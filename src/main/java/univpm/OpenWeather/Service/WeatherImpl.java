@@ -19,12 +19,7 @@ public class WeatherImpl implements WeatherInt {
 		return null;
 	}
 
-	@Override
-	public void Prova() {
-		// TODO Auto-generated method stub
-		
-	}
-	
+
 	
 
 }
