@@ -4,9 +4,9 @@ public class Weather {
 
 	private double temp_min;
 	private double temp_max;
-	private double pressure;
-	private String feels_like;
-	private String main;
+	private double pressure; 
+	private String feels_like; //Descrizione del tempo (es. "Nuvoloso")
+	private String main; //deve far ritornare il meteo generico di una città
 	
 	public Weather() {
 		this.main = null;
@@ -15,12 +15,6 @@ public class Weather {
 		this.pressure =0;
 		this.feels_like = null;
 	}
-	
-	
-	
-	
-	
-	
 
 	public double getTemp_min() {
 		return temp_min;

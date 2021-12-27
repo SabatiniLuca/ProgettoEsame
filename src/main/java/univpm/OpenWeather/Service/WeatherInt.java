@@ -7,7 +7,7 @@ import org.json.simple.JSONObject;
 
 public interface WeatherInt {
 	
-	public JSONArray getAPI(String name) throws MalformedURLException;
+	public JSONObject getAPI(String name) throws MalformedURLException;
 	public JSONObject getCity(String cityName);
 	public String toString();
 	

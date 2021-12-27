@@ -4,14 +4,17 @@ import org.json.simple.JSONObject;
 
 public class Statistics {
 	
-	private double pressione_min;
-	private double pressione_max;
+//	private double pressione_min;
+//	private double pressione_max;
 	
 	public JSONObject dailyAverange() {
 		
+		JSONObject w = new JSONObject();
 		
 		
-		return null;
+		
+		
+		return w;
 	}
 	
 

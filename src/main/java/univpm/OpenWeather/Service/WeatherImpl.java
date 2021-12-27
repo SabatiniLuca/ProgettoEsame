@@ -13,7 +13,7 @@ import org.json.simple.parser.JSONParser;
 
 public class WeatherImpl implements WeatherInt {
 	
-	private String apiKey = "15b8b402dfd9f2d93b1bfa8245d0edc6";
+	//private String apiKey = "15b8b402dfd9f2d93b1bfa8245d0edc6";
 	
 	@Override
 	public JSONObject getCity(String cityName) {
@@ -42,10 +42,11 @@ public class WeatherImpl implements WeatherInt {
 	
 	
 	@Override
-	public JSONArray getAPI(String name) throws MalformedURLException {
+	public JSONObject getAPI(String name) throws MalformedURLException {
 		// TODO Auto-generated method stub
 		StringBuilder informationString =new StringBuilder();
 		JSONArray ris = new JSONArray();
+		JSONObject countryData = null;
 		
 			try {
 				URL openweather= new URL("https://api.openweathermap.org/data/2.5/forecast?q=Milano&appid=15b8b402dfd9f2d93b1bfa8245d0edc6&mode=JSON&units=metric&lang=it");
@@ -69,7 +70,7 @@ public class WeatherImpl implements WeatherInt {
 				
 					System.out.println(ris.get(0));
 				
-					JSONObject countryData = (JSONObject) ris.get(0);
+					countryData = (JSONObject) ris.get(0);
 				
 					System.out.println(countryData.get("location type"));
 				
@@ -80,7 +81,7 @@ public class WeatherImpl implements WeatherInt {
 				e.printStackTrace();
 			}
 		
-			return ris;
+			return countryData;
 		
 }
 	
