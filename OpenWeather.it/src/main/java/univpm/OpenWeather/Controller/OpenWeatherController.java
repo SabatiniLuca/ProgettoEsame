@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 
 import java.net.URL;
 import java.util.Scanner;
+import java.util.Vector;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,9 +29,57 @@ import univpm.OpenWeather.Service.WeatherImpl;
 
 @RestController
 public class OpenWeatherController {
+	//private boolean current=true;
 	
 	@Autowired
 	WeatherImpl service;
+	
+	@RequestMapping("/greeting")
+	public String greeting(@RequestParam(value="name",defaultValue="Mario")String name) {
+		return "Salve "+name+", questo è OpenWeather";		
+	}
+	
+	/**
+	 * cambio solo queste prime due rotte
+	 * @param name nome della città
+	 * @return JSONObject con la rappresentazione della città
+	 * @throws MalformedURLException avvisa se la chiamata non è andata a buon fine
+	 * 
+	 * @author lucas
+	 */
+	
+	@RequestMapping("/current")
+	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
+		/**
+		 * service.ResetUrl();
+		 * il reset di url lo metterei direttamente dentro al service
+		 */
+		Weather meteo=new Weather();
+		//meteo=(Weather) service.getCity(name);
+		meteo=service.getWeather(name);
+		return new ResponseEntity<>(service.printInfo(meteo), HttpStatus.OK);
+	}
+	
+	@GetMapping(value= "/forecast/{cityName}")//non ancora finita, questa rotta dovrebbe fare la chiamata per il forecast 5 giorni e stampare tutto
+	public ResponseEntity<Vector<Weather>> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
+		Vector<Weather> forecast=new Vector<Weather>();
+		/**
+		 * in questa parte devo trovare un modo per riempire il vettore forecast con un for each
+		 * ogni giorno le info della city devono essere uguali( percheè non cambia) e devono cambiare solo le previsioni che
+		 * si valorizzano con @method service.getWeather()
+		 */
+		
+		return new ResponseEntity<>(forecast, HttpStatus.OK);
+	}
+	
+	
+	
+	
+	/*
+	 * da qui in giù non ho modificato niente
+	 
+	
+	
 	
 	@GetMapping(value = "/ApiCall")	
 	public ResponseEntity<Object> ApiCall(@RequestParam (name="name", defaultValue = "Milano") String name) throws MalformedURLException {
@@ -39,7 +89,7 @@ public class OpenWeatherController {
 	/*
 	 * Metodo che permette di vedere le informazioni 
 	 * relative alla città (non il meteo)
-	 */
+	 *
 	
 	@GetMapping (value = "/CityInfo")
 	public ResponseEntity<City> CityInfo(@RequestParam(name = "name", defaultValue = "Milano") String name) throws MalformedURLException {
@@ -51,13 +101,7 @@ public class OpenWeatherController {
 	 * Metodo che consente di vedere le informazioni 
 	 * riguardanti il meteo di un giorno di una città specifica
 	 * @Author Francesco Rachiglia
-	 */
-	@GetMapping(value= "/CurrentWeather")
-	public ResponseEntity<Weather> CurrentWeather(@RequestParam(name = "name", defaultValue = "Milano") String name) throws MalformedURLException{
-		service.ResetUrl();
-		return new ResponseEntity<>(service.getWeather(name), HttpStatus.OK);
-	}
-	
+	 *
 	
 	
 	@RequestMapping("/weather")
@@ -102,6 +146,7 @@ public class OpenWeatherController {
 		
 		return informationString;
 	}
+	*/
 	
 	
 }

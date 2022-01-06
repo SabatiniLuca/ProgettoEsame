@@ -3,6 +3,9 @@ package univpm.OpenWeather.Model;
 
 public class Weather extends City {
 	
+	/**
+	 * ho cambiato description (prima era feels like)
+	 */
 	private String description; //Descrizione del tempo (es. "Soleggiato")
 	private double temp;
 	private double temp_min;
@@ -31,6 +34,10 @@ public class Weather extends City {
 		// TODO Auto-generated constructor stub
 	}
 
+	public static double convert(double fTemp) {
+		double t=(fTemp-32)*(5/9);
+		return  t;
+	}
 	
 	//Getters & Setters
 	

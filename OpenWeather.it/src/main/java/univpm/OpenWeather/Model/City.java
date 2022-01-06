@@ -35,7 +35,6 @@ public class City extends Position {
 		super();
 	}
 
-	
 
 	//Getters and setters
 
