@@ -1,6 +1,5 @@
 package univpm.OpenWeather.Model;
 
-<<<<<<< HEAD
 public class Position {
 
 	private double latitude;
@@ -34,32 +33,4 @@ public class Position {
 		return "Position [lat=" + latitude + ", lon=" + longitude + "]";
 	}
 	
-	
-
-=======
-public abstract class Position {
-
-	protected double latitude;
-	protected double longitude;
-	
-	public Position(double latitude, double longitude) {
-		super();
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
-	
-	public double getLatitude() {
-		return latitude;
-	}
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-	}
-	public double getLongitude() {
-		return longitude;
-	}
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-	}
-	
->>>>>>> refs/remotes/Francesco/FrancescoUpdate
 }
