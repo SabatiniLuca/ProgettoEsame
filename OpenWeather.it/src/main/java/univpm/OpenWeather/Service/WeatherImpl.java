@@ -29,6 +29,7 @@ import univpm.OpenWeather.Utils.Stats;
 		@Override 
 		public String UrlBuilder(String name) {
 			if (name.isEmpty()) {
+				//forse qui si può aggiungere una eccezione
 				return null;
 			}
 			else {

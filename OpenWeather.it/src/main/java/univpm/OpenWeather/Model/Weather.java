@@ -3,7 +3,7 @@ package univpm.OpenWeather.Model;
 
 public class Weather extends City {
 	
-	private String feels_like; //Descrizione del tempo (es. "Soleggiato")
+	private String description; //Descrizione del tempo (es. "Soleggiato")
 	private double temp;
 	private double temp_min;
 	private double temp_max;
@@ -13,9 +13,9 @@ public class Weather extends City {
 
 	
 	//Constructors
-	public Weather(double temp, String feels_like, double temp_min, double temp_max, double pressure) {
+	public Weather(double temp, String description, double temp_min, double temp_max, double pressure) {
 		this.temp=temp;
-		this.feels_like = feels_like;
+		this.description = description;
 		this.temp_min = temp_min;
 		this.temp_max = temp_max;
 		this.pressure = pressure;
@@ -42,13 +42,13 @@ public class Weather extends City {
 		this.temp = temp;
 	}
 
-	public String getFeels_like() {
-		return feels_like;
+	public String getDescription() {
+		return description;
 	}
 
 	
-	public void setFeels_like(String feels_like) {
-		this.feels_like = feels_like;
+	public void setDescription(String feels_like) {
+		this.description = feels_like;
 	}
 	
 	public double getTemp_min() {
@@ -97,7 +97,7 @@ public class Weather extends City {
 	
 	@Override
 	public String toString() {
-		return "Weather [feels_like=" + feels_like + ", temp_min=" + temp_min + ", temp_max="
+		return "Weather [feels_like=" + description + ", temp_min=" + temp_min + ", temp_max="
 				+ temp_max + ", pressure=" + pressure + ", data=" + data + "]";
 	}
 
