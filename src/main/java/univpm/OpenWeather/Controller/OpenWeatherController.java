@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 
 
 
+
 import java.net.URL;
 import java.util.Scanner;
 
@@ -21,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import univpm.OpenWeather.Model.City;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Service.WeatherImpl;
 
@@ -41,10 +41,10 @@ public class OpenWeatherController {
 	 * relative alla città (non il meteo)
 	 */
 	
-	@GetMapping (value = "/CityInfo")
-	public ResponseEntity<City> CityInfo(@RequestParam(name = "name", defaultValue = "Milano") String name) throws MalformedURLException {
+	@GetMapping (value = "/DailyWeather")
+	public ResponseEntity<Weather> CityInfo(@RequestParam(name = "name", defaultValue = "Milano") String name) throws MalformedURLException {
 		service.ResetUrl();
-		return new ResponseEntity<>(service.getCity(name), HttpStatus.OK);
+		return new ResponseEntity<>(service.getDailyWeather(name), HttpStatus.OK);
 	}
 	
 	/*

@@ -1,13 +1,9 @@
 package univpm.OpenWeather.Model;
 
-
-import java.util.Vector;
-
 public class City extends Position {
 	
 	private long id;
 	private String name;
-	private Vector <Weather> meteo = new Vector<Weather>();
 	private Position coordinates;
 	
 	public City(long id, String name, Position coordinates) {
@@ -51,24 +47,16 @@ public class City extends Position {
 	}
 
 	
-	public String getCityName() {
+	public String getName() {
 		return name;
 	}
-	public void setCityName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 	
-	public Vector<Weather> getMeteo() {
-		return meteo;
-	}
-	public void setMeteo(Vector<Weather> meteo) {
-		this.meteo = meteo;
-	}
-
 	@Override
 	public String toString() {
-		return "City [id=" + id + ", name=" + name + "," + ", meteo=" + meteo
-				+ ", coordinates=" + coordinates + "]";
+		return "City [id=" + id + ", name=" + name + "," + ", coordinates=" + coordinates + "]";
 	}
 
 

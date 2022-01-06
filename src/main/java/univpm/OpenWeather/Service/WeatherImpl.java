@@ -1,6 +1,7 @@
 package univpm.OpenWeather.Service;
 
 import java.io.InputStreamReader;
+
 import java.io.Reader;
 import java.net.MalformedURLException;
 
@@ -14,7 +15,6 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 
-import univpm.OpenWeather.Model.City;
 import univpm.OpenWeather.Model.Position;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Stats;
@@ -24,7 +24,7 @@ import univpm.OpenWeather.Utils.Stats;
 	public class WeatherImpl implements WeatherInt {
 		
 		private String apiKey = "15b8b402dfd9f2d93b1bfa8245d0edc6";
-		private String url ="https://api.openweathermap.org/data/2.5/forecast?q=";
+		private String url ="https://api.openweathermap.org/data/2.5/weather?q=";
 		
 		@Override 
 		public String UrlBuilder(String name) {
@@ -72,38 +72,53 @@ import univpm.OpenWeather.Utils.Stats;
 		
 		
 		@Override
-		public City getCity(String cityName) throws MalformedURLException {
+		public Weather getDailyWeather(String cityName) throws MalformedURLException {
 			// TODO Auto-generated method stub
 				String u = UrlBuilder(cityName);
-			
+				System.out.println(u);
 				JSONObject object = getInfo(u);
 				
-				City city = new City();
+				Weather meteo = new Weather();
 				Position coordinates = new Position();
+				System.out.println(object);
 				
 				try {
-					JSONObject cityObj = (JSONObject) object.get("city");
-					String name = (String) cityObj.get("name");
-					String country = (String) cityObj.get("country");
-					long id = (long) cityObj.get("id");
-					city.setCityName(name);
-					city.setId(id);
 					
-					JSONObject coordinatesObj = (JSONObject) cityObj.get("coord");
+					JSONObject meteoObj = (JSONObject) object.get("main");
+					double temp = (double) meteoObj.get("temp"); 
+					double temp_max= (double) meteoObj.get("temp_max");
+					double temp_min= (double) meteoObj.get("temp_min");
+					long pressure=(long) meteoObj.get("pressure");
+					double feels_like = (double) meteoObj.get("feels_like");
+					String data = (String) meteoObj.get("data");
+					meteo.setTemp(temp);
+					meteo.setTemp_min(temp_min);
+					meteo.setTemp_max(temp_max);
+					meteo.setPressure(pressure);
+					meteo.setFeels_like(feels_like);
+					meteo.setData(data);
+					
+					
+					String name = (String) object.get("name");
+					long id = (long) object.get("id");
+					meteo.setName(name);
+					meteo.setId(id);
+					
+					JSONObject coordinatesObj = (JSONObject) object.get("coord");
 					double lat = (double) coordinatesObj.get("lat");
 					double lon = (double) coordinatesObj.get("lon");
-					coordinates.setLatitude(lat);
-					coordinates.setLongitude(lon);
-					city.setCoordinates(coordinates);
+					coordinates.setLat(lat);
+					coordinates.setLon(lon);
+					meteo.setCoordinates(coordinates);
 				
 					
 				}
 				catch (Exception e) {
 					e.printStackTrace();
 				}
-				System.out.println(city.getCityName() + " " + city.getId()) ;
+				System.out.println(meteo.getName() + " " + meteo.getId()) ;
 				
-				return city;
+				return meteo;
 			
 		}
 
@@ -146,7 +161,7 @@ import univpm.OpenWeather.Utils.Stats;
 		
 		
 		public void ResetUrl() {
-			this.url = "https://api.openweathermap.org/data/2.5/forecast?q=";
+			this.url = "https://api.openweathermap.org/data/2.5/weather?q=";
 		}
 
 

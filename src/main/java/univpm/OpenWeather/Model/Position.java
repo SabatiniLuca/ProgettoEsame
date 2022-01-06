@@ -15,22 +15,22 @@ public class Position {
 		
 	}
 	
-	public double getLatitude() {
+	public double getLat() {
 		return latitude;
 	}
-	public void setLatitude(double latitude) {
+	public void setLat(double latitude) {
 		this.latitude = latitude;
 	}
-	public double getLongitude() {
+	public double getLon() {
 		return longitude;
 	}
-	public void setLongitude(double longitude) {
+	public void setLon(double longitude) {
 		this.longitude = longitude;
 	}
 
 	@Override
 	public String toString() {
-		return "Position [latitude=" + latitude + ", longitude=" + longitude + "]";
+		return "Position [lat=" + latitude + ", lon=" + longitude + "]";
 	}
 	
 	
