@@ -1,6 +1,7 @@
 package univpm.OpenWeather.Service;
 
 import java.io.InputStreamReader;
+
 import java.io.Reader;
 import java.net.MalformedURLException;
 
@@ -84,27 +85,27 @@ import univpm.OpenWeather.Utils.Stats;
 		
 		
 		@Override
-		public City getCity(String cityName) throws MalformedURLException {
+		public City getCity(String cityName, Weather meteo) throws MalformedURLException {
 			// TODO Auto-generated method stub
-			City city = new City();
-			
-			ResetUrl();
-			String u = UrlBuilder(true, cityName);//
-		
-			JSONObject object = getInfo(u);
-			
-			Stats s = new Stats();
-			
-			s.getInfoCity(object, city);
-			
-			return city;
-		
+				
+				ResetUrl();
+				String u = UrlBuilder(true, cityName);//
+				
+				System.out.println(u);
+				
+				JSONObject object = getInfo(u);
+				
+				System.out.println(object);
+				Stats s = new Stats();
+				
+				s.getInfoCity(object, meteo);
+					
+				return meteo;
 		}
 
 
-		public Weather getWeather(String cityName) throws MalformedURLException {
+		public Weather getWeather(String cityName, Weather meteo) throws MalformedURLException {
 			// TODO Auto-generated method stub
-			Weather meteo = new Weather();
 			
 			ResetUrl();
 			String u = UrlBuilder(true, cityName); //Crea URL
@@ -124,37 +125,37 @@ import univpm.OpenWeather.Utils.Stats;
 			return meteo;
 		}
 		
-		
 		@SuppressWarnings("unchecked")// se lo tolgo si riempe di warnings perchè dice di definire il tipo di mappa
 		@Override
-		public JSONObject printInfo(Weather city) {
+		public JSONObject printInfo(Weather meteo) {
 			
 			JSONObject cityInfo=new JSONObject();
 			
-			JSONObject coord=new JSONObject();
-			coord.put("lon",city.getLongitude());
-			coord.put("lat", city.getLatitude());
-			cityInfo.put("Coordinates", coord);
+			Position coord = new Position();
+			JSONObject coordObj=new JSONObject();
+			coordObj.put("lon",coord.getLongitude());
+			coordObj.put("lat", coord.getLatitude());
+			cityInfo.put("Coordinates", meteo.getCoordinates());
+			
 			
 			JSONObject info=new JSONObject();
-			info.put("Name", city.getCityName());
-			info.put("Id", city.getId());
+			info.put("Name", meteo.getCity().getCityName());
+			info.put("Id", meteo.getCity().getId());
 			cityInfo.put("info", info);
 			
 			JSONObject weather=new JSONObject();
 			//weather.put("Weather", city.getMain());
-			weather.put("Specific", city.getDescription());
+			weather.put("Specific", meteo.getDescription());
 			cityInfo.put("Status", weather);
 			
 			JSONObject temp=new JSONObject();
-			temp.put("Minimum", city.getTemp_min());
-			temp.put("Current", city.getTemp());
-			temp.put("Maximum", city.getTemp_max());//(city.getTemp_max() − 32) × 5/9 
+			temp.put("Minimum", meteo.getTemp_min());
+			temp.put("Current", meteo.getTemp());
+			temp.put("Maximum", meteo.getTemp_max());//(city.getTemp_max() − 32) × 5/9 
 			cityInfo.put("Temperatures", temp);
 			
-			cityInfo.put("Pressure", city.getPressure());
-			cityInfo.put("Date", city.getData());
-			
+			cityInfo.put("Pressure", meteo.getPressure());
+			cityInfo.put("Date", meteo.getDate());
 			return cityInfo;
 		}
 

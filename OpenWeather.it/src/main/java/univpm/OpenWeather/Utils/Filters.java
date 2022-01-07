@@ -8,5 +8,6 @@ public interface Filters {
 	public JSONObject DailyAverage();
 	public JSONObject FiveDaysAverage();
 	
+	
 
 }

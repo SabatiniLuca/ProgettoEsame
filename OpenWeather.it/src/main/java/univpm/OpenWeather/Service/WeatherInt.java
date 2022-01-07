@@ -10,11 +10,12 @@ import univpm.OpenWeather.Model.Weather;
 
 public interface WeatherInt {
 	
-	public City getCity(String name) throws MalformedURLException;
+	
 	public JSONObject getInfo(String url) throws MalformedURLException;
-	public Weather getWeather(String name) throws MalformedURLException;
+	public Weather getWeather(String name, Weather meteo) throws MalformedURLException;
 	public String toString();
 	public String UrlBuilder(boolean current, String cityName);
-	JSONObject printInfo(Weather city);
+	public JSONObject printInfo(Weather city);
+	public City getCity(String cityName, Weather meteo) throws MalformedURLException;
 
 }

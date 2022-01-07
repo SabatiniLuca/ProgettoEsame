@@ -11,17 +11,21 @@ public class Weather extends City {
 	private double temp_min;
 	private double temp_max;
 	private double pressure; 
-	private String data;
+	private long date;
 	private String main;
+	private City city;
+	
 
 	
 	//Constructors
-	public Weather(double temp, String description, double temp_min, double temp_max, double pressure) {
+	public Weather(double temp, String description, double temp_min, double temp_max, double pressure, long date, City city) {
 		this.temp=temp;
 		this.description = description;
 		this.temp_min = temp_min;
 		this.temp_max = temp_max;
 		this.pressure = pressure;
+		this.date = date;
+		this.city = city;
 	}
 	
 
@@ -35,7 +39,7 @@ public class Weather extends City {
 	}
 
 	public static double convert(double fTemp) {
-		double t=(fTemp-32)*(5/9);
+		double t=((fTemp-32)*(5/9));
 		return  t;
 	}
 	
@@ -59,7 +63,7 @@ public class Weather extends City {
 	}
 	
 	public double getTemp_min() {
-		return temp_min;
+		return convert(temp_min);
 	}
 
 	public void setTemp_min(double temp_min) {
@@ -67,7 +71,7 @@ public class Weather extends City {
 	}
 
 	public double getTemp_max() {
-		return temp_max;
+		return convert(temp_max);
 	}
 
 	public void setTemp_max(double temp_max) {
@@ -84,12 +88,12 @@ public class Weather extends City {
 
 
 	
-	public String getData() {
-		return data;
+	public long getDate() {
+		return date;
 	}
 
-	public void setData(String data) {
-		this.data = data;
+	public void setDate(long date) {
+		this.date = date;
 	}
 	
 	public String getMain() {
@@ -105,7 +109,17 @@ public class Weather extends City {
 	@Override
 	public String toString() {
 		return "Weather [feels_like=" + description + ", temp_min=" + temp_min + ", temp_max="
-				+ temp_max + ", pressure=" + pressure + ", data=" + data + "]";
+				+ temp_max + ", pressure=" + pressure + ", date=" + date + "]";
+	}
+
+
+	public City getCity() {
+		return city;
+	}
+
+
+	public void setCity(City city) {
+		this.city = city;
 	}
 
 	

@@ -2,28 +2,17 @@ package univpm.OpenWeather.Controller;
 
 
 import java.net.MalformedURLException;
-
-
-
-import java.net.URL;
-import java.util.Scanner;
 import java.util.Vector;
 
-import javax.net.ssl.HttpsURLConnection;
-
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import univpm.OpenWeather.Model.City;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Service.WeatherImpl;
 
@@ -55,8 +44,8 @@ public class OpenWeatherController {
 		 * il reset di url lo metterei direttamente dentro al service
 		 */
 		Weather meteo=new Weather();
-		//meteo=(Weather) service.getCity(name);
-		meteo=service.getWeather(name);
+		service.getCity(name, meteo);
+		service.getWeather(name, meteo);
 		return new ResponseEntity<>(service.printInfo(meteo), HttpStatus.OK);
 	}
 	
