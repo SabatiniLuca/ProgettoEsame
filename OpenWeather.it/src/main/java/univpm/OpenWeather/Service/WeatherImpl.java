@@ -153,7 +153,8 @@ import univpm.OpenWeather.Utils.Stats;
 			cityInfo.put("Temperatures", temp);
 			
 			cityInfo.put("Pressure", meteo.getPressure());
-			cityInfo.put("Date", meteo.getDate());
+			
+			cityInfo.put("dt", meteo.getDate());
 			return cityInfo;
 		}
 

@@ -1,5 +1,6 @@
 package univpm.OpenWeather.Model;
 
+import java.text.SimpleDateFormat;
 
 public class Weather extends City {
 	
@@ -11,14 +12,14 @@ public class Weather extends City {
 	private double temp_min;
 	private double temp_max;
 	private double pressure; 
-	private long date;
+	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
 	private String main;
 	private City city;
 	
 
 	
 	//Constructors
-	public Weather(double temp, String description, double temp_min, double temp_max, double pressure, long date, City city) {
+	public Weather(double temp, String description, double temp_min, double temp_max, double pressure, SimpleDateFormat date, City city) {
 		this.temp=temp;
 		this.description = description;
 		this.temp_min = temp_min;
@@ -88,11 +89,11 @@ public class Weather extends City {
 
 
 	
-	public long getDate() {
+	public SimpleDateFormat getDate() {
 		return date;
 	}
 
-	public void setDate(long date) {
+	public void setDate(SimpleDateFormat date) {
 		this.date = date;
 	}
 	

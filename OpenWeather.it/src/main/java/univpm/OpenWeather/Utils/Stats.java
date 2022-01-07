@@ -1,5 +1,8 @@
 package univpm.OpenWeather.Utils;
 
+//import java.sql.Date;
+import java.text.SimpleDateFormat;
+
 import org.json.simple.JSONObject;
 
 import univpm.OpenWeather.Model.City;
@@ -28,6 +31,12 @@ public class Stats implements StatsInt{
 		
 		String description = service.searchArray(jobj, "weather" , "description");//valorizza la descrizione del meteo
 		meteo.setDescription(description);
+		/*String dateStr = obj.getString("birthdate");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date birthDate = sdf.parse(dateStr);
+		//then
+		user.setBirthdate(birthDate);
+		meteo.setDate(date);*/
 		/**
 		 * se vogliamo si potrebbe fare la stessa cosa anche per il campo
 		 * "main" dentro l'array di weather (indica il nome del fenomeno atmosferico
