@@ -131,16 +131,14 @@ import univpm.OpenWeather.Utils.Stats;
 			
 			JSONObject cityInfo=new JSONObject();
 			
-			Position coord = new Position();
 			JSONObject coordObj=new JSONObject();
-			coordObj.put("lon",coord.getLongitude());
-			coordObj.put("lat", coord.getLatitude());
+			coordObj.put("lon",meteo.getCoordinates().getLongitude());
+			coordObj.put("lat", meteo.getCoordinates().getLatitude());
 			cityInfo.put("Coordinates", meteo.getCoordinates());
 			
-			
 			JSONObject info=new JSONObject();
-			info.put("Name", meteo.getCity().getCityName());
-			info.put("Id", meteo.getCity().getId());
+			info.put("Name", meteo.getCityName());
+			info.put("Id", meteo.getId());
 			cityInfo.put("info", info);
 			
 			JSONObject weather=new JSONObject();

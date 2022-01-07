@@ -63,7 +63,7 @@ public class Weather extends City {
 	}
 	
 	public double getTemp_min() {
-		return convert(temp_min);
+		return temp_min;
 	}
 
 	public void setTemp_min(double temp_min) {
@@ -71,7 +71,7 @@ public class Weather extends City {
 	}
 
 	public double getTemp_max() {
-		return convert(temp_max);
+		return temp_max;
 	}
 
 	public void setTemp_max(double temp_max) {

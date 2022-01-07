@@ -3,6 +3,7 @@ package univpm.OpenWeather.Utils;
 import org.json.simple.JSONObject;
 
 import univpm.OpenWeather.Model.City;
+import univpm.OpenWeather.Model.Position;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Service.WeatherImpl;
 
@@ -66,41 +67,19 @@ public class Stats implements StatsInt{
 	public City getInfoCity(JSONObject jobj, City meteo) {
 		
 		//System.out.println(jobj);
+		Position coord = new Position();
+		JSONObject coordObj=(JSONObject) jobj.get("coord");//valorizza lon e lat
+		double lon= (double) coordObj.get("lon");
+		double lat= (double) coordObj.get("lat");
+		coord.setLatitude(lat);
+		coord.setLongitude(lon);
+		meteo.setCoordinates(coord);
 		
-		JSONObject coord=(JSONObject) jobj.get("coord");//valorizza lon e lat
-		double lon= (double) coord.get("lon");
-		double lat= (double) coord.get("lat");
-		meteo.setLatitude(lat);
-		meteo.setLongitude(lon);
-			
 		String name=(String) jobj.get("name");//valorizza name e id
 		long id=(long) jobj.get("id");
 		meteo.setCityName(name);
 		meteo.setId(id);	
 		
-				
-		/*
-		try {
-			JSONArray meteoArr = (JSONArray) jobj.get("list");
-			JSONObject meteoObj = (JSONObject) meteoArr.get(0);
-			double temp = (double) meteoObj.get("temp");
-			String feels_like = (String) meteoObj.get("feels_like");
-			double temp_min = (double) meteoObj.get("temp_min");
-			double temp_max = (double) meteoObj.get("temp_max");
-			double pressure = (double) meteoObj.get("pressure");
-			
-			meteo.setTemp(temp);
-			meteo.setFeels_like(feels_like);
-			meteo.setTemp_min(temp_min);
-			meteo.setTemp_max(temp_max);
-			meteo.setPressure(pressure);
-			
-			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
 		return meteo;	
 	}
 	
