@@ -17,6 +17,8 @@ public class Stats implements StatsInt{
 	public Weather getDailyWeather(JSONObject jobj, Weather meteo) {
 		
 		//System.out.println(jobj);
+		long date=(long) jobj.get("dt");//valorizza la data
+		meteo.setDate(date);
 		
 		JSONObject tempObject=(JSONObject) jobj.get("main");//valorizza le temperature
 		double temp =(double) tempObject.get("temp"); 
@@ -31,49 +33,14 @@ public class Stats implements StatsInt{
 		
 		String description = service.searchArray(jobj, "weather" , "description");//valorizza la descrizione del meteo
 		meteo.setDescription(description);
-		/*String dateStr = obj.getString("birthdate");
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date birthDate = sdf.parse(dateStr);
-		//then
-		user.setBirthdate(birthDate);
-		meteo.setDate(date);*/
-		/**
-		 * se vogliamo si potrebbe fare la stessa cosa anche per il campo
-		 * "main" dentro l'array di weather (indica il nome del fenomeno atmosferico
-		 * mentre description è piu dettagliato) 
-		 * esempio
-		 * main= rain
-		 * description= light rain
-		 */
-				
-				
-		/*
-		try {
-			JSONArray meteoArr = (JSONArray) jobj.get("list");
-			JSONObject meteoObj = (JSONObject) meteoArr.get(0);
-			double temp = (double) meteoObj.get("temp");
-			String feels_like = (String) meteoObj.get("feels_like");
-			double temp_min = (double) meteoObj.get("temp_min");
-			double temp_max = (double) meteoObj.get("temp_max");
-			double pressure = (double) meteoObj.get("pressure");
-			
-			meteo.setTemp(temp);
-			meteo.setFeels_like(feels_like);
-			meteo.setTemp_min(temp_min);
-			meteo.setTemp_max(temp_max);
-			meteo.setPressure(pressure);
-			
-			
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-		}
-		*/
+		String main = service.searchArray(jobj, "weather" , "main");//valorizza la descrizione del meteo
+		meteo.setMain(main);
+						
 		return meteo;	
 	}
 	
 	
-	public City getInfoCity(JSONObject jobj, City meteo) {
+	public City getInfoCity(JSONObject jobj, City city) {
 		
 		//System.out.println(jobj);
 		Position coord = new Position();
@@ -82,14 +49,14 @@ public class Stats implements StatsInt{
 		double lat= (double) coordObj.get("lat");
 		coord.setLatitude(lat);
 		coord.setLongitude(lon);
-		meteo.setCoordinates(coord);
+		city.setCoordinates(coord);
 		
 		String name=(String) jobj.get("name");//valorizza name e id
 		long id=(long) jobj.get("id");
-		meteo.setCityName(name);
-		meteo.setId(id);	
+		city.setCityName(name);
+		city.setId(id);	
 		
-		return meteo;	
+		return city;	
 	}
 	
 	

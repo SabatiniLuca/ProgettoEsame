@@ -12,14 +12,14 @@ public class Weather extends City {
 	private double temp_min;
 	private double temp_max;
 	private double pressure; 
-	SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
+	private long date;
 	private String main;
 	private City city;
 	
 
 	
 	//Constructors
-	public Weather(double temp, String description, double temp_min, double temp_max, double pressure, SimpleDateFormat date, City city) {
+	public Weather(double temp, String description, double temp_min, double temp_max, double pressure, long date, City city) {
 		this.temp=temp;
 		this.description = description;
 		this.temp_min = temp_min;
@@ -39,10 +39,7 @@ public class Weather extends City {
 		// TODO Auto-generated constructor stub
 	}
 
-	public static double convert(double fTemp) {
-		double t=((fTemp-32)*(5/9));
-		return  t;
-	}
+	
 	
 	//Getters & Setters
 	
@@ -59,8 +56,8 @@ public class Weather extends City {
 	}
 
 	
-	public void setDescription(String feels_like) {
-		this.description = feels_like;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	public double getTemp_min() {
@@ -89,11 +86,11 @@ public class Weather extends City {
 
 
 	
-	public SimpleDateFormat getDate() {
+	public long getDate() {
 		return date;
 	}
 
-	public void setDate(SimpleDateFormat date) {
+	public void setDate(long date) {
 		this.date = date;
 	}
 	
@@ -102,8 +99,7 @@ public class Weather extends City {
 	}
 	
 	public void setMain(String main) {
-		// TODO Auto-generated method stub
-		
+		this.main=main;		
 	}
 	
 	

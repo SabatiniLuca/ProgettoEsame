@@ -39,25 +39,21 @@ public class OpenWeatherController {
 	
 	@RequestMapping("/current")
 	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
-		/**
-		 * service.ResetUrl();
-		 * il reset di url lo metterei direttamente dentro al service
-		 */
 		Weather meteo=new Weather();
 		service.getCity(name, meteo);
 		service.getWeather(name, meteo);
 		return new ResponseEntity<>(service.printInfo(meteo), HttpStatus.OK);
 	}
 	
-	@GetMapping(value= "/forecast/{cityName}")//non ancora finita, questa rotta dovrebbe fare la chiamata per il forecast 5 giorni e stampare tutto
+	@RequestMapping("/forecast")
 	public ResponseEntity<Vector<Weather>> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
-		Vector<Weather> forecast=new Vector<Weather>();
-		/**
-		 * in questa parte devo trovare un modo per riempire il vettore forecast con un for each
-		 * ogni giorno le info della city devono essere uguali( percheè non cambia) e devono cambiare solo le previsioni che
-		 * si valorizzano con @method service.getWeather()
-		 */
 		
+		Vector<Weather> forecast=new Vector<Weather>();
+		forecast=service.getForecast(forecast, name);
+		service.printInfoCity(forecast.firstElement());
+		for(Weather w:forecast) {
+			service.printInfoWeather(w);
+		}
 		return new ResponseEntity<>(forecast, HttpStatus.OK);
 	}
 	
