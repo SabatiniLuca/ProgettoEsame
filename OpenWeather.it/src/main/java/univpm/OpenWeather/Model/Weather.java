@@ -1,6 +1,11 @@
 package univpm.OpenWeather.Model;
 
-import java.text.SimpleDateFormat;
+/**
+ * Classe contenente le informazioni sul meteo 
+ * e un oggetto di City per prendere le informazioni sulla città e sulla posizione
+ * @author Francesco
+ *
+ */
 
 public class Weather extends City {
 	

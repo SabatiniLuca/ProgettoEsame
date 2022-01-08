@@ -42,7 +42,7 @@ public class OpenWeatherController {
 		Weather meteo=new Weather();
 		service.getCity(name, meteo);
 		service.getWeather(name, meteo);
-		return new ResponseEntity<>(service.printInfo(meteo,true), HttpStatus.OK);
+		return new ResponseEntity<>(service.printInfo(meteo, true), HttpStatus.OK);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -55,11 +55,17 @@ public class OpenWeatherController {
 		
 		
 		for(Weather w:forecast) {
-			all.put("day",service.printInfo(w,false));
+			all.put("day",service.printInfo(w, true));
 		}
 		return new ResponseEntity<>(forecast, HttpStatus.OK);
 	}
 	
+	@GetMapping("/saveEveryHour")
+	public ResponseEntity<String> saveEveryHour(@RequestParam String name){
+		Weather weather = new Weather();
+		String path = service.saveHourlyWeather(name, weather);
+		return new ResponseEntity<>(path, HttpStatus.OK);
+	}
 	
 	
 	

@@ -1,5 +1,11 @@
 package univpm.OpenWeather.Model;
 
+/**
+ * Classe Position contenente le informazioni sulle coordinate
+ * di una città.
+ * @author Francesco
+ *
+ */
 public class Position {
 
 	private double latitude;

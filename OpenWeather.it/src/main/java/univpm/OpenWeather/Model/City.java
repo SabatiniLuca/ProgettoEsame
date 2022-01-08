@@ -1,5 +1,11 @@
 package univpm.OpenWeather.Model;
 
+/**
+ * Classe City contenente le informazioni generali della città
+ * e un oggetto di Position per leggere e settare le coordinate
+ * @author Francesco
+ *
+ */
 public class City extends Position {
 	
 	private long id;

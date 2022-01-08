@@ -1,5 +1,9 @@
 package univpm.OpenWeather.Service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import java.io.Reader;
@@ -8,16 +12,20 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.Vector;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
 import org.springframework.stereotype.Service;
 
 import univpm.OpenWeather.Model.City;
-import univpm.OpenWeather.Model.Position;
+
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Stats;
 import univpm.OpenWeather.Utils.Utils;
@@ -91,13 +99,13 @@ import univpm.OpenWeather.Utils.Utils;
 			// TODO Auto-generated method stub
 				
 				ResetUrl();
-				String u = UrlBuilder(true, cityName);//
+				String u = UrlBuilder(true, cityName);
 				
-				System.out.println(u);
+				//System.out.println(u);
 				
 				JSONObject object = getInfo(u);
 				
-				System.out.println(object);
+				//System.out.println(object);
 				Stats s = new Stats();
 				
 				s.getInfoCity(object, meteo);
@@ -207,6 +215,7 @@ import univpm.OpenWeather.Utils.Utils;
 			allInfo.put("City", cityInfo);
 			allInfo.put("Forecasts", weatherInfo);
 			
+			
 			if(all) {
 				return allInfo;
 			}else {
@@ -214,7 +223,65 @@ import univpm.OpenWeather.Utils.Utils;
 			}
 			
 		}
-
+		
+		/**
+		 * Metodo che salva su file le informazioni 
+		 * del meteo di una città
+		 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
+		 * @author Francesco
+		 */
+		
+		public String saveHourlyWeather(String name, Weather weather) {
+			
+			String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather";
+			File file = new File(path);	
+			
+			ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
+			System.out.println("Start Execution");
+			
+			eTP.scheduleAtFixedRate(new Runnable() {
+				@Override
+				public void run() {
+					
+					JSONObject toFile = new JSONObject();
+					Weather meteo = new Weather();
+					try {
+						meteo = (Weather) getCity(name, weather);
+						meteo = getWeather(name, weather);
+						System.out.println("meteo " +meteo);
+					} catch (MalformedURLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					System.out.println(toFile);
+					toFile = printInfo(meteo, true);
+					
+					System.out.println(toFile);
+					try {
+						if (!file.exists()) {
+							file.createNewFile();
+							System.out.println("File created");
+						}
+						else {
+							file.delete();
+							System.out.println("File deleted");
+						}
+						FileWriter f = new FileWriter(file); 
+						BufferedWriter n = new BufferedWriter(f);
+						n.write(toFile.toString());
+						n.close();
+					}
+					catch(IOException e)
+					{
+						System.out.println(e); //creare eccezioni
+					}
+			
+				}
+			}, 0, 3, TimeUnit.HOURS);
+			
+			return "File salvato in " + file;
+}
+			
 		
 		
 		

@@ -1,8 +1,5 @@
 package univpm.OpenWeather.Utils;
 
-//import java.sql.Date;
-import java.text.SimpleDateFormat;
-
 import org.json.simple.JSONObject;
 
 import univpm.OpenWeather.Model.City;
