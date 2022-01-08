@@ -42,17 +42,20 @@ public class OpenWeatherController {
 		Weather meteo=new Weather();
 		service.getCity(name, meteo);
 		service.getWeather(name, meteo);
-		return new ResponseEntity<>(service.printInfo(meteo), HttpStatus.OK);
+		return new ResponseEntity<>(service.printInfo(meteo,true), HttpStatus.OK);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@RequestMapping("/forecast")
 	public ResponseEntity<Vector<Weather>> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
 		
 		Vector<Weather> forecast=new Vector<Weather>();
 		forecast=service.getForecast(forecast, name);
-		service.printInfoCity(forecast.firstElement());
+		JSONObject all=new JSONObject();
+		
+		
 		for(Weather w:forecast) {
-			service.printInfoWeather(w);
+			all.put("day",service.printInfo(w,false));
 		}
 		return new ResponseEntity<>(forecast, HttpStatus.OK);
 	}

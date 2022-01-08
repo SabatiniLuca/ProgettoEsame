@@ -136,27 +136,48 @@ import univpm.OpenWeather.Utils.Utils;
 			
 			JSONObject object = getInfo(u);//ottiene il JSONObject con tutte le previsioni
 			
+			City city=new City();
+			JSONObject cityobj=(JSONObject) object.get("city");
+			s.getInfoCity(cityobj, city);//valorizza city con i valori che sono dentro l'oggetto city di object
+			
 			JSONArray list=(JSONArray) object.get("list");//seleziono l'array contenente le informazioni del meteo
 			Iterator<JSONObject> i=list.iterator();//creo un iteratore
+			
+			
 			while(i.hasNext()) {
-				
+				long day0=0,day;
+				Vector<Weather> dayForecast=new Vector<Weather>();
+				do {
 				Weather meteo=new Weather();//crea un oggetto Weather
+				meteo.setCity(city);
+				meteo.setCoordinates(city.getCoordinates());
 				s.getDailyWeather(i.next(), meteo);//prende le informazioni relative al giorno iterato da i dentro il JSONArray list
-				//meteo.setCity(city);//setta le informazioni della citta
-				//meteo.setCoordinates(city.getCoordinates());
-				fullForecast.add(meteo);
+				day=meteo.getDate();
+				
+				dayForecast.add(meteo);
+				
+				}while(day0!=0 && (day-day0)<86400);
+				fullForecast.add(dayForecast.elementAt(0));
 			}
 			
 			
 			return fullForecast;
 		}
 		
+		/**
+		 * questo metodo stampa tutte le informazioni se 
+		 * @param all è true
+		 * in caso contrario stampa solo le informazioni del meteo
+		 * @author lucas
+		 */
 		@SuppressWarnings("unchecked")// se lo tolgo si riempe di warnings perchè dice di definire il tipo di mappa
 		@Override
-		public JSONObject printInfo(Weather meteo) {
+		public JSONObject printInfo(Weather meteo, boolean all) {
 			Utils u=new Utils();
+			JSONObject allInfo=new JSONObject();
 			
 			JSONObject cityInfo=new JSONObject();
+			JSONObject weatherInfo=new JSONObject();
 			
 			JSONObject coordObj=new JSONObject();
 			coordObj.put("lon",meteo.getCoordinates().getLongitude());
@@ -171,62 +192,30 @@ import univpm.OpenWeather.Utils.Utils;
 			JSONObject weather=new JSONObject();
 			weather.put("Weather", meteo.getMain());
 			weather.put("Specific", meteo.getDescription());
-			cityInfo.put("Status", weather);
+			weatherInfo.put("Status", weather);
 			
 			JSONObject temp=new JSONObject();
 			temp.put("Minimum", (u.tempConverter(meteo.getTemp_min())+" °C"));
 			temp.put("Current", (u.tempConverter(meteo.getTemp())+" °C"));
 			temp.put("Maximum", (u.tempConverter(meteo.getTemp_max())+" °C"));
-			cityInfo.put("Temperatures", temp);
+			weatherInfo.put("Temperatures", temp);
 			
-			cityInfo.put("Pressure", meteo.getPressure());
+			weatherInfo.put("Pressure", meteo.getPressure());
 			
-			cityInfo.put("dt", u.dateConverter(meteo.getDate()));
-			return cityInfo;
+			weatherInfo.put("date", u.dateConverter(meteo.getDate()));
+			
+			allInfo.put("City", cityInfo);
+			allInfo.put("Forecasts", weatherInfo);
+			
+			if(all) {
+				return allInfo;
+			}else {
+				return weatherInfo;
+			}
+			
 		}
 
 		
-		@SuppressWarnings("unchecked")
-		public JSONObject printInfoCity(City city) {
-			Utils u=new Utils();
-			
-			JSONObject cityInfo=new JSONObject();
-			
-			JSONObject coordObj=new JSONObject();
-			coordObj.put("lon",city.getCoordinates().getLongitude());
-			coordObj.put("lat", city.getCoordinates().getLatitude());
-			cityInfo.put("Coordinates", city.getCoordinates());
-			
-			JSONObject info=new JSONObject();
-			info.put("Name", city.getCityName());
-			info.put("Id", city.getId());
-			cityInfo.put("info", info);
-			return cityInfo;
-		}
-		
-		@SuppressWarnings("unchecked")
-		public JSONObject printInfoWeather(Weather meteo) {
-			Utils u=new Utils();
-			
-			JSONObject cityWeather=new JSONObject();
-			
-			JSONObject weather=new JSONObject();
-			weather.put("Weather", meteo.getMain());
-			weather.put("Specific", meteo.getDescription());
-			
-			
-			JSONObject temp=new JSONObject();
-			temp.put("Minimum", (u.tempConverter(meteo.getTemp_min())+" °C"));
-			temp.put("Current", (u.tempConverter(meteo.getTemp())+" °C"));
-			temp.put("Maximum", (u.tempConverter(meteo.getTemp_max())+" °C"));
-			cityWeather.put("Temperatures", temp);
-			
-			cityWeather.put("Pressure", meteo.getPressure());
-			
-			cityWeather.put("dt", u.dateConverter(meteo.getDate()));
-			
-			return cityWeather;
-		}
 		
 		
 		/**

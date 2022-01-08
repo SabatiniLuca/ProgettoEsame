@@ -2,6 +2,9 @@ package univpm.OpenWeather.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Vector;
+
+import univpm.OpenWeather.Model.Weather;
 
 public class Utils {
 	/**
@@ -11,6 +14,15 @@ public class Utils {
 	 */
 
 	public Utils() {}
+	
+	public Vector<Weather> selectDay(){
+		
+		return null;
+		
+	}
+	
+	
+	
 	
 	/**
 	 * Questo metodo converte la data da epoch time ad un formato più leggibile
