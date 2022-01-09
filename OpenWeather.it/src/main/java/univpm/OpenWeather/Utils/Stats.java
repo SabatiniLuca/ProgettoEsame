@@ -12,10 +12,14 @@ public class Stats implements StatsInt{
 	WeatherImpl service = new WeatherImpl();
 	
 	public Weather getDailyWeather(JSONObject jobj, Weather meteo) {
+		getFromCall p=new getFromCall();
 		
-		//System.out.println(jobj);
+		meteo.setDate(p.getLong(p.getDate(jobj),"dt"));
+		meteo.setTemp(p.getDouble(p.getTemp(jobj, false), null));
+		/*
 		long date=(long) jobj.get("dt");//valorizza la data
 		meteo.setDate(date);
+		
 		
 		JSONObject tempObject=(JSONObject) jobj.get("main");//valorizza le temperature
 		double temp = (double) tempObject.get("temp"); 
@@ -32,7 +36,7 @@ public class Stats implements StatsInt{
 		meteo.setDescription(description);
 		String main = service.searchArray(jobj, "weather" , "main");//valorizza la descrizione del meteo
 		meteo.setMain(main);
-						
+		*/				
 		return meteo;	
 	}
 	
