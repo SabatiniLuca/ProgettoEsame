@@ -19,6 +19,8 @@ public class City extends Position {
 		this.coordinates= coordinates;
 	}
 	
+	
+	
 	public Position getCoordinates() {
 		return coordinates;
 	}

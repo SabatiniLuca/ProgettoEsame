@@ -13,7 +13,6 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -99,9 +98,9 @@ import univpm.OpenWeather.Utils.getFromCall;
 		
 		
 		@Override
-		public City getCity(String cityName, Weather meteo) throws MalformedURLException {
+		public City getCity(String cityName, City city) throws MalformedURLException {
 			// TODO Auto-generated method stub
-				
+				getFromCall p=new getFromCall();
 				ResetUrl();
 				String u = UrlBuilder(true, cityName);
 				
@@ -110,32 +109,32 @@ import univpm.OpenWeather.Utils.getFromCall;
 				JSONObject object = getInfo(u);
 				
 				//System.out.println(object);
-				Stats s = new Stats();
+				//Stats s = new Stats();
 				
-				s.getInfoCity(object, meteo);
+				//s.getInfoCity(object, city);
 					
-				return meteo;
+				city=p.createCity(object);
+				return city;
 		}
 
 		@Override
 		public Weather getWeather(String cityName, Weather meteo) throws MalformedURLException {
 			// TODO Auto-generated method stub
-			
+			getFromCall p=new getFromCall();
 			ResetUrl();
 			String u = UrlBuilder(true, cityName); //Crea URL
 			
 			JSONObject object = getInfo(u); //JSONObject contentente il JSON 
 			
+			meteo=p.createWeather(object,true);
 			
-			Stats s = new Stats();
+			
 			/**
 			 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
 			 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
 			 * @author lucas
 			 */
-			//s.getInfoCity(object, meteo);
-			s.getDailyWeather(object, meteo); //Passo il JSON per farlo elaborare
-					
+			
 			return meteo;
 		}
 		
@@ -171,6 +170,7 @@ import univpm.OpenWeather.Utils.getFromCall;
 		
 		@SuppressWarnings("unchecked")
 		public JSONObject getForecast(String cityName) throws MalformedURLException{
+			getFromCall p=new getFromCall();
 			Stats s=new Stats();
 			Utils util=new Utils();
 			HashMap<String,HashMap<String,JSONObject>> forecast= new HashMap<String,HashMap<String,JSONObject>>();
@@ -188,7 +188,7 @@ import univpm.OpenWeather.Utils.getFromCall;
 			Iterator<JSONObject> i=list.iterator();//creo un iteratore
 			
 			Integer contatore=0;
-			
+			WeatherImpl service=new WeatherImpl();
 			while(i.hasNext()) {
 				Date previous=null , next=null;
 				HashMap<String,JSONObject> day=new HashMap<String,JSONObject>();
@@ -199,11 +199,12 @@ import univpm.OpenWeather.Utils.getFromCall;
 						previous=util.toDate((long) day.get(c).get("date"));
 						
 					}
-					
-					
-					Weather meteo=new Weather();
-					s.getDailyWeather(i.next(), meteo);//crea un oggetto Weather
-					day.put("Weather", printInfo(s.getDailyWeather(i.next(), meteo),false) );//prende le informazioni relative al giorno iterato da i dentro il JSONArray list
+					//System.out.println(i.next());
+					JSONObject temp=i.next();
+					Weather meteo=p.createWeather(temp,false);
+					//meteo=p.createWeather(i.next());
+					//getWeather(i.next(),meteo);//crea un oggetto Weather
+					day.put("Weather", printInfo(meteo,false) );//prende le informazioni relative al giorno iterato da i dentro il JSONArray list
 					//meteo.setCity(city);
 					next=util.toDate(meteo.getDate());
 					
@@ -212,27 +213,10 @@ import univpm.OpenWeather.Utils.getFromCall;
 				
 				forecast.put("day" + contatore, day);
 				contatore++;
-				
 			}
 			
-			City city=new City();
-			JSONObject cityobj=(JSONObject) object.get("city");
-			JSONObject print=new JSONObject();
-			
-			String name=(String) cityobj.get("name");
-			long id=(long) cityobj.get("id");
-			print.put("name", name);
-			print.put("id", id);
-			
-			JSONObject coordObj=(JSONObject) cityobj.get("coord");//valorizza lon e lat
-			double lon= (double) coordObj.get("lon");
-			double lat= (double) coordObj.get("lat");
-			print.put("lon", lon);
-			print.put("lat", lat);
-			
-			
-			
-			toPrint.put("City", print);
+			//City city=p.createCity(object);
+			//toPrint.put("City", city);
 			toPrint.putAll(forecast);
 			
 			//System.out.println(toPrint);
@@ -259,15 +243,18 @@ import univpm.OpenWeather.Utils.getFromCall;
 			JSONObject weatherInfo=new JSONObject();
 			
 			if(all) {
-				JSONObject coordObj=new JSONObject();
-				coordObj.put("lon",meteo.getCoordinates().getLongitude());
-				coordObj.put("lat", meteo.getCoordinates().getLatitude());
-				cityInfo.put("Coordinates", meteo.getCoordinates());
+				//JSONObject coordObj=new JSONObject();
+				//coordObj.put("lon",meteo.getLongitude());
+				//coordObj.put("lat", meteo.getLatitude());
 				
-				JSONObject info=new JSONObject();
-				info.put("Name", meteo.getCityName());
-				info.put("Id", meteo.getId());
-				cityInfo.put("info", info);
+				cityInfo.put("Coordinates", meteo.getCity().getCoordinates());
+				// System.out.println("lon="+meteo.getLongitude());
+				//JSONObject info=new JSONObject();
+				//info.put("Name", meteo.getCityName());
+				//info.put("Id", meteo.getId());
+				cityInfo.put("Name", meteo.getCity().getCityName());
+				cityInfo.put("Id", meteo.getCity().getId());
+				
 				
 				
 			}
@@ -321,7 +308,7 @@ import univpm.OpenWeather.Utils.getFromCall;
 					JSONObject toFile = new JSONObject();
 					Weather meteo = new Weather();
 					try {
-						meteo = (Weather) getCity(name, weather);
+						//meteo = (Weather) getCity(name, weather);
 						meteo = getWeather(name, weather);
 						System.out.println("meteo " +meteo);
 					} catch (MalformedURLException e1) {

@@ -1,5 +1,7 @@
 package univpm.OpenWeather.Model;
 
+import univpm.OpenWeather.Utils.Stats;
+
 /**
  * Classe contenente le informazioni sul meteo 
  * e un oggetto di City per prendere le informazioni sulla città e sulla posizione
@@ -16,22 +18,34 @@ public class Weather extends City {
 	private double temp;
 	private double temp_min;
 	private double temp_max;
-	private double pressure; 
+	private long pressure; 
 	private long date;
 	private String main;
 	private City city;
-	
+	Stats s;
 
 	
 	//Constructors
-	public Weather(double temp, String description, double temp_min, double temp_max, double pressure, long date, City city) {
+	public Weather(double temp, String description, double temp_min, double temp_max,long pressure, long date, String main,City city) {
 		this.temp=temp;
 		this.description = description;
 		this.temp_min = temp_min;
+		this.main=main;
 		this.temp_max = temp_max;
 		this.pressure = pressure;
 		this.date = date;
 		this.city = city;
+	}
+	
+	public Weather(double temp, String description, double temp_min, double temp_max,long pressure, long date, String main) {
+		this.temp=temp;
+		this.description = description;
+		this.temp_min = temp_min;
+		this.main=main;
+		this.temp_max = temp_max;
+		this.pressure = pressure;
+		this.date = date;
+		
 	}
 	
 
@@ -39,6 +53,8 @@ public class Weather extends City {
 		// TODO Auto-generated constructor stub
 		super(id, name, coordinates);	
 		}
+	
+	
 
 	public Weather() {
 		// TODO Auto-generated constructor stub
@@ -81,11 +97,11 @@ public class Weather extends City {
 		this.temp_max = temp_max;
 	}
 
-	public double getPressure() {
+	public long getPressure() {
 		return pressure;
 	}
 
-	public void setPressure(double pressure) {
+	public void setPressure(long pressure) {
 		this.pressure = pressure;
 	}
 

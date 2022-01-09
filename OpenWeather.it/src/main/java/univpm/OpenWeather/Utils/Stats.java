@@ -11,11 +11,19 @@ public class Stats implements StatsInt{
 	
 	WeatherImpl service = new WeatherImpl();
 	
-	public Weather getDailyWeather(JSONObject jobj, Weather meteo) {
+	public Weather getDailyWeather(JSONObject jobj , Weather meteo) {
 		getFromCall p=new getFromCall();
 		
+		
 		meteo.setDate(p.getLong(p.getDate(jobj),"dt"));
-		meteo.setTemp(p.getDouble(p.getTemp(jobj, false), null));
+		meteo.setTemp(p.getDouble(p.getMain(jobj, true), "temp"));
+		meteo.setTemp_min(p.getDouble(p.getMain(jobj, true), "temp_max"));
+		meteo.setTemp_max(p.getDouble(p.getMain(jobj, true), "temp_min"));
+		//meteo.setPressure(p.getDouble(p.getMain(jobj,true), "pressure"));
+		meteo.setDescription(p.getString(p.getCity(jobj), "description"));
+		meteo.setMain(p.getString(p.getCity(jobj), "main"));
+		
+		
 		/*
 		long date=(long) jobj.get("dt");//valorizza la data
 		meteo.setDate(date);
@@ -42,8 +50,9 @@ public class Stats implements StatsInt{
 	
 	
 	public City getInfoCity(JSONObject jobj, City city) {
+		getFromCall p=new getFromCall();
 		
-		//System.out.println(jobj);
+		
 		Position coord = new Position();
 		JSONObject coordObj=(JSONObject) jobj.get("coord");//valorizza lon e lat
 		double lon= (double) coordObj.get("lon");

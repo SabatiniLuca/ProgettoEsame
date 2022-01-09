@@ -16,7 +16,7 @@ public interface WeatherInt {
 	public String toString();
 	public String UrlBuilder(boolean current, String cityName);
 	public JSONObject printInfo(Weather city, boolean all);
-	public City getCity(String cityName, Weather meteo) throws MalformedURLException;
+	public City getCity(String cityName, City city) throws MalformedURLException;
 	public String saveHourlyWeather(String name, Weather weather);
 
 }
