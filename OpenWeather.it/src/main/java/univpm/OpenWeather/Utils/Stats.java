@@ -18,7 +18,7 @@ public class Stats implements StatsInt{
 		meteo.setDate(date);
 		
 		JSONObject tempObject=(JSONObject) jobj.get("main");//valorizza le temperature
-		double temp =(double) tempObject.get("temp"); 
+		double temp = (double) tempObject.get("temp"); 
 		double temp_max= (double) tempObject.get("temp_max");
 		double temp_min= (double) tempObject.get("temp_min");
 		meteo.setTemp(temp);

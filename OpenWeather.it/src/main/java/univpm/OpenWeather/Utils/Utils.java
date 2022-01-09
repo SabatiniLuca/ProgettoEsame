@@ -2,6 +2,7 @@ package univpm.OpenWeather.Utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Vector;
 
 import univpm.OpenWeather.Model.Weather;
@@ -32,9 +33,17 @@ public class Utils {
 	 */
 	public String dateConverter(long epochDate) {
 		String date;
-		DateFormat format= new SimpleDateFormat("dd/MM/yyyy");//da sistemare l'anno perchè stampa 1970
+		DateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//da sistemare l'anno perchè stampa 1970
 		date=format.format(epochDate);
 		return date;
+	}
+	
+	public Date toDate(long epoch) {
+		String date;
+		DateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//da sistemare l'anno perchè stampa 1970
+		date=format.format(epoch);
+		Date jDate = new Date(Long.parseLong(date) * 1000);
+		return jDate;
 	}
 	
 	

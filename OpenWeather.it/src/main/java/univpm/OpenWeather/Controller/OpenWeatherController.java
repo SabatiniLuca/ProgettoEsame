@@ -2,6 +2,7 @@ package univpm.OpenWeather.Controller;
 
 
 import java.net.MalformedURLException;
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.json.simple.JSONObject;
@@ -45,19 +46,9 @@ public class OpenWeatherController {
 		return new ResponseEntity<>(service.printInfo(meteo, true), HttpStatus.OK);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping("/forecast")
-	public ResponseEntity<Vector<Weather>> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
-		
-		Vector<Weather> forecast=new Vector<Weather>();
-		forecast=service.getForecast(forecast, name);
-		JSONObject all=new JSONObject();
-		
-		
-		for(Weather w:forecast) {
-			all.put("day",service.printInfo(w, true));
-		}
-		return new ResponseEntity<>(forecast, HttpStatus.OK);
+	public ResponseEntity<JSONObject> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
+		return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
 	}
 	
 	@GetMapping("/saveEveryHour")

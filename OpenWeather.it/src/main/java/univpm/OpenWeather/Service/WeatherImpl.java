@@ -10,6 +10,8 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 
 import java.net.URL;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 import java.util.concurrent.Executors;
@@ -18,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -135,9 +138,13 @@ import univpm.OpenWeather.Utils.Utils;
 			return meteo;
 		}
 		
-		public Vector<Weather> getForecast(Vector<Weather> forecast,String cityName) throws MalformedURLException{
+		
+		
+		@SuppressWarnings("unchecked")
+		public JSONObject getForecast(String cityName) throws MalformedURLException{
 			Stats s=new Stats();
-			Vector<Weather> fullForecast=new Vector<Weather>();
+			Utils util=new Utils();
+			HashMap<String,Vector<Weather>> forecast= new HashMap<String,Vector<Weather>>();
 			
 			ResetUrl();
 			String u = UrlBuilder(false, cityName);
@@ -145,32 +152,49 @@ import univpm.OpenWeather.Utils.Utils;
 			JSONObject object = getInfo(u);//ottiene il JSONObject con tutte le previsioni
 			
 			City city=new City();
-			JSONObject cityobj=(JSONObject) object.get("city");
-			s.getInfoCity(cityobj, city);//valorizza city con i valori che sono dentro l'oggetto city di object
+			try {
+				JSONObject cityobj=(JSONObject) object.get("city");
+				s.getInfoCity(cityobj, city);//valorizza city con i valori che sono dentro l'oggetto city di object
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
 			
 			JSONArray list=(JSONArray) object.get("list");//seleziono l'array contenente le informazioni del meteo
 			Iterator<JSONObject> i=list.iterator();//creo un iteratore
 			
-			
+			Integer contatore=0;
+			Date previous=null , next=null;
 			while(i.hasNext()) {
-				long day0=0,day;
+				
 				Vector<Weather> dayForecast=new Vector<Weather>();
 				do {
-				Weather meteo=new Weather();//crea un oggetto Weather
-				meteo.setCity(city);
-				meteo.setCoordinates(city.getCoordinates());
-				s.getDailyWeather(i.next(), meteo);//prende le informazioni relative al giorno iterato da i dentro il JSONArray list
-				day=meteo.getDate();
+					if(dayForecast.size()>1) {
+						previous=util.toDate(dayForecast.lastElement().getDate());
+					}
+					
+					Weather meteo=new Weather();//crea un oggetto Weather
+					s.getDailyWeather(i.next(), meteo);//prende le informazioni relative al giorno iterato da i dentro il JSONArray list
+					meteo.setCity(city);
+					next=util.toDate(meteo.getDate());
+					
+					dayForecast.add(meteo);
+				}while(previous!=null && DateUtils.isSameDay(previous, next));
 				
-				dayForecast.add(meteo);
 				
-				}while(day0!=0 && (day-day0)<86400);
-				fullForecast.add(dayForecast.elementAt(0));
+				forecast.put("day" + contatore, dayForecast);
+				contatore++;
+				
 			}
 			
+			JSONObject toPrint=new JSONObject();
+			toPrint.putAll(forecast);
 			
-			return fullForecast;
+			return toPrint;
 		}
+		
+		
+		
 		
 		/**
 		 * questo metodo stampa tutte le informazioni se 

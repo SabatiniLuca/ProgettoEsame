@@ -38,7 +38,7 @@ public class City extends Position {
 	
 	public City() {
 		// TODO Auto-generated constructor stub
-		super();
+		//super();
 	}
 
 
