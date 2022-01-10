@@ -12,9 +12,9 @@ import univpm.OpenWeather.Model.Weather;
  * istanze delle rispettive classi. 
  * @author lucas
  */
-public class getFromCall {
+public class GetFromCall {
 
-	public getFromCall() {
+	public GetFromCall() {
 		// TODO Auto-generated constructor stub
 	}
 	

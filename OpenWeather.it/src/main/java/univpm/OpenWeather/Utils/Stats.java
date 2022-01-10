@@ -12,7 +12,7 @@ public class Stats implements StatsInt{
 	WeatherImpl service = new WeatherImpl();
 	
 	public Weather getDailyWeather(JSONObject jobj , Weather meteo) {
-		getFromCall p=new getFromCall();
+		GetFromCall p=new GetFromCall();
 		
 		
 		meteo.setDate(p.getLong(p.getDate(jobj),"dt"));

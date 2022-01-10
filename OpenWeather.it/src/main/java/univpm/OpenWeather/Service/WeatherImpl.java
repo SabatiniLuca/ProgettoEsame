@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
-import univpm.OpenWeather.Utils.getFromCall;
+import univpm.OpenWeather.Utils.GetFromCall;
 
 
 	@Service
@@ -95,7 +95,7 @@ import univpm.OpenWeather.Utils.getFromCall;
 		@Override
 		public Weather getWeather(String cityName, Weather meteo) throws MalformedURLException {
 			// TODO Auto-generated method stub
-			getFromCall p=new getFromCall();
+			GetFromCall p=new GetFromCall();
 			ResetUrl();
 			String u = UrlBuilder(true, cityName); //Crea URL
 			
@@ -119,7 +119,7 @@ import univpm.OpenWeather.Utils.getFromCall;
 		
 		@SuppressWarnings("unchecked")
 		public JSONObject getForecast(String cityName) throws MalformedURLException{
-			getFromCall p=new getFromCall();
+			GetFromCall p=new GetFromCall();
 			
 			new HashMap<String,HashMap<String,JSONObject>>();
 			
