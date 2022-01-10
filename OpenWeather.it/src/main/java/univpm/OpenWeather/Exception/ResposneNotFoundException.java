@@ -1,24 +1,26 @@
 package univpm.OpenWeather.Exception;
+
+import java.io.IOException;
 /**
- * Exception che si genera se un oggetto 
- * (Credo possiamo utilizzarla anche per i JSONObject) è Null
+ * Exception che viene chiamata quando
+ * non vinene trovata una risposta alla chiamata effettuata
  * @author Francesco
  *
  */
-public class NullObjectException extends Exception{
+public class ResposneNotFoundException extends IOException{
 	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String mes="Object is null";
+	private String mes="Response not found";
 	/**
 	 * Constructor
 	 * @param mes
 	 */
-	public NullObjectException(String mes) {
+	public ResposneNotFoundException(String mes) {
 		super();
-		this.mes = mes;
+		this.mes = mes;	
 	}
 	
 	/**
@@ -28,4 +30,5 @@ public class NullObjectException extends Exception{
 	public String getMes() {
 		return mes;
 	}
+
 }

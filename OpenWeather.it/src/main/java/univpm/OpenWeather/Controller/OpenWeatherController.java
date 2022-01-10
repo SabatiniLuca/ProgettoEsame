@@ -37,7 +37,7 @@ public class OpenWeatherController {
 	 */
 	
 	@RequestMapping("/current")
-	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
+	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
 		Weather meteo=new Weather();
 		//service.getCity(name, meteo);
 		//service.getWeather(name, meteo);
@@ -45,7 +45,7 @@ public class OpenWeatherController {
 	}
 	
 	@RequestMapping("/forecast")
-	public ResponseEntity<JSONObject> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
+	public ResponseEntity<JSONObject> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
 		return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
 	}
 	
