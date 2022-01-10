@@ -2,6 +2,7 @@ package univpm.OpenWeather.Controller;
 
 
 import java.net.MalformedURLException;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -37,14 +38,11 @@ public class OpenWeatherController {
 	
 	@RequestMapping("/current")
 	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{
-		
 		Weather meteo=new Weather();
 		//service.getCity(name, meteo);
 		//service.getWeather(name, meteo);
-		return new ResponseEntity<>(service.printInfo(service.getWeather(name, meteo), false), HttpStatus.OK);
+		return new ResponseEntity<>(service.printInfo(service.getWeather(name, meteo), true), HttpStatus.OK);
 	}
-	
-	
 	
 	@RequestMapping("/forecast")
 	public ResponseEntity<JSONObject> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException{

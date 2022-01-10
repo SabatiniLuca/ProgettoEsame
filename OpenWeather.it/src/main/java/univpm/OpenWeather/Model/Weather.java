@@ -15,7 +15,7 @@ public class Weather extends City {
 	 * ho cambiato description (prima era feels like)
 	 */
 	private String description; //Descrizione del tempo (es. "Soleggiato")
-	private double temp;
+	private Double temp;
 	private double temp_min;
 	private double temp_max;
 	private long pressure; 
@@ -26,7 +26,7 @@ public class Weather extends City {
 
 	
 	//Constructors
-	public Weather(double temp, String description, double temp_min, double temp_max,long pressure, long date, String main,City city) {
+	public Weather(Double temp, String description, double temp_min, double temp_max,long pressure, long date, String main,City city) {
 		this.temp=temp;
 		this.description = description;
 		this.temp_min = temp_min;
@@ -37,7 +37,7 @@ public class Weather extends City {
 		this.city = city;
 	}
 	
-	public Weather(double temp, String description, double temp_min, double temp_max,long pressure, long date, String main) {
+	public Weather(Double temp, String description, double temp_min, double temp_max,long pressure, long date, String main) {
 		this.temp=temp;
 		this.description = description;
 		this.temp_min = temp_min;
@@ -68,7 +68,7 @@ public class Weather extends City {
 		return temp;
 	}
 
-	public void setTemp(double temp) {
+	public void setTemp(Double temp) {
 		this.temp = temp;
 	}
 

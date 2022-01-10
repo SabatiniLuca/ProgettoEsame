@@ -6,8 +6,12 @@ import org.json.simple.JSONObject;
 import univpm.OpenWeather.Model.City;
 import univpm.OpenWeather.Model.Position;
 import univpm.OpenWeather.Model.Weather;
-import univpm.OpenWeather.Service.WeatherImpl;
 
+/**
+ * Questa classe usa diversi metodi per prendere le informazioni da un JSONObject e crea delle 
+ * istanze delle rispettive classi. 
+ * @author lucas
+ */
 public class getFromCall {
 
 	public getFromCall() {
@@ -42,6 +46,12 @@ public class getFromCall {
 		return ret;
 	}
 	
+	/**
+	 * crea una posizione da un JSONobject
+	 * @param obj json object da cui prendere le informazioni di latitudine e longitudine
+	 * @return un oggetto della classe Position
+	 * @author lucas
+	 */
 	public Position createPosition(JSONObject obj) {
 		JSONObject p=getCoord(obj);
 		double lat=(double) p.get("lat");
@@ -50,6 +60,12 @@ public class getFromCall {
 		return pos;
 	}
 	
+	/**
+	 * Questo metodo consente di creare una citta da un Json object
+	 * @param obj Json object da elaborare
+	 * @return ritorna un oggetto della classe City
+	 * @author lucas
+	 */
 	public City createCity(JSONObject obj) {
 		JSONObject c=getCity(obj);
 		System.out.println(c);
@@ -61,23 +77,32 @@ public class getFromCall {
 		return city;
 	}
 	
+	/**
+	 * questo metodo consente di creare un oggetto della classe Weather da un json object.
+	 * inoltre valorizza solo il meteo oppure anche gli attributi della citta in base al parametro
+	 * booleano poichè in alcuni casi gli attributi di citta rimangono gli stessi e non c'è bisogno di ricrearli.
+	 * 
+	 * Grazia al concatenamento con createCity  e createPosition con questa classe si possono valorizzare anche gli attributi City e Position.
+	 * 
+	 * @param obj Json object da elaborare
+	 * @param current seleziona il tipo di operazione da fare
+	 * @return un oggetto della classe Weather valorizzato con il json object passatogli
+	 */
 	public Weather createWeather(JSONObject obj,boolean current) {
-		
-			JSONObject t=getMain(obj,true);
+			JSONObject t=(JSONObject) obj.get("main");
+			//JSONObject t=getMain(obj,current);
+			
 			JSONObject w=getWeather(obj);
+			
+			double temp=(double) t.get("temp");
 			//System.out.println(t);
-			//System.out.println(w);
-			double temp=(double) t.get("t");
+			double t_min=(double) t.get("temp_min");
+			double t_max=(double) t.get("temp_max");
+			long pressure=(long) t.get("pressure");
 			String description= (String) w.get("description");
 			String main= (String) w.get("main");
-			double t_min=(double) t.get("tMin");
-			double t_max=(double) t.get("tMax");
 			long date=(long) obj.get("dt");
-			long pressure=(long) t.get("pressure");
 			
-			
-			
-			//meteo.setCity(city);
 		if(current) {	
 			City city=new City();
 			city=createCity(obj);
@@ -89,7 +114,38 @@ public class getFromCall {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	public JSONObject getMain(JSONObject obj,boolean current) {
+		JSONObject m=(JSONObject) obj.get("main");
+		JSONObject ret= new JSONObject();
+		
+		double temp = (double) m.get("temp"); 
+		double temp_max= (double) m.get("temp_max");
+		double temp_min= (double) m.get("temp_min");
+		if(current) {
+			
+			ret.put("t", temp);
+			ret.put("tMax", temp_max);
+			ret.put("tMin", temp_min);
+		}else {
+			//double temp = (double) m.get("temp");
+			ret.put("temp", temp);
+		}
+		
+		long pressure=(long) m.get("pressure");
+		
+		ret.put("pressure", pressure);
+		
+		
+		return ret;		
+	}
 	
+	/**
+	 * crea un JSONObject le informazioni di citta
+	 * @param obj
+	 * @return json object
+	 * @author lucas
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getCity(JSONObject obj) {
 		JSONObject ret=new JSONObject();
@@ -101,7 +157,12 @@ public class getFromCall {
 		return ret;
 		
 	}
-	
+	/**
+	 * crea un jsonobject con informazioni delle coordinate
+	 * @param obj
+	 * @return json object
+	 * @author lucas
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getCoord(JSONObject obj) {
 		JSONObject coordObj=(JSONObject) obj.get("coord");//valorizza lon e lat
@@ -112,14 +173,19 @@ public class getFromCall {
 		
 		return coordObj;
 	}
-	
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 * @author lucas
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getWeather(JSONObject obj) {
-		WeatherImpl service=new WeatherImpl();
+		Utils u=new Utils();
 		JSONArray ar=(JSONArray) obj.get("weather");
 		JSONObject weather=(JSONObject) ar.get(0);
-		String description = service.searchArray(obj, "weather" , "description");
-		String main = service.searchArray(obj, "weather" , "main");
+		String description = u.searchArray(obj, "weather" , "description");
+		String main = u.searchArray(obj, "weather" , "main");
 		weather.put("Main", main);
 		weather.put("Description", description);
 		
@@ -127,6 +193,8 @@ public class getFromCall {
 		
 	}
 	
+	
+	/*
 	public Weather setWeather(JSONObject obj) {
 		WeatherImpl service=new WeatherImpl();
 		Weather meteo=new Weather();
@@ -144,38 +212,27 @@ public class getFromCall {
 		
 		return meteo;
 	}
+	*/
 	
 	
-	
-	@SuppressWarnings("unchecked")
-	public JSONObject getMain(JSONObject obj,boolean current) {
-		JSONObject m=(JSONObject) obj.get("main");
-		JSONObject ret= new JSONObject();
-		if(current) {
-			double temp = (double) m.get("temp"); 
-			double temp_max= (double) m.get("temp_max");
-			double temp_min= (double) m.get("temp_min");
-			ret.put("t", temp);
-			ret.put("tMax", temp_max);
-			ret.put("tMin", temp_min);
-		}else {
-			double temp = (double) m.get("temp");
-			ret.put("temp", temp);
-		}
-		
-		long pressure=(long) m.get("pressure");
-		
-		ret.put("pressure", pressure);
-		
-		
-		return ret;		
-	}
+	/**
+	 * 
+	 * @param obj
+	 * @param current
+	 * @return
+	 * @author lucas
+	 */
 	
 	
 	
 	
 	
 	
+	/**
+	 * 
+	 * @param obj
+	 * @return
+	 */
 	public JSONObject getDate(JSONObject obj) {
 		return (JSONObject) obj.get("dt");
 	}

@@ -3,7 +3,11 @@ package univpm.OpenWeather.Utils;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Vector;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 import univpm.OpenWeather.Model.Weather;
 
@@ -23,7 +27,27 @@ public class Utils {
 	}
 	
 	
+	/**
+	 *Metodo che usa getCity per prendere previsioni 
+	 *meteo della città richiesta e
+	 *restituisce il JSONArray
+	 * 
+	 *@return restituisce il JSONArray con la città e le relative informazioni
+	 * 
+	 */
 	
+	public String searchArray(JSONObject obj,String arrayName, String valueName) {
+		JSONArray array=(JSONArray) obj.get(arrayName);
+		Iterator<?> i=array.iterator();
+		String value="";
+		
+		while (i.hasNext()) {
+			JSONObject info=(JSONObject) i.next();
+			value=(String) info.get(valueName);
+		}
+		return value;
+		
+	}
 	
 	/**
 	 * Questo metodo converte la data da epoch time ad un formato più leggibile
