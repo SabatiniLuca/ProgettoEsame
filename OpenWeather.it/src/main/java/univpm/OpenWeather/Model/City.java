@@ -19,16 +19,6 @@ public class City extends Position {
 		this.coordinates= coordinates;
 	}
 	
-	
-	
-	public Position getCoordinates() {
-		return coordinates;
-	}
-
-	public void setCoordinates(Position coordinates) {
-		this.coordinates = coordinates;
-	}
-
 	public City(long id, String name) {
 		// TODO Auto-generated constructor stub
 	}
@@ -61,6 +51,15 @@ public class City extends Position {
 		this.name = name;
 	}
 	
+	
+	public Position getCoordinates() {
+		return coordinates;
+	}
+
+	public void setCoordinates(Position coordinates) {
+		this.coordinates = coordinates;
+	}
+
 
 	@Override
 	public String toString() {

@@ -72,14 +72,15 @@ public class Weather extends City {
 		this.temp = temp;
 	}
 
+	
 	public String getDescription() {
 		return description;
 	}
 
-	
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 	
 	public double getTemp_min() {
 		return temp_min;
@@ -89,6 +90,7 @@ public class Weather extends City {
 		this.temp_min = temp_min;
 	}
 
+	
 	public double getTemp_max() {
 		return temp_max;
 	}
@@ -97,6 +99,7 @@ public class Weather extends City {
 		this.temp_max = temp_max;
 	}
 
+	
 	public long getPressure() {
 		return pressure;
 	}
@@ -104,7 +107,6 @@ public class Weather extends City {
 	public void setPressure(long pressure) {
 		this.pressure = pressure;
 	}
-
 
 	
 	public long getDate() {
@@ -115,6 +117,7 @@ public class Weather extends City {
 		this.date = date;
 	}
 	
+	
 	public String getMain() {
 		return main;
 	}
@@ -124,13 +127,6 @@ public class Weather extends City {
 	}
 	
 	
-	@Override
-	public String toString() {
-		return "Weather [feels_like=" + description + ", temp_min=" + temp_min + ", temp_max="
-				+ temp_max + ", pressure=" + pressure + ", date=" + date + "]";
-	}
-
-
 	public City getCity() {
 		return city;
 	}
@@ -140,6 +136,16 @@ public class Weather extends City {
 		this.city = city;
 	}
 
+	
+	
+	@Override
+	public String toString() {
+		return "Weather [feels_like=" + description + ", temp_min=" + temp_min + ", temp_max="
+				+ temp_max + ", pressure=" + pressure + ", date=" + date + "]";
+	}
+
+
+	
 	
 	
 	

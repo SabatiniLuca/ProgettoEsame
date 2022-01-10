@@ -25,7 +25,6 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 
 import univpm.OpenWeather.Model.Weather;
-import univpm.OpenWeather.Utils.Stats;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.getFromCall;
 
@@ -262,10 +261,6 @@ import univpm.OpenWeather.Utils.getFromCall;
 						if (!file.exists()) {
 							file.createNewFile();
 							System.out.println("File created");
-						}
-						else {
-							file.delete();
-							System.out.println("File deleted");
 						}
 						FileWriter f = new FileWriter(file); 
 						BufferedWriter n = new BufferedWriter(f);

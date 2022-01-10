@@ -50,9 +50,8 @@ public class Stats implements StatsInt{
 	
 	
 	public City getInfoCity(JSONObject jobj, City city) {
-		getFromCall p=new getFromCall();
-		
-		
+		//getFromCall p=new getFromCall();
+				
 		Position coord = new Position();
 		JSONObject coordObj=(JSONObject) jobj.get("coord");//valorizza lon e lat
 		double lon= (double) coordObj.get("lon");
