@@ -1,7 +1,5 @@
 package univpm.OpenWeather.Service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import junit.framework.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 class WeatherImplTest extends TestCase {
 	
 	@Autowired
-	private WeatherImpl service;
+	private WeatherImpl service=new WeatherImpl();
 
 	/**
 	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#UrlBuilder(boolean, java.lang.String)}.
@@ -21,10 +19,9 @@ class WeatherImplTest extends TestCase {
 	@Test
 	void testUrlBuilder() {
 		String url=service.UrlBuilder(true,"fano");
-		String urlCorretto="api.openweathermap.org/data/2.5/weather?q=fano&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
-		//assertEquals(url, urlCorretto);
-		assert url.equals(urlCorretto);
-		//fail("Not yet implemented");
+		String urlCorretto="https://api.openweathermap.org/data/2.5/weather?q=fano&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
+		assertEquals(url, urlCorretto);
+		
 	}
 
 	/**
