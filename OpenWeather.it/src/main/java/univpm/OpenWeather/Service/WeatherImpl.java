@@ -76,7 +76,7 @@ import univpm.OpenWeather.Utils.GetFromCall;
 					}else {
 						Reader scan=new InputStreamReader(url.openStream());
 					
-						JSONParser parser = new JSONParser();
+						JSONParser parser = new JSONParser() ;
 						
 						obj = (JSONObject) parser.parse(scan);
 										

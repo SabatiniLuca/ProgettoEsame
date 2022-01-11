@@ -64,7 +64,7 @@ public class Utils {
 	
 	public Date toDate(long epoch) {
 		//String date;//2022-01-09T09:14:36.201+00:00
-		//DateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//da sistemare l'anno perchè stampa 1970
+		//DateFormat format= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		//date=format.format(epoch);
 		Date jDate = new Date(epoch * 1000);
 		return jDate;

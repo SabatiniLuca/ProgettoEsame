@@ -93,3 +93,7 @@ build/
 ### VS Code ###
 .vscode/
 >>>>>>> refs/remotes/Francesco/FrancescoUpdate
+
+
+###files da ignorare
+/risposta.json

@@ -1,5 +1,9 @@
 package univpm.OpenWeather.Service;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import junit.framework.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +16,7 @@ class WeatherImplTest extends TestCase {
 	
 	@Autowired
 	private WeatherImpl service=new WeatherImpl();
-
+	private String url ="https://api.openweathermap.org/data/2.5/";
 	/**
 	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#UrlBuilder(boolean, java.lang.String)}.
 	 */
@@ -26,10 +30,15 @@ class WeatherImplTest extends TestCase {
 
 	/**
 	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#getInfo(java.lang.String)}.
+	 * @throws IOException 
 	 */
 	@Test
-	void testGetInfo() {
-		fail("Not yet implemented");
+	void testGetInfo() throws IOException {
+		//String url="https://api.openweathermap.org/data/2.5/weather?q=fano&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
+		//obj=service.getInfo(url);
+		
+		
+		//assertEquals(obj , line);
 	}
 
 	/**
@@ -53,7 +62,9 @@ class WeatherImplTest extends TestCase {
 	 */
 	@Test
 	void testResetUrl() {
-		fail("Not yet implemented");
+		service.ResetUrl();
+		String url="https://api.openweathermap.org/data/2.5/";
+		assertEquals(this.url,url);
 	}
 
 	public void tearDown() {}

@@ -90,14 +90,15 @@ public class GetFromCall {
 	 */
 	public Weather createWeather(JSONObject obj,boolean current) {
 			JSONObject t=(JSONObject) obj.get("main");
+			
 			//JSONObject t=getMain(obj,current);
 			
 			JSONObject w=getWeather(obj);
 			
-			double temp=(double) t.get("temp");
-			//System.out.println(t);
-			double t_min=(double) t.get("temp_min");
-			double t_max=(double) t.get("temp_max");
+			double temp= ifThenRound(t.get("temp"));;
+			
+			double t_min=ifThenRound(t.get("temp_min"));
+			double t_max=ifThenRound(t.get("temp_max"));
 			long pressure=(long) t.get("pressure");
 			String description= (String) w.get("description");
 			String main= (String) w.get("main");
@@ -138,6 +139,32 @@ public class GetFromCall {
 		
 		
 		return ret;		
+	}
+	
+	/**
+	 * Questo metodo serve perchè alcune temperature avevano valori diversi da double che è
+	 * quello usato nella classe Weather per la temperatura quindi serviva una conversione ma 
+	 * un semplice cast non ha funzionato.
+	 * @param number oggetto json convertito in Object
+	 * questo parametro viene convertito in Long Double o Integer in base al tipo
+	 * @return restituisce il valore come tipo primitivo double
+	 * 
+	 * @author lucas
+	 */
+	public double ifThenRound(Object number) {
+		double ret=0;
+		//System.out.println(number);
+		if(number instanceof Double) {
+			ret=(double) number;
+		}else if(number instanceof Long) {
+			ret= ((Long) number).doubleValue();
+			
+		}else if(number instanceof Integer) {
+			ret=((Integer)number).doubleValue();
+		}
+		//System.out.println(number);
+		return ret;
+			
 	}
 	
 	/**
@@ -192,41 +219,6 @@ public class GetFromCall {
 		return weather;
 		
 	}
-	
-	
-	/*
-	public Weather setWeather(JSONObject obj) {
-		WeatherImpl service=new WeatherImpl();
-		Weather meteo=new Weather();
-		//long date=(long) obj.get("dt");
-		//meteo.setDate(date);
-		meteo.setDescription((String) obj.get("Description"));
-		meteo.setMain((String) obj.get("Main"));
-		JSONObject main=(JSONObject) obj.get("main");
-		meteo.setTemp((double)  main.get("temp")) ;
-		meteo.setPressure((long) main.get("pressure"));
-		String description = service.searchArray(obj, "weather" , "description");
-		String mainMeteo = service.searchArray(obj, "weather" , "main");
-		meteo.setDescription(description);
-		meteo.setMain(mainMeteo);
-		
-		return meteo;
-	}
-	*/
-	
-	
-	/**
-	 * 
-	 * @param obj
-	 * @param current
-	 * @return
-	 * @author lucas
-	 */
-	
-	
-	
-	
-	
 	
 	/**
 	 * 
