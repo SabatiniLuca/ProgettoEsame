@@ -1,9 +1,6 @@
 package univpm.OpenWeather.Service;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 import junit.framework.*;
 import org.springframework.beans.factory.annotation.Autowired;

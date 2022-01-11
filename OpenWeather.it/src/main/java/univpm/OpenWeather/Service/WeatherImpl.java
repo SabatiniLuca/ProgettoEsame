@@ -10,7 +10,9 @@ import java.io.Reader;
 import java.net.MalformedURLException;
 
 import java.net.URL;
-import java.util.HashMap;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -114,62 +116,36 @@ import univpm.OpenWeather.Utils.GetFromCall;
 		}
 		
 		
-		
-		
-		
 		@SuppressWarnings("unchecked")
-		public JSONObject getForecast(String cityName) throws MalformedURLException{
-			GetFromCall p=new GetFromCall();
-			
-			new HashMap<String,HashMap<String,JSONObject>>();
+		public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException {
+			GetFromCall p = new GetFromCall();
 			
 			ResetUrl();
 			String u = UrlBuilder(false, cityName);
+
+			JSONObject object = getInfo(u);// ottiene il JSONObject con tutte le previsioni
+
+			JSONArray list = (JSONArray) object.get("list");// seleziono l'array contenente le informazioni del meteo
+			Iterator<JSONObject> i = list.iterator();// creo un iteratore
+
+			JSONObject toPrint = new JSONObject();
+			JSONArray dayArray = new JSONArray();
 			
-			JSONObject object = getInfo(u);//ottiene il JSONObject con tutte le previsioni
-			
-			
-			
-			JSONArray list=(JSONArray) object.get("list");//seleziono l'array contenente le informazioni del meteo
-			Iterator<JSONObject> i=list.iterator();//creo un iteratore
-			
-			JSONArray ar=new JSONArray();
-			Integer contatore=0;
-			while(i.hasNext()) {
-				//Date previous=null , next=null;
-				//HashMap<String,JSONObject> day=new HashMap<String,JSONObject>();
-				//do {
-										
-					//System.out.println(i.next());
-					JSONObject temp=i.next();
-					Weather meteo=p.createWeather(temp,false);
-					JSONObject ob=printInfo(meteo,false);
-					ob.put("Day ", contatore);
-					ar.add(ob);
-					contatore++;
-					//day.put("Weather"+contatore, printInfo(meteo,false) );//prende le informazioni relative al giorno iterato da i dentro il JSONArray list
-					
-					
-				//}while(previous!=null && DateUtils.isSameDay(previous, next));
+			while (i.hasNext()) {
 				
-				
-				//forecast.put("day" + contatore, day);
-					
+				JSONObject temp = i.next();
+				Weather meteo = p.createWeather(temp, false);
+
+				dayArray.add(printInfo(meteo, false));
+
 			}
-			
-			
-			JSONObject toPrint=new JSONObject();
+
 			toPrint.put("City", object.get("city"));
-			toPrint.put("Forecasts", ar);
-			
-			//City city=p.createCity(object);
-			//toPrint.put("City", city);
-			//toPrint.putAll(forecast);
-			
-			//System.out.println(toPrint);
-			
+			toPrint.put("Forecasts", dayArray);
 			return toPrint;
 		}
+		
+		
 		
 		
 		
@@ -190,15 +166,21 @@ import univpm.OpenWeather.Utils.GetFromCall;
 			JSONObject weatherInfo=new JSONObject();
 			
 			if(all) {
-				cityInfo.put("Coordinates", meteo.getCity().getCoordinates());
-				cityInfo.put("Name", meteo.getCity().getCityName());
-				cityInfo.put("Id", meteo.getCity().getId());
-					
-			}
+			//info stampate se all é true
 			
+			cityInfo.put("Coordinates", meteo.getCity().getCoordinates());
+			cityInfo.put("Name", meteo.getCity().getCityName());
+			cityInfo.put("Id", meteo.getCity().getId());
+			}		
+			
+			//info stampate se all é false
+			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");//  
+            String strDate = dateFormat.format(u.toDate(meteo.getDate()));  
+			weatherInfo.put("date", strDate);
 			JSONObject weather=new JSONObject();
 			weather.put("Weather", meteo.getMain());
 			weather.put("Specific", meteo.getDescription());
+			weather.put("Pressure", meteo.getPressure() +" Pa");
 			weatherInfo.put("Status", weather);
 			
 			JSONObject temp=new JSONObject();
@@ -207,9 +189,9 @@ import univpm.OpenWeather.Utils.GetFromCall;
 			temp.put("Maximum", (u.tempConverter(meteo.getTemp_max())+" °C"));
 			weatherInfo.put("Temperatures", temp);
 			
-			weatherInfo.put("Pressure", meteo.getPressure());
 			
-			weatherInfo.put("date", u.toDate(meteo.getDate()));
+			
+			
 			
 			allInfo.put("City", cityInfo);
 			allInfo.put("Forecasts", weatherInfo);
