@@ -48,10 +48,10 @@ import univpm.OpenWeather.Utils.GetFromCall;
 			//creazione Url
 			
 			if(current==true) {//current weather
-				this.url+="weather?q="+cityName+"&appid="+this.apiKey;  
+				this.url+="weather?q="+cityName+",IT"+"&appid="+this.apiKey;  
 			}
 			else if(current==false) {//5day forecast
-				this.url+="forecast?q="+cityName+"&appid="+this.apiKey;
+				this.url+="forecast?q="+cityName+",IT"+"&appid="+this.apiKey;
 			}
 			return this.url;
 		}

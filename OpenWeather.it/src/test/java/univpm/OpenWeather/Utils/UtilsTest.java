@@ -67,21 +67,22 @@ class UtilsTest {
 	 */
 	@Test
 	void testSearchArray() throws Exception {
-		//BufferedReader b=new BufferedReader(new FileReader("risposta.json"));
-		String json="";
-		FileReader b=new FileReader("risposta.json");
-		
-		while(b!=null) {
-			json+=(b.read());
-			JSONParser parser = new JSONParser();
-			JSONObject obj=new JSONObject();
-			obj = (JSONObject) parser.parse(json);
-			System.out.println(obj);
+		String json = "";
+		Scanner in = new Scanner(new FileReader("risposta.json"));
+		while (in.hasNext()) {
+			json += (in.nextLine());
+
 		}
-		
-		//b.close();
-		
-		fail("Not working");
+		System.out.println(json);
+		JSONParser parser = new JSONParser();
+		JSONObject obj = new JSONObject();
+		obj = (JSONObject) parser.parse(json);
+		in.close();
+		String totest = u.searchArray(obj, "weather", "description");
+		String corretta = "overcast clouds";
+
+		assertEquals(totest, corretta);
+
 	}
 
 	/**
@@ -108,7 +109,7 @@ class UtilsTest {
 	@Test
 	void testTempConverter() {
 		double totest=u.tempConverter(293);
-		System.out.println(totest);
+		//System.out.println(totest);
 		double temp=19.85;
 		
 		assertEquals(totest,temp);
