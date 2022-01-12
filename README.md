@@ -5,11 +5,12 @@ Questo programma permette di visualizzare le previsioni meteo correnti e future 
 
 Inoltre si può richiedere la stampa di alcune statistiche riguardanti la temperatura e la pressione in base a tre diverse fasce temporali (oraria,giornaliera e settimanale).
 ## Utilizzo
-| Rotta   | Descrizione   |
-|---------|:-------------:|
-|`/current`| Stampa le principali condizioni meteorologiche attuali della città richiesta |
-| `/forecast` | Stampa le condizioni meteorologiche per i successivi 5 giorni ad intervalli di 3 ore |
-|     |       |
+| Tipo di risultato | Rotta   | Descrizione   |
+|-------------------|:--------:|:-------------:|
+| *JSONObject* |`/current`| Stampa le principali condizioni meteorologiche attuali della città richiesta. |
+| *JSONObject* | `/forecast` | Stampa le condizioni meteorologiche per i successivi 5 giorni ad intervalli di 3 ore. |
+| *JSONObject* | `/saveEveryHour` | Consente di salvare un file in locale con estensione .json che si aggiorna, ad intervalli di un'ora, le condizioni meteo della città richiesta. |
+|  |     |       |
 
 ## Link d'interesse
 I link su cui ci siamo basati per la documentazione delle chiamate API sono:
