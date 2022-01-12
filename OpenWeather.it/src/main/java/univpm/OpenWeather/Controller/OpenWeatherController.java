@@ -2,6 +2,7 @@ package univpm.OpenWeather.Controller;
 
 
 import java.net.MalformedURLException;
+import java.text.ParseException;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,15 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Service.WeatherImpl;
+import univpm.OpenWeather.Utils.Stats;
+
 
 @RestController
 public class OpenWeatherController {
 	//private boolean current=true;
 	
 	@Autowired
-	WeatherImpl service;
+	WeatherImpl service; 	
+	Stats statistics = new Stats();
 	
 	@RequestMapping("/greeting")
 	public String greeting(@RequestParam(value="name",defaultValue="Mario")String name) {
@@ -39,8 +44,6 @@ public class OpenWeatherController {
 	@RequestMapping("/current")
 	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
 		Weather meteo=new Weather();
-		//service.getCity(name, meteo);
-		//service.getWeather(name, meteo);
 		return new ResponseEntity<>(service.printInfo(service.getWeather(name, meteo), true), HttpStatus.OK);
 	}
 	
@@ -50,87 +53,18 @@ public class OpenWeatherController {
 	}
 	
 	@GetMapping("/saveEveryHour")
-	public ResponseEntity<String> saveEveryHour(@RequestParam String name){
+	public ResponseEntity<String> saveEveryHour(@RequestParam(name ="name", defaultValue = "Milano") String name){
 		Weather weather = new Weather();
 		String path = service.saveHourlyWeather(name, weather);
 		return new ResponseEntity<>(path, HttpStatus.OK);
 	}
 	
-	
-	
-	/*
-	 * da qui in giù non ho modificato niente
-	 
-	
-	
-	
-	@GetMapping(value = "/ApiCall")	
-	public ResponseEntity<Object> ApiCall(@RequestParam (name="name", defaultValue = "Milano") String name) throws MalformedURLException {
-		return new ResponseEntity<>(service.getInfo(service.UrlBuilder(name)).toString(), HttpStatus.OK);
+	@GetMapping("/stats")
+	public ResponseEntity<JSONObject> stats (@RequestParam(name="name", defaultValue="Milano")String name) throws MalformedURLException, ParseException, NullObjectException{
+		Weather meteo = new Weather();
+		JSONObject obj = service.getForecast(name);
+		return new ResponseEntity<>(statistics.getFiveDaysAverage(obj, meteo), HttpStatus.OK);
 	}
-	
-	/*
-	 * Metodo che permette di vedere le informazioni 
-	 * relative alla città (non il meteo)
-	 *
-	
-	@GetMapping (value = "/CityInfo")
-	public ResponseEntity<City> CityInfo(@RequestParam(name = "name", defaultValue = "Milano") String name) throws MalformedURLException {
-		service.ResetUrl();
-		return new ResponseEntity<>(service.getCity(name), HttpStatus.OK);
-	}
-	
-	/*
-	 * Metodo che consente di vedere le informazioni 
-	 * riguardanti il meteo di un giorno di una città specifica
-	 * @Author Francesco Rachiglia
-	 *
-	
-	
-	@RequestMapping("/weather")
-	public StringBuilder Meteo() throws MalformedURLException {
-		
-		StringBuilder informationString = new StringBuilder();
-		URL url= new URL("https://api.openweathermap.org/data/2.5/forecast?q=Milano&appid=15b8b402dfd9f2d93b1bfa8245d0edc6&mode=JSON&units=metric&lang=it");
-		
-		
-		try {
-			HttpsURLConnection conn=(HttpsURLConnection) url.openConnection();
-			conn.setRequestMethod("GET");
-			conn.connect();
-		
-			int responseCode = conn.getResponseCode();
-			if (responseCode !=200) {
-				throw new Exception("HttpResponseCode: " + responseCode);
-			}else {
-				Scanner scan=new Scanner(url.openStream());
-				informationString = new StringBuilder();
-				while(scan.hasNext()) {
-					informationString.append(scan.nextLine());
-				}
-				scan.close();
-				System.out.println(informationString);
-			
-				JSONParser parse = new JSONParser();
-				JSONArray ris = (JSONArray) parse.parse(String.valueOf(informationString));
-			
-				System.out.println(ris.get(0));
-			
-				JSONObject countryData = (JSONObject) ris.get(0);
-			
-				System.out.println(countryData.get("location_type"));
-			
-			}
-		
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return informationString;
-	}
-	*/
-	
 	
 }
 

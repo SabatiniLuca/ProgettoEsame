@@ -11,7 +11,7 @@ public class NullObjectException extends Exception{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String mes="Object is null";
+	private String mes="Objcet is null";
 	/**
 	 * Constructor
 	 * @param mes

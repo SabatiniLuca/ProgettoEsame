@@ -1,8 +1,13 @@
 package univpm.OpenWeather.Utils;
 
+import org.json.simple.JSONObject;
+
+import univpm.OpenWeather.Exception.NullObjectException;
+import univpm.OpenWeather.Model.Weather;
+
 public interface StatsInt {
 	
-	//public Weather getDailyWeather(JSONObject jobj , Weather meteo) throws ParseException;
+	public JSONObject getFiveDaysAverage(JSONObject jobj , Weather meteo) throws NullObjectException;
 	
 
 }
