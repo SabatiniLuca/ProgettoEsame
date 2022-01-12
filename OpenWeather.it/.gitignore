@@ -97,4 +97,4 @@ build/
 
 ###files da ignorare
 /risposta.json
-/IMMgithub
+.jpg
