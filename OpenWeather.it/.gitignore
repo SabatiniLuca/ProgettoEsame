@@ -97,4 +97,6 @@ build/
 
 ###files da ignorare
 /risposta.json
-.jpg
+responseCurrent.jpg
+responseForecast1.jpg
+responseForecast2.jpg
