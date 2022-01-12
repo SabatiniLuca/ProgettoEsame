@@ -16,10 +16,10 @@ Inoltre si può richiedere la stampa di alcune statistiche riguardanti la temper
 ### Esempi di risultati da Postman
 Di seguito gli esempi delle rotte sopra elencate:
 
-`/current`
+`current?name=ancona`
 ![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseCurrent.jpg)
 
-`/forecast`   
+`/forecast?name=fano`   
 *parte uno*
 ![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseForecast1.jpg)
 
