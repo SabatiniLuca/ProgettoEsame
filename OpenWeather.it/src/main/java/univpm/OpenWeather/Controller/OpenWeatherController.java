@@ -41,29 +41,33 @@ public class OpenWeatherController {
 	 * @author lucas
 	 */
 	
-	@RequestMapping("/current")
+	@GetMapping("/current")
 	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
-		Weather meteo=new Weather();
-		return new ResponseEntity<>(service.printInfo(service.getWeather(name, meteo), true), HttpStatus.OK);
+		return new ResponseEntity<>(service.printInfo(service.getWeather(name), true), HttpStatus.OK);
 	}
 	
-	@RequestMapping("/forecast")
+	@GetMapping("/forecast")
 	public ResponseEntity<JSONObject> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
 		return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
 	}
 	
 	@GetMapping("/saveEveryHour")
-	public ResponseEntity<String> saveEveryHour(@RequestParam(name ="name", defaultValue = "Milano") String name){
-		Weather weather = new Weather();
-		String path = service.saveHourlyWeather(name, weather);
-		return new ResponseEntity<>(path, HttpStatus.OK);
+	public ResponseEntity<JSONObject> saveEveryHour(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
+		//String path = ;//, weather
+		return new ResponseEntity<>(service.saveHourlyWeather(name,false), HttpStatus.OK);
+	}
+	
+	@GetMapping("/statsHour")
+	public ResponseEntity<JSONObject> hourStatistics(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
+		
+		return new ResponseEntity<>(service.saveHourlyWeather(name,true), HttpStatus.OK);
 	}
 	
 	@GetMapping("/stats")
 	public ResponseEntity<JSONObject> stats (@RequestParam(name="name", defaultValue="Milano")String name) throws MalformedURLException, ParseException, NullObjectException{
 		Weather meteo = new Weather();
 		JSONObject obj = service.getForecast(name);
-		return new ResponseEntity<>(statistics.getFiveDaysAverage(obj, meteo), HttpStatus.OK);
+		return new ResponseEntity<>(statistics.getFiveDaysAverage(obj), HttpStatus.OK);
 	}
 	
 }

@@ -26,9 +26,11 @@ import org.json.simple.parser.JSONParser;
 
 import org.springframework.stereotype.Service;
 
+import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.GetFromCall;
+import univpm.OpenWeather.Utils.Stats;
 
 
 	@Service
@@ -95,15 +97,14 @@ import univpm.OpenWeather.Utils.GetFromCall;
 		
 
 		@Override
-		public Weather getWeather(String cityName, Weather meteo) throws MalformedURLException {
+		public Weather getWeather(String cityName) throws MalformedURLException {//, Weather meteo
 			// TODO Auto-generated method stub
 			GetFromCall p=new GetFromCall();
 			ResetUrl();
 			String u = UrlBuilder(true, cityName); //Crea URL
 			
 			JSONObject object = getInfo(u); //JSONObject contentente il JSON 
-			
-			meteo=p.createWeather(object,true);
+			Weather meteo=p.createWeather(object,true);
 			
 			
 			/**
@@ -211,34 +212,47 @@ import univpm.OpenWeather.Utils.GetFromCall;
 		 * del meteo di una città
 		 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
 		 * @author Francesco
-		 */
-		
-		public String saveHourlyWeather(String name, Weather weather) {
+		 * @throws NullObjectException 
+		 */		
+		@SuppressWarnings("unchecked")
+		public JSONObject saveHourlyWeather(String name,boolean stats) throws NullObjectException {
 			
-			String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather";
+			
+			String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
 			File file = new File(path);	
 			
 			ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
 			System.out.println("Start Execution");
 			
+			JSONObject toPrint=new JSONObject();
+			JSONArray array=new JSONArray();
+			
 			eTP.scheduleAtFixedRate(new Runnable() {
+				
 				@Override
 				public void run() {
 					
+					
 					JSONObject toFile = new JSONObject();
-					Weather meteo = new Weather();
+					Weather weather = new Weather();
 					try {
-						//meteo = (Weather) getCity(name, weather);
-						meteo = getWeather(name, weather);
-						System.out.println("meteo " +meteo);
+						
+						weather=getWeather(name);//meteo = 
+						//System.out.println("meteo " +weather);
 					} catch (MalformedURLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					System.out.println(toFile);
-					toFile = printInfo(meteo, true);
+					//System.out.println(toFile);
+					toFile = printInfo(weather, false);
 					
-					System.out.println(toFile);
+					//System.out.println(toFile);
+					array.add(toFile);
+					//System.out.println("ARRAY"+array);
+					
+					toPrint.put("Forecasts", array);
+					//System.out.println("TOPRINT"+toPrint);
+					
 					try {
 						if (!file.exists()) {
 							file.createNewFile();
@@ -246,45 +260,31 @@ import univpm.OpenWeather.Utils.GetFromCall;
 						}
 						FileWriter f = new FileWriter(file); 
 						BufferedWriter n = new BufferedWriter(f);
-						n.write(toFile.toString());
+						n.write(toPrint.toString());
 						n.close();
 					}
 					catch(IOException e)
 					{
 						System.out.println(e); //creare eccezioni
 					}
-			
+					
+					
 				}
-			}, 0, 3, TimeUnit.HOURS);
+				
+				
+			}, 0, 10, TimeUnit.SECONDS);
 			
-			return "File salvato in " + file;
-}
-			
-		
-		
-		
-		/**
-		 *Metodo che usa getCity per prendere previsioni 
-		 *meteo della città richiesta e
-		 *restituisce il JSONArray
-		 * 
-		 *@return restituisce il JSONArray con la città e le relative informazioni
-		 * 
-		 */
-		/*
-		public String searchArray(JSONObject obj,String arrayName, String valueName) {
-			JSONArray array=(JSONArray) obj.get(arrayName);
-			Iterator<?> i=array.iterator();
-			String value="";
-			
-			while (i.hasNext()) {
-				JSONObject info=(JSONObject) i.next();
-				value=(String) info.get(valueName);
+			Stats s=new Stats();
+			if(!stats) {
+				JSONObject ret=new JSONObject();
+				ret.put("File salvato in",   file);
+				return ret;
+			}else {
+				return s.getFiveDaysAverage(toPrint);
 			}
-			return value;
 			
 		}
-		*/
+		
 		
 		public void ResetUrl() {
 			this.url = "https://api.openweathermap.org/data/2.5/";

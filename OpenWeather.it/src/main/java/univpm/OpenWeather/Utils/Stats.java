@@ -15,7 +15,7 @@ public class Stats implements StatsInt{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getFiveDaysAverage(JSONObject jobj, Weather meteo) throws NullObjectException {
+	public JSONObject getFiveDaysAverage(JSONObject jobj) throws NullObjectException {
 		// TODO Auto-generated method stub
 		JSONObject temp = new JSONObject();
 		JSONObject statistics = new JSONObject();
@@ -34,7 +34,7 @@ public class Stats implements StatsInt{
 			temp.put("Min Pressure", p_min);	
 			statistics.put("Statistics", temp);
 		}
-		else throw new NullObjectException("Objcet is null");
+		else throw new NullObjectException("Object is null");
 		return statistics;
 	}
 	

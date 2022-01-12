@@ -4,12 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Vector;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Service.WeatherImpl;
 
 public class Utils {
@@ -23,11 +20,6 @@ public class Utils {
 	
 	public Utils() {}
 	
-	public Vector<Weather> selectDay(){
-		
-		return null;
-		
-	}
 	
 	
 	/**
