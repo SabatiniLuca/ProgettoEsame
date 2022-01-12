@@ -12,6 +12,19 @@ Inoltre si può richiedere la stampa di alcune statistiche riguardanti la temper
 | *JSONObject* | `/saveEveryHour` | Consente di salvare un file in locale con estensione .json che si aggiorna, ad intervalli di un'ora, le condizioni meteo della città richiesta. |
 |  |     |       |
 
+
+### Esempi di risultati da Postman
+Di seguito gli esempi delle rotte sopra elencate:
+
+`/current`
+![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseCurrent.jpg)
+
+`/forecast`   
+*parte uno*
+![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseForecast1.jpg)
+
+*parte due*
+![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseForecast2.jpg)
 ## Link d'interesse
 I link su cui ci siamo basati per la documentazione delle chiamate API sono:
 
