@@ -23,9 +23,6 @@ public class Stats implements StatsInt{
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-
-
-
 	public JSONObject getFiveDaysAverage(String path) throws NullObjectException, IOException {
 
 		// TODO Auto-generated method stub
@@ -258,10 +255,4 @@ public double getPressAverage(JSONObject jobj) {
 		return var;
 	}
 
-	@Override
-	public JSONObject getFiveDaysAverage(JSONObject jobj) throws NullObjectException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

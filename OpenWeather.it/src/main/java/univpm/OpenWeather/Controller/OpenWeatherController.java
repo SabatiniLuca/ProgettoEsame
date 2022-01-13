@@ -1,6 +1,7 @@
 package univpm.OpenWeather.Controller;
 
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 
@@ -58,14 +59,7 @@ public class OpenWeatherController {
 	
 	@GetMapping("/statsHour")//to be fixed
 	public ResponseEntity<JSONObject> hourStatistics(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
-		
 		return new ResponseEntity<>(service.saveHourlyWeather(name,true), HttpStatus.OK);
-	}
-	
-	@GetMapping("/stats")
-	public ResponseEntity<JSONObject> stats (@RequestParam(name="name", defaultValue="Milano")String name) throws MalformedURLException, ParseException, NullObjectException{
-		JSONObject obj = service.getForecast(name);
-		return new ResponseEntity<>(statistics.getFiveDaysAverage(obj), HttpStatus.OK);
 	}
 	
 }

@@ -220,6 +220,7 @@ import univpm.OpenWeather.Utils.Stats;
 			
 			String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
 			File file = new File(path);	
+			JSONObject printStats = null;
 			
 			ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
 			System.out.println("Start Execution");
@@ -266,23 +267,30 @@ import univpm.OpenWeather.Utils.Stats;
 					catch(IOException e)
 					{
 						System.out.println(e); //creare eccezioni
-					}
-					
-					
+					}				
 				}
-				
-				
-			}, 0, 10, TimeUnit.SECONDS);
+			}, 0, 1, TimeUnit.HOURS);
 			
-			Stats s=new Stats();
-			if(!stats) {
-				JSONObject ret=new JSONObject();
-				ret.put("File salvato in",   file);
-				return ret;
-			}else {
-				return s.getFiveDaysAverage(toPrint);
+			eTP.shutdownNow();
+			
+			Stats s = new Stats();
+			try {
+				Thread.sleep(5000);
+				printStats=s.getFiveDaysAverage(name+"HourlyWeather");
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			} catch (NullObjectException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
+			
+			
+			return printStats;
 		}
 		
 		
