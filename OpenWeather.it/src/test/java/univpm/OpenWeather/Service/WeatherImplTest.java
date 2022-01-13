@@ -3,7 +3,6 @@
  */
 package univpm.OpenWeather.Service;
 
-import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -12,6 +11,8 @@ import java.util.Scanner;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import junit.framework.TestCase;
@@ -20,6 +21,7 @@ import univpm.OpenWeather.Model.Position;
 import univpm.OpenWeather.Model.Weather;
 
 /**
+ * questa classe testa alcune parti del  @Service 
  * @author lucas
  *
  */
@@ -34,6 +36,7 @@ class WeatherImplTest extends TestCase {
 	JSONObject esRisposta=new JSONObject();
 	JSONObject parsato=new JSONObject();
 	
+	@BeforeEach
 	@SuppressWarnings("unchecked")
 	@Override
 	public void setUp() throws IOException, ParseException {
@@ -65,7 +68,7 @@ class WeatherImplTest extends TestCase {
 		actual.put("Temperatures", temperatures);
 		
 		this.parsato=actual;
-		
+		actual=null;
 		
 		this.coord=new Position(43.8204,13.0121);
 		this.city=new City(3177219,"Fano",this.coord);
@@ -80,7 +83,7 @@ class WeatherImplTest extends TestCase {
 	void testUrlBuilderTrue() {
 		String url=service.UrlBuilder(true,"fano");
 		String urlCorretto="https://api.openweathermap.org/data/2.5/weather?q=fano,IT&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
-		assertEquals(url, urlCorretto);
+	assertEquals(url, urlCorretto);
 		
 	}
 	
@@ -150,10 +153,16 @@ class WeatherImplTest extends TestCase {
 		assertEquals(this.url,url);
 	}
 	
+	@AfterEach
 	@Override
 	public void tearDown() {
+		System.out.println("Tests are done, tearing down.");
 		this.esRisposta=null;
 		this.toJson=null;
+		this.coord=null;
+		this.city=null;
+		this.meteo=null;
+		this.parsato=null;
 	}
 
 }

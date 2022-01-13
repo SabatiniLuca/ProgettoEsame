@@ -10,14 +10,13 @@ import java.util.Scanner;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * Questa classe testa 
  * @author lucas
  */
 class UtilsTest {
@@ -28,10 +27,7 @@ class UtilsTest {
 	
 	
 
-	/**
-	 * @return 
-	 * @throws java.lang.Exception
-	 */
+	
 	@BeforeEach
 	void setUp() throws Exception {
 		System.out.println("Setting it up!");
@@ -48,14 +44,8 @@ class UtilsTest {
 		in.close();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterEach
-	void tearDown() throws Exception {
-		this.esRisposta=null;
-		
-	}
+	
+	
 
 	/**
 	 * Test method for {@link univpm.OpenWeather.Utils.Utils#searchArray(org.json.simple.JSONObject, java.lang.String, java.lang.String)}.
@@ -114,6 +104,12 @@ class UtilsTest {
 		double temp=19.85;
 		
 		assertEquals(totest,temp);
+	}
+	
+	@AfterEach
+	public void tearDown() {
+		System.out.println("Tearing down");
+		this.esRisposta=null;
 	}
 
 }

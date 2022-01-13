@@ -1,6 +1,5 @@
 package univpm.OpenWeather.Utils;
 
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import univpm.OpenWeather.Model.City;
@@ -20,7 +19,8 @@ public class GetFromCall {
 	
 	
 	
-	@SuppressWarnings("unchecked")
+	/**
+	 * @SuppressWarnings("unchecked")
 	public JSONObject getCurrent(JSONObject obj) {
 		JSONObject toPrint=new JSONObject();
 		toPrint.put("City", getCity(obj));
@@ -28,7 +28,14 @@ public class GetFromCall {
 		toPrint.put("Weather", getWeather(obj));
 		return toPrint;
 	}
+	 */
 	
+	
+	
+	
+	
+	/**
+	 * 
 	public String getString(JSONObject obj, String value) {
 		String ret=(String) obj.get(value);
 		return ret;
@@ -43,6 +50,7 @@ public class GetFromCall {
 		long ret=(long) obj.get(value);
 		return ret;
 	}
+	 */
 	
 	/**
 	 * crea una posizione da un JSONobject
@@ -66,12 +74,11 @@ public class GetFromCall {
 	 */
 	public City createCity(JSONObject obj) {
 		JSONObject c=getCity(obj);
-		System.out.println(c);
 		long id=(long) c.get("Id");
 		String name=(String) c.get("City Name");
 		Position pos=createPosition(obj);
 		City city=new City(id,name,pos);
-		System.out.println(city);
+		//System.out.println(city);
 		return city;
 	}
 	
@@ -102,8 +109,7 @@ public class GetFromCall {
 			long date=(long) obj.get("dt");
 			
 		if(current) {	
-			City city=new City();
-			city=createCity(obj);
+			City city=createCity(obj);
 			Weather meteo=new Weather(temp, description,t_min,t_max,pressure,date, main,city);
 			return meteo;
 		}else {
@@ -138,7 +144,8 @@ public class GetFromCall {
 	/**
 	 * Questo metodo serve perchè alcune temperature avevano valori diversi da double che è
 	 * quello usato nella classe Weather per la temperatura quindi serviva una conversione ma 
-	 * un semplice cast non ha funzionato.
+	 * un semplice cast non ha funzionato perchè per essere salvato nella classe il numero deve essere un 
+	 * double (primitivo) e non un oggetto per esempio Long o Double che sono sottoclassi di Object
 	 * @param number oggetto json convertito in Object
 	 * questo parametro viene convertito in Long Double o Integer in base al tipo
 	 * @return restituisce il valore come tipo primitivo double
@@ -203,13 +210,14 @@ public class GetFromCall {
 	@SuppressWarnings("unchecked")
 	public JSONObject getWeather(JSONObject obj) {
 		Utils u=new Utils();
-		JSONArray ar=(JSONArray) obj.get("weather");
-		JSONObject weather=(JSONObject) ar.get(0);
+		//JSONArray ar=(JSONArray) obj.get("weather");non penso servano
+		//JSONObject weather=(JSONObject) ar.get(0);
+		JSONObject weather=new JSONObject();
 		String description = u.searchArray(obj, "weather" , "description");
 		String main = u.searchArray(obj, "weather" , "main");
 		weather.put("Main", main);
 		weather.put("Description", description);
-		
+		//System.out.println(weather);
 		return weather;
 		
 	}
@@ -219,10 +227,13 @@ public class GetFromCall {
 	 * @param obj
 	 * @return
 	 * @author lucas
-	 */
-	public JSONObject getDate(JSONObject obj) {
+	 * 
+	 * public JSONObject getDate(JSONObject obj) {
+		System.out.println(obj.get("dt"));
 		return (JSONObject) obj.get("dt");
 	}
+	
+	 */
 	
 	
 
