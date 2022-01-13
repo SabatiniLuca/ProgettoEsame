@@ -129,14 +129,11 @@ public class GetFromCall {
 			ret.put("tMax", temp_max);
 			ret.put("tMin", temp_min);
 		}else {
-			//double temp = (double) m.get("temp");
 			ret.put("temp", temp);
 		}
 		
 		long pressure=(long) m.get("pressure");
-		
 		ret.put("pressure", pressure);
-		
 		
 		return ret;		
 	}

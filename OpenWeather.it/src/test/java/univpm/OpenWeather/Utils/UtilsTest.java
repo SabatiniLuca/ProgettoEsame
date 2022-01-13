@@ -6,6 +6,8 @@ package univpm.OpenWeather.Utils;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -14,6 +16,7 @@ import org.json.simple.parser.JSONParser;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,7 +28,7 @@ class UtilsTest {
 
 	@Autowired
 	Utils u=new Utils();
-
+	JSONObject esRisposta=new JSONObject();
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -43,13 +46,22 @@ class UtilsTest {
 	/**
 	 * @return 
 	 * @throws java.lang.Exception
-	 *
+	 */
 	@BeforeEach
-	JSONObject setUp() throws Exception {
-		JSONObject obj=new JSONObject();
-		ObjectInputStream in= new ObjectInputStream(new BufferedInputStream(new FileInputStream("risposta.json") ) );
-		obj=(JSONObject) in.readObject();
-		return obj;
+	void setUp() throws Exception {
+		System.out.println("Setting it up!");
+		String json = "";
+		Scanner in = new Scanner(new FileReader("risposta.txt"));
+		while (in.hasNext()) {
+			json += (in.nextLine());
+
+		}
+		//System.out.println(json);
+		JSONParser parser = new JSONParser();
+		JSONObject obj = new JSONObject();
+		obj = (JSONObject) parser.parse(json);
+		this.esRisposta=obj;
+		in.close();
 	}
 
 	/**
@@ -61,22 +73,14 @@ class UtilsTest {
 
 	/**
 	 * Test method for {@link univpm.OpenWeather.Utils.Utils#searchArray(org.json.simple.JSONObject, java.lang.String, java.lang.String)}.
+	 * testa un metodo implementato per cercare un valore all'interno di un array a sua volta all'interno di un oggetto
+	 * @author lucas
 	 * @throws Exception 
 	 */
 	@Test
 	void testSearchArray() throws Exception {
-		String json = "";
-		Scanner in = new Scanner(new FileReader("risposta.json"));
-		while (in.hasNext()) {
-			json += (in.nextLine());
-
-		}
-		System.out.println(json);
-		JSONParser parser = new JSONParser();
-		JSONObject obj = new JSONObject();
-		obj = (JSONObject) parser.parse(json);
-		in.close();
-		String totest = u.searchArray(obj, "weather", "description");
+		
+		String totest = u.searchArray(this.esRisposta, "weather", "description");
 		String corretta = "overcast clouds";
 
 		assertEquals(totest, corretta);
@@ -85,14 +89,25 @@ class UtilsTest {
 
 	/**
 	 * Test method for {@link univpm.OpenWeather.Utils.Utils#dateConverter(long)}.
+	 * testa la conversione in data da stringa
+	 * @author lucas
+	 * @throws ParseException 
 	 */
 	@Test
-	void testDateConverter() {
-		fail("Not yet implemented");
+	void testDateConverter() throws ParseException {
+		String dt_txt="2022-01-13 09:00:00";
+		Date totest=u.dateConverter(dt_txt);
+		Date actual=new SimpleDateFormat("yyyy-MM-dd HH:MM:SS").parse(dt_txt);
+		
+		assertEquals(totest,actual);
+		
+		
 	}
 
 	/**
 	 * Test method for {@link univpm.OpenWeather.Utils.Utils#toDate(long)}.
+	 * testa la conversione in data da epochtime
+	 * @author lucas
 	 */
 	@Test
 	void testToDate() {
@@ -103,6 +118,8 @@ class UtilsTest {
 
 	/**
 	 * Test method for {@link univpm.OpenWeather.Utils.Utils#tempConverter(double)}.
+	 * testa la conversione della temperatura in gradi Celsius
+	 * @author lucas
 	 */
 	@Test
 	void testTempConverter() {

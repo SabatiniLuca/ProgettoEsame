@@ -53,11 +53,10 @@ public class OpenWeatherController {
 	
 	@GetMapping("/saveEveryHour")
 	public ResponseEntity<JSONObject> saveEveryHour(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
-		//String path = ;//, weather
 		return new ResponseEntity<>(service.saveHourlyWeather(name,false), HttpStatus.OK);
 	}
 	
-	@GetMapping("/statsHour")
+	@GetMapping("/statsHour")//to be fixed
 	public ResponseEntity<JSONObject> hourStatistics(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
 		
 		return new ResponseEntity<>(service.saveHourlyWeather(name,true), HttpStatus.OK);
@@ -65,7 +64,6 @@ public class OpenWeatherController {
 	
 	@GetMapping("/stats")
 	public ResponseEntity<JSONObject> stats (@RequestParam(name="name", defaultValue="Milano")String name) throws MalformedURLException, ParseException, NullObjectException{
-		Weather meteo = new Weather();
 		JSONObject obj = service.getForecast(name);
 		return new ResponseEntity<>(statistics.getFiveDaysAverage(obj), HttpStatus.OK);
 	}
