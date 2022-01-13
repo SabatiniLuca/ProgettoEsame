@@ -1,6 +1,3 @@
-/**
- * 
- */
 package univpm.OpenWeather.Utils;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,26 +19,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author lucas
- *
  */
 class UtilsTest {
 
 	@Autowired
 	Utils u=new Utils();
 	JSONObject esRisposta=new JSONObject();
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-	}
+	
+	
 
 	/**
 	 * @return 
@@ -54,9 +39,8 @@ class UtilsTest {
 		Scanner in = new Scanner(new FileReader("risposta.txt"));
 		while (in.hasNext()) {
 			json += (in.nextLine());
-
 		}
-		//System.out.println(json);
+
 		JSONParser parser = new JSONParser();
 		JSONObject obj = new JSONObject();
 		obj = (JSONObject) parser.parse(json);
@@ -69,6 +53,8 @@ class UtilsTest {
 	 */
 	@AfterEach
 	void tearDown() throws Exception {
+		this.esRisposta=null;
+		
 	}
 
 	/**
