@@ -1,9 +1,7 @@
 package univpm.OpenWeather.Controller;
 
-
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.text.ParseException;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import univpm.OpenWeather.Exception.NullObjectException;
-import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Service.WeatherImpl;
 import univpm.OpenWeather.Utils.Stats;
 
@@ -52,15 +49,31 @@ public class OpenWeatherController {
 		return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
 	}
 	
-	@GetMapping("/saveEveryHour")
+	/**
+	 * 
+	 * @param name
+	 * @return sia il file che si aggiorna ogni ora sia le statistiche 
+	 * (prende però solo le prime previsioni e quindi non genera statistiche vere e proprie)		
+	 * @throws NullObjectException
+	 */
+	@GetMapping("/saveEveryHourStats")
 	public ResponseEntity<JSONObject> saveEveryHour(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
-		return new ResponseEntity<>(service.saveHourlyWeather(name,false), HttpStatus.OK);
+		return new ResponseEntity<>(service.saveHourlyWeatherAndStats(name,false), HttpStatus.OK);
 	}
 	
-	@GetMapping("/statsHour")//to be fixed
-	public ResponseEntity<JSONObject> hourStatistics(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
-		return new ResponseEntity<>(service.saveHourlyWeather(name,true), HttpStatus.OK);
+	/**
+	 * 
+	 * @param name
+	 * @return la stringa che indica il percorso in cui il file è stato salvato
+	 */
+	@GetMapping("/saveFile")
+	public ResponseEntity<String> saveFile(@RequestParam(name = "name", defaultValue = "Milano")String name){
+		return new ResponseEntity<>(service.saveFile(name), HttpStatus.OK);
 	}
 	
+	@GetMapping("/Stats")
+	public ResponseEntity<JSONObject> genStats(@RequestParam(name = "name", defaultValue="Milano")String name) throws NullObjectException, IOException{
+		return new ResponseEntity<JSONObject>(statistics.getFiveDaysAverage(name+"HourlyWeather.txt"), HttpStatus.OK);
+	}
 }
 
