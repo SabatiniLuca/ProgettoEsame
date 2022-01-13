@@ -2,6 +2,7 @@ package univpm.OpenWeather.Controller;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.ParseException;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +51,6 @@ public class OpenWeatherController {
 	}
 	
 	/**
-	 * 
 	 * @param name
 	 * @return sia il file che si aggiorna ogni ora sia le statistiche 
 	 * (prende però solo le prime previsioni e quindi non genera statistiche vere e proprie)		
@@ -62,7 +62,6 @@ public class OpenWeatherController {
 	}
 	
 	/**
-	 * 
 	 * @param name
 	 * @return la stringa che indica il percorso in cui il file è stato salvato
 	 */
@@ -71,9 +70,21 @@ public class OpenWeatherController {
 		return new ResponseEntity<>(service.saveFile(name), HttpStatus.OK);
 	}
 	
+	/**
+	 * 
+	 * @param name
+	 * @return Statistiche sulle previsioni prese da file
+	 * @throws NullObjectException
+	 * @throws IOException
+	 */
 	@GetMapping("/Stats")
 	public ResponseEntity<JSONObject> genStats(@RequestParam(name = "name", defaultValue="Milano")String name) throws NullObjectException, IOException{
 		return new ResponseEntity<JSONObject>(statistics.getFiveDaysAverage(name+"HourlyWeather.txt"), HttpStatus.OK);
+	}
+	
+	@GetMapping("/Errors")
+	public ResponseEntity<JSONObject> errors(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException, ParseException{
+		return new ResponseEntity<>(service.getErrors(name), HttpStatus.OK);
 	}
 }
 

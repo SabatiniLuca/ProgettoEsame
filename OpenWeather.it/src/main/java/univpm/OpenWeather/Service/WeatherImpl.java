@@ -343,6 +343,33 @@ public class WeatherImpl implements WeatherInt {
 		return printStats;
 	}
 
+	/**
+	 * Metodo che restituisce l'errore tra il forecast e l'attuale
+	 * @param name
+	 * @return
+	 * @throws MalformedURLException 
+	 * @throws ParseException 
+	 */
+	@SuppressWarnings("unchecked")
+	public JSONObject getErrors(String name) throws MalformedURLException, ParseException {
+		
+		Utils u = new Utils();
+		JSONObject current = printInfo(getWeather(name), false);
+		
+		JSONObject forecast = getForecast(name);
+		JSONArray forecastArr = (JSONArray) forecast.get("Forecasts");
+		JSONObject fore = (JSONObject) forecastArr.get(0);
+		
+		JSONObject err = new JSONObject();
+		double errors = (u.getCurrentInfo(current) - u.getForecastInfo(fore));
+		double err_max = (u.getCurrentMaxTemp(current) - u.getForecastMaxTemp(fore));
+		double err_min = (u.getCurrentMinTemp(current) - u.getForecastMinTemp(fore));
+		err.put("Current temp Error", errors);
+		err.put("Current temp Max Error", err_max);
+		err.put("Current temp Min Error", err_min);
+		
+		return err;
+	}
 
 	public void ResetUrl() {
 		this.url = "https://api.openweathermap.org/data/2.5/";

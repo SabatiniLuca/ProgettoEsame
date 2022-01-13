@@ -9,19 +9,19 @@ import org.json.simple.JSONObject;
 
 import univpm.OpenWeather.Service.WeatherImpl;
 
+/**
+ * Questa classe contiene diversi metodi utili e li raggruppa per cercare di
+ *  rendere più chiaro il resto del programma
+ *  @author lucas
+ */
 public class Utils {
-	/**
-	 * Questa classe contiene diversi metodi utili e li raggruppa per cercare di
-	 *  rendere più chiaro il resto del programma
-	 *  @author lucas
-	 */
-
+	
 	WeatherImpl service =new WeatherImpl();
-	
-	public Utils() {}
-	
-	
-	
+
+	public Utils(){
+		
+	}
+
 	/**
 	 *Metodo che usa getCity per prendere previsioni 
 	 *meteo della città richiesta e
@@ -30,20 +30,20 @@ public class Utils {
 	 *@return restituisce il JSONArray con la città e le relative informazioni
 	 * 
 	 */
-	
+
 	public String searchArray(JSONObject obj,String arrayName, String valueName) {
 		JSONArray array=(JSONArray) obj.get(arrayName);
 		Iterator<?> i=array.iterator();
 		String value="";
-		
+
 		while (i.hasNext()) {
 			JSONObject info=(JSONObject) i.next();
 			value=(String) info.get(valueName);
 		}
 		return value;
-		
+
 	}
-	
+
 	/**
 	 * Questo metodo converte la data da epoch time ad un formato più leggibile
 	 * @param epochDate data in epoch time
@@ -55,17 +55,15 @@ public class Utils {
 		Date date= new SimpleDateFormat("yyyy-MM-dd HH:MM:SS").parse(dateText);
 		return date;
 	}
-	
+
 	public Date toDate(long epoch) {
-		
+
 		Date jDate = new Date(epoch * 1000);
-		
+
 		return jDate;
 	}
-	
-	
-	
-	
+
+
 	/**
 	 * converte la temperatura da Kelvin a celsius e la arrotonda
 	 * @param temp temperatura in Kelvin
@@ -76,4 +74,75 @@ public class Utils {
 		double rounded=Math.round(t*100.0)/100.0;
 		return  rounded;
 	}
+	
+	
+	public double getCurrentInfo(JSONObject jobj) {
+		double temp=0;
+		
+		JSONObject tempObj = (JSONObject) jobj.get("Temperatures");
+		
+		String curr = (String) tempObj.get("Current");
+		
+		temp = Double.parseDouble(curr.substring(0, 4));
+		return temp;
+	}
+	
+	public double getForecastInfo(JSONObject jobj) {
+		double temp=0;
+		
+		JSONObject tempObj = (JSONObject) jobj.get("Temperatures");
+		
+		String fore = (String) tempObj.get("Current");
+		
+		temp = Double.parseDouble(fore.substring(0, 4));
+		
+		return temp;
+	}
+	
+	public double getCurrentMaxTemp(JSONObject jobj) {
+		double temp=0;
+		
+		JSONObject tempObj = (JSONObject) jobj.get("Temperatures");
+		
+		String curr = (String) tempObj.get("Maximum");
+		
+		temp = Double.parseDouble(curr.substring(0, 4));
+		return temp;
+	}
+	
+	public double getForecastMaxTemp(JSONObject jobj) {
+		double temp=0;
+		
+		JSONObject tempObj = (JSONObject) jobj.get("Temperatures");
+		
+		String fore = (String) tempObj.get("Maximum");
+		
+		temp = Double.parseDouble(fore.substring(0, 4));
+		
+		return temp;
+	}
+	
+	public double getCurrentMinTemp(JSONObject jobj) {
+		double temp=0;
+		
+		JSONObject tempObj = (JSONObject) jobj.get("Temperatures");
+		
+		String curr = (String) tempObj.get("Minimum");
+		
+		temp = Double.parseDouble(curr.substring(0, 4));
+		return temp;
+	}
+	
+	public double getForecastMinTemp(JSONObject jobj) {
+		double temp=0;
+		
+		JSONObject tempObj = (JSONObject) jobj.get("Temperatures");
+		
+		String fore = (String) tempObj.get("Minimum");
+		
+		temp = Double.parseDouble(fore.substring(0, 4));
+		
+		return temp;
+	}
+	
 }
