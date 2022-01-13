@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author lucas
  *
  */
-class WeatherImplTest extends TestCase {
+class WeatherImplTest extends TestCase { 
 	
 	@Autowired
 	private WeatherImpl service=new WeatherImpl();

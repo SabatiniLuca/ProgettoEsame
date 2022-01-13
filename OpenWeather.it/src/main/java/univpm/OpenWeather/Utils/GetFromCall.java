@@ -26,8 +26,6 @@ public class GetFromCall {
 		toPrint.put("City", getCity(obj));
 		toPrint.put("Coord", getCoord(obj));
 		toPrint.put("Weather", getWeather(obj));
-		//toPrint.put("Temps", getTemp((JSONObject) obj.get("main"),true));
-		//toPrint.put("Pressure", getPressure((JSONObject) obj.get("main")));
 		return toPrint;
 	}
 	
@@ -91,15 +89,14 @@ public class GetFromCall {
 	public Weather createWeather(JSONObject obj,boolean current) {
 			JSONObject t=(JSONObject) obj.get("main");
 			
-			//JSONObject t=getMain(obj,current);
-			
 			JSONObject w=getWeather(obj);
 			
-			double temp= ifThenRound(t.get("temp"));;
-			
+			double temp= ifThenRound(t.get("temp"));			
 			double t_min=ifThenRound(t.get("temp_min"));
 			double t_max=ifThenRound(t.get("temp_max"));
+			
 			long pressure=(long) t.get("pressure");
+			
 			String description= (String) w.get("description");
 			String main= (String) w.get("main");
 			long date=(long) obj.get("dt");
@@ -221,6 +218,7 @@ public class GetFromCall {
 	 * 
 	 * @param obj
 	 * @return
+	 * @author lucas
 	 */
 	public JSONObject getDate(JSONObject obj) {
 		return (JSONObject) obj.get("dt");
