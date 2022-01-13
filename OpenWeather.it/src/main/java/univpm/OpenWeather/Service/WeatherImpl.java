@@ -26,270 +26,270 @@ import org.json.simple.parser.JSONParser;
 
 import org.springframework.stereotype.Service;
 
+import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.GetFromCall;
+import univpm.OpenWeather.Utils.Stats;
+import univpm.OpenWeather.Utils.StatsInt;
 
 
-	@Service
-	public class WeatherImpl implements WeatherInt {
-		
-		/**
-		 * ho modificato l'url iniziale per poter usare @method UrlBuilder correttamente 
-		 * @author lucas
-		 */
-		private String apiKey = "15b8b402dfd9f2d93b1bfa8245d0edc6";
-		private String url ="https://api.openweathermap.org/data/2.5/";
-		
-		/**
-		 * Questo metodo setta la stringa url 
-		 * @author lucas
-		 */
-		@Override 
-		public String UrlBuilder(boolean current, String cityName) {
-			//creazione Url
-			
-			if(current==true) {//current weather
-				this.url+="weather?q="+cityName+",IT"+"&appid="+this.apiKey;  
-			}
-			else if(current==false) {//5day forecast
-				this.url+="forecast?q="+cityName+",IT"+"&appid="+this.apiKey;
-			}
-			return this.url;
+@Service
+public class WeatherImpl implements WeatherInt {
+
+	/**
+	 * ho modificato l'url iniziale per poter usare @method UrlBuilder correttamente 
+	 * @author lucas
+	 */
+	private String apiKey = "15b8b402dfd9f2d93b1bfa8245d0edc6";
+	private String url ="https://api.openweathermap.org/data/2.5/";
+
+	/**
+	 * Questo metodo setta la stringa url 
+	 * @author lucas
+	 */
+	@Override 
+	public String UrlBuilder(boolean current, String cityName) {
+		//creazione Url
+
+		if(current==true) {//current weather
+			this.url+="weather?q="+cityName+",IT"+"&appid="+this.apiKey;  
 		}
-		
-		/**
-		 * questo metodo crea una connessione usando il parametro u e restituisce un Json object
-		 */
-		@Override
-		public JSONObject getInfo(String u) throws MalformedURLException {
-			// TODO Auto-generated method stub
-			JSONObject obj = null;
-			URL url = new URL(u);
-				try {
-					
-					HttpsURLConnection conn=(HttpsURLConnection) url.openConnection();
-					conn.setRequestMethod("GET");
-					conn.connect();
-				
-					int responseCode = conn.getResponseCode();
-					if (responseCode !=200) {
-						throw new Exception("HttpResponseCode: " + responseCode);
-					}else {
-						Reader scan=new InputStreamReader(url.openStream());
-					
-						JSONParser parser = new JSONParser() ;
-						
-						obj = (JSONObject) parser.parse(scan);
-										
-						scan.close();
-					}
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			
-				return obj;
-			
+		else if(current==false) {//5day forecast
+			this.url+="forecast?q="+cityName+",IT"+"&appid="+this.apiKey;
+		}
+		return this.url;
 	}
-		
 
-		@Override
-		public Weather getWeather(String cityName, Weather meteo) throws MalformedURLException {
-			// TODO Auto-generated method stub
-			GetFromCall p=new GetFromCall();
-			ResetUrl();
-			String u = UrlBuilder(true, cityName); //Crea URL
-			
-			JSONObject object = getInfo(u); //JSONObject contentente il JSON 
-			
-			meteo=p.createWeather(object,true);
-			
-			
-			/**
-			 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
-			 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
-			 * @author lucas
-			 */
-			
-			return meteo;
-		}
-		
-		
-		@SuppressWarnings("unchecked")
-		public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException {
-			GetFromCall p = new GetFromCall();
-			
-			ResetUrl();
-			String u = UrlBuilder(false, cityName);
+	/**
+	 * questo metodo crea una connessione usando il parametro u e restituisce un Json object
+	 */
+	@Override
+	public JSONObject getInfo(String u) throws MalformedURLException {
+		// TODO Auto-generated method stub
+		JSONObject obj = null;
+		URL url = new URL(u);
+		try {
 
-			JSONObject object = getInfo(u);// ottiene il JSONObject con tutte le previsioni
+			HttpsURLConnection conn=(HttpsURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+			conn.connect();
 
-			JSONArray list = (JSONArray) object.get("list");// seleziono l'array contenente le informazioni del meteo
-			Iterator<JSONObject> i = list.iterator();// creo un iteratore
+			int responseCode = conn.getResponseCode();
+			if (responseCode !=200) {
+				throw new Exception("HttpResponseCode: " + responseCode);
+			}else {
+				Reader scan=new InputStreamReader(url.openStream());
 
-			JSONObject toPrint = new JSONObject();
-			JSONArray dayArray = new JSONArray();
-			
-			while (i.hasNext()) {
-				
-				JSONObject temp = i.next();
-				Weather meteo = p.createWeather(temp, false);
+				JSONParser parser = new JSONParser() ;
 
-				dayArray.add(printInfo(meteo, false));
+				obj = (JSONObject) parser.parse(scan);
 
+				scan.close();
 			}
-
-			toPrint.put("City", object.get("city"));
-			toPrint.put("Forecasts", dayArray);
-			return toPrint;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
-		
-		
-		
-		
+
+		return obj;
+
+	}
+
+
+	@Override
+	public Weather getWeather(String cityName) throws MalformedURLException {
+		// TODO Auto-generated method stub
+		Weather meteo = new Weather();
+		GetFromCall p=new GetFromCall();
+		ResetUrl();
+		String u = UrlBuilder(true, cityName); //Crea URL
+
+		JSONObject object = getInfo(u); //JSONObject contentente il JSON 
+
+		meteo=p.createWeather(object,true);
+
+
 		/**
-		 * questo metodo stampa tutte le informazioni se 
-		 * @param all è true
-		 * in caso contrario stampa solo le informazioni del meteo
+		 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
+		 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
 		 * @author lucas
 		 */
-		@SuppressWarnings("unchecked")// se lo tolgo si riempe di warnings perchè dice di definire il tipo di mappa
-		@Override
-		public JSONObject printInfo(Weather meteo, boolean all) {
-			Utils u=new Utils();
-			JSONObject allInfo=new JSONObject();
-			
-			JSONObject cityInfo=new JSONObject();
-			JSONObject weatherInfo=new JSONObject();
-			
-			if(all) {
+
+		return meteo;
+	}
+
+
+	@SuppressWarnings("unchecked")
+	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException {
+		GetFromCall p = new GetFromCall();
+
+		ResetUrl();
+		String u = UrlBuilder(false, cityName);
+
+		JSONObject object = getInfo(u);// ottiene il JSONObject con tutte le previsioni
+
+		JSONArray list = (JSONArray) object.get("list");// seleziono l'array contenente le informazioni del meteo
+		Iterator<JSONObject> i = list.iterator();// creo un iteratore
+
+		JSONObject toPrint = new JSONObject();
+		JSONArray dayArray = new JSONArray();
+
+		while (i.hasNext()) {
+
+			JSONObject temp = i.next();
+			Weather meteo = p.createWeather(temp, false);
+
+			dayArray.add(printInfo(meteo, false));
+
+		}
+
+		toPrint.put("City", object.get("city"));
+		toPrint.put("Forecasts", dayArray);
+		return toPrint;
+	}
+
+
+
+
+
+
+	/**
+	 * questo metodo stampa tutte le informazioni se 
+	 * @param all è true
+	 * in caso contrario stampa solo le informazioni del meteo
+	 * @author lucas
+	 */
+	@SuppressWarnings("unchecked")// se lo tolgo si riempe di warnings perchè dice di definire il tipo di mappa
+	@Override
+	public JSONObject printInfo(Weather meteo, boolean all) {
+		Utils u=new Utils();
+		JSONObject allInfo=new JSONObject();
+
+		JSONObject cityInfo=new JSONObject();
+		JSONObject weatherInfo=new JSONObject();
+
+		if(all) {
 			//info stampate se all é true
-			
+
 			cityInfo.put("Coordinates", meteo.getCity().getCoordinates());
 			cityInfo.put("Name", meteo.getCity().getCityName());
 			cityInfo.put("Id", meteo.getCity().getId());
-			}		
-			
-			//info stampate se all é false
-			DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");//  
-            String strDate = dateFormat.format(u.toDate(meteo.getDate()));  
-			weatherInfo.put("date", strDate);
-			JSONObject weather=new JSONObject();
-			weather.put("Weather", meteo.getMain());
-			weather.put("Specific", meteo.getDescription());
-			weather.put("Pressure", meteo.getPressure() +" Pa");
-			weatherInfo.put("Status", weather);
-			
-			JSONObject temp=new JSONObject();
-			temp.put("Minimum", (u.tempConverter(meteo.getTemp_min())+" °C"));
-			temp.put("Current", (u.tempConverter(meteo.getTemp())+" °C"));
-			temp.put("Maximum", (u.tempConverter(meteo.getTemp_max())+" °C"));
-			weatherInfo.put("Temperatures", temp);
-			
-			
-			
-			
-			
-			allInfo.put("City", cityInfo);
-			allInfo.put("Forecasts", weatherInfo);
-			
-			if(all) {
-				return allInfo;
-			}else {
-				return weatherInfo;
-			}
-			
-			
-			
+		}		
+
+		//info stampate se all é false
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");//  
+		String strDate = dateFormat.format(u.toDate(meteo.getDate()));  
+		weatherInfo.put("date", strDate);
+		JSONObject weather=new JSONObject();
+		weather.put("Weather", meteo.getMain());
+		weather.put("Specific", meteo.getDescription());
+		weather.put("Pressure", meteo.getPressure() +" Pa");
+		weatherInfo.put("Status", weather);
+
+		JSONObject temp=new JSONObject();
+		temp.put("Minimum", (u.tempConverter(meteo.getTemp_min())+" °C"));
+		temp.put("Current", (u.tempConverter(meteo.getTemp())+" °C"));
+		temp.put("Maximum", (u.tempConverter(meteo.getTemp_max())+" °C"));
+		weatherInfo.put("Temperatures", temp);
+
+
+
+
+
+		allInfo.put("City", cityInfo);
+		allInfo.put("Forecasts", weatherInfo);
+
+		if(all) {
+			return allInfo;
+		}else {
+			return weatherInfo;
 		}
-		
-		/**
-		 * Metodo che salva su file le informazioni 
-		 * del meteo di una città
-		 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
-		 * @author Francesco
-		 */
-		
-		public String saveHourlyWeather(String name, Weather weather) {
-			
-			String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather";
-			File file = new File(path);	
-			
-			ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
-			System.out.println("Start Execution");
-			
-			eTP.scheduleAtFixedRate(new Runnable() {
-				@Override
-				public void run() {
-					
-					JSONObject toFile = new JSONObject();
-					Weather meteo = new Weather();
-					try {
-						//meteo = (Weather) getCity(name, weather);
-						meteo = getWeather(name, weather);
-						System.out.println("meteo " +meteo);
-					} catch (MalformedURLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					System.out.println(toFile);
-					toFile = printInfo(meteo, true);
-					
-					System.out.println(toFile);
-					try {
-						if (!file.exists()) {
-							file.createNewFile();
-							System.out.println("File created");
-						}
-						FileWriter f = new FileWriter(file); 
-						BufferedWriter n = new BufferedWriter(f);
-						n.write(toFile.toString());
-						n.close();
-					}
-					catch(IOException e)
-					{
-						System.out.println(e); //creare eccezioni
-					}
-			
+
+
+
+	}
+
+	/**
+	 * Metodo che salva su file le informazioni 
+	 * del meteo di una città
+	 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
+	 * @author Francesco
+	 * @throws IOException 
+	 */		
+	public JSONObject saveHourlyWeather(String name) {
+
+		String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather";
+		File file = new File(path);	
+		JSONArray arr = new JSONArray();
+		JSONObject toPrint = new JSONObject();
+		JSONObject printStats = new JSONObject();
+
+		ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
+		System.out.println("Start Execution");
+
+		eTP.scheduleAtFixedRate(new Runnable() {
+			@SuppressWarnings("unchecked")
+			@Override
+			public void run() {
+
+				JSONObject toFile = new JSONObject();
+				Weather meteo = new Weather();
+				try {
+					meteo = getWeather(name);
+				} catch (MalformedURLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-			}, 0, 3, TimeUnit.HOURS);
-			
-			return "File salvato in " + file;
-}
-			
-		
-		
-		
-		/**
-		 *Metodo che usa getCity per prendere previsioni 
-		 *meteo della città richiesta e
-		 *restituisce il JSONArray
-		 * 
-		 *@return restituisce il JSONArray con la città e le relative informazioni
-		 * 
-		 */
-		/*
-		public String searchArray(JSONObject obj,String arrayName, String valueName) {
-			JSONArray array=(JSONArray) obj.get(arrayName);
-			Iterator<?> i=array.iterator();
-			String value="";
-			
-			while (i.hasNext()) {
-				JSONObject info=(JSONObject) i.next();
-				value=(String) info.get(valueName);
+				toFile = printInfo(meteo, false);
+				arr.add(0, toFile);
+				toPrint.put("Forecasts", arr); 	
+				try {
+					if (!file.exists()) {
+						file.createNewFile();
+						System.out.println("File created");
+						
+					}
+					FileWriter f = new FileWriter(file); 
+					BufferedWriter n = new BufferedWriter(f);
+					n.write(toPrint.toString());
+					n.close();
+				}
+				catch(IOException e)
+				{
+					System.out.println(e); //creare eccezioni
+				}
+
 			}
-			return value;
-			
-		}
-		*/
+		}, 0, 30, TimeUnit.HOURS);
 		
-		public void ResetUrl() {
-			this.url = "https://api.openweathermap.org/data/2.5/";
+		Stats s = new Stats();
+		JSONObject a = null;
+		try {
+			Thread.sleep(5000);
+			printStats=s.getFiveDaysAverage(name+"HourlyWeather");
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (NullObjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
+		
+		
+		return printStats;
+	}
 
 
-		
+
+	public void ResetUrl() {
+		this.url = "https://api.openweathermap.org/data/2.5/";
+	}
+
+
+
 }

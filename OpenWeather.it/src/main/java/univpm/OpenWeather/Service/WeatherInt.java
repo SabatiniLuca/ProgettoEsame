@@ -1,5 +1,6 @@
 package univpm.OpenWeather.Service;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 
 
@@ -12,9 +13,9 @@ public interface WeatherInt {
 	
 	public JSONObject getInfo(String url) throws MalformedURLException;
 	public String UrlBuilder(boolean current, String cityName);
-	public Weather getWeather(String name, Weather meteo) throws MalformedURLException;
+	public Weather getWeather(String name) throws MalformedURLException;
 	public String toString();
 	public JSONObject printInfo(Weather city, boolean all);
-	public String saveHourlyWeather(String name, Weather weather);
+	public JSONObject saveHourlyWeather(String name) throws IOException;
 
 }

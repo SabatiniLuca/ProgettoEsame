@@ -1,9 +1,12 @@
 package univpm.OpenWeather.Controller;
 
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,8 +46,7 @@ public class OpenWeatherController {
 	
 	@RequestMapping("/current")
 	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
-		Weather meteo=new Weather();
-		return new ResponseEntity<>(service.printInfo(service.getWeather(name, meteo), true), HttpStatus.OK);
+		return new ResponseEntity<>(service.printInfo(service.getWeather(name), true), HttpStatus.OK);
 	}
 	
 	@RequestMapping("/forecast")
@@ -52,18 +54,22 @@ public class OpenWeatherController {
 		return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
 	}
 	
-	@GetMapping("/saveEveryHour")
-	public ResponseEntity<String> saveEveryHour(@RequestParam(name ="name", defaultValue = "Milano") String name){
-		Weather weather = new Weather();
-		String path = service.saveHourlyWeather(name, weather);
-		return new ResponseEntity<>(path, HttpStatus.OK);
+	/*@GetMapping("/stats")
+	public ResponseEntity<JSONObject> stats (@RequestParam(name="name", defaultValue="Milano")String name) throws ParseException, NullObjectException, IOException{
+		JSONObject obj = service.getForecast(name);
+		String path = null;
+		return new ResponseEntity<>(statistics.getFiveDaysAverage(path), HttpStatus.OK);
+	}*/
+	
+	@GetMapping("/saveArray")
+	public ResponseEntity<JSONObject> saveArray (@RequestParam(name = "name", defaultValue="Milano")String name){
+		return new ResponseEntity<>(service.saveHourlyWeather(name), HttpStatus.OK);
 	}
 	
-	@GetMapping("/stats")
-	public ResponseEntity<JSONObject> stats (@RequestParam(name="name", defaultValue="Milano")String name) throws MalformedURLException, ParseException, NullObjectException{
-		Weather meteo = new Weather();
-		JSONObject obj = service.getForecast(name);
-		return new ResponseEntity<>(statistics.getFiveDaysAverage(obj, meteo), HttpStatus.OK);
+	@GetMapping("/historystats")
+	public ResponseEntity<JSONObject> historyStats(@RequestParam(name = "name", defaultValue = "Milano")String name) throws NullObjectException, IOException{
+		service.saveHourlyWeather(name);
+		return new ResponseEntity<>(statistics.getFiveDaysAverage(name+"HourlyWeather"), HttpStatus.OK);
 	}
 	
 }
