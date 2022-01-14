@@ -12,6 +12,7 @@ import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import univpm.OpenWeather.Exception.ExeededDayException;
 import univpm.OpenWeather.Service.WeatherImpl;
 
 /**
@@ -46,48 +47,84 @@ public class FiltersImpl implements FiltersInt {
 		
 		while(i.hasNext() ) {
 			JSONObject temp=i.next();
-			String tempDate=(String) temp.get("date");
-			//String sub=tempDate.substring(0,10);
-			Date actual=u.dateConverter(tempDate);
+			Date tempDate=u.dateConverter((String) temp.get("date")) ;
 			
-			System.out.println("richiesta (17 gen)"+dataRichiesta+"\n");
-			System.out.println(actual+"\tpresa dal ogg\n");
-			if(dataRichiesta.compareTo(actual)>=0) {
+			if(dataRichiesta.compareTo(tempDate)>=0) {
 				toPrint.add(temp);
 			}else {break;}
+			tempDate=null;
 		}
 		
 		JSONObject printAll=new JSONObject();
-		printAll.put("Previsioni fino al giorno: "+ dataRichiesta.toString(), toPrint);
+		printAll.put("Previsioni fino al giorno: "+ dataRichiesta.toString().substring(0,16), toPrint);
 		return printAll;
 	}
 
-	@Override //da finire
-	public JSONObject fiveDaysFromNow() throws ParseException {
-		Date date = u.toDate(System.currentTimeMillis()/1000);
+	
+	/**
+	 * Questo metodo crea una data sotto forma di testo che limita la stampa di previsioni e poi le stampa.
+	 * per esempio se la data creata è fra due giorni
+	 * @throws ExeededDayException 
+	 */
+	@Override 
+	public String setDate(long number) throws ParseException, ExeededDayException {
+		long days;//86400  secondi in un giorno
+		String text="";
 		
+		if (number>432000 ) {
+			throw new ExeededDayException("La previsione cercata è tra più di 5 giorni da ora");
+		}
+		else if(number<10800) {
+			throw new ExeededDayException("La previsione cercata è tra meno di 3 ore da ora");
+		}else if(number==0) {
+			days=0;//setta la data al momento presente
+		}
+		else {
+			days=86400+number;//setta la data ad un momento futuro in base a quanto è grande number
+		}
+		
+		Date date = u.toDate((System.currentTimeMillis()/1000)+days);
 		SimpleDateFormat format=new SimpleDateFormat("dd-MM-yyyy HH:MM");
-		  String text = format.format(date);
-		  //LocalDate parsedDate = LocalDate.parse(text, format);
-		  System.out.println(text);
+		text = format.format(date);
+		return text;
 		
-		
-		
-		return selectDay(text);
 	}
-
+	
+	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject oneDayFromNow() {
-		// TODO Auto-generated method stub
-		return null;
+	public JSONObject FromStartToFinish(String start, String finish) throws ParseException {
+		
+		Iterator<JSONObject> i=this.days.iterator();
+		JSONArray toPrint= new JSONArray();
+		
+		Date datainizio=u.dateConverter(start);
+		while(true) {
+			Date cerca=u.dateConverter((String) i.next().get("date")) ;
+			if(datainizio.compareTo(cerca)==0) {
+				break;
+			}
+		}
+		
+		Date datafine=u.dateConverter(finish);
+		
+		while(i.hasNext() ) {
+			JSONObject temp=i.next();
+			Date tempDate=u.dateConverter((String) temp.get("date")) ;
+			
+			if(datafine.compareTo(tempDate)>=0) {
+				toPrint.add(temp);
+			}else {break;}
+			tempDate=null;
+		}
+		
+		JSONObject printAll=new JSONObject();
+		printAll.put("Previsioni dal"+ datainizio.toString().substring(0, 16)+" al "+datafine.toString().substring(0, 16), toPrint);
+		return printAll;
 	}
 
-	@Override
-	public JSONObject onlyToday() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
+	
+	//setters e getter
 	public JSONObject getForecast() {
 		return forecast;
 	}
@@ -95,6 +132,8 @@ public class FiltersImpl implements FiltersInt {
 	public void setForecast(JSONObject forecast) {
 		this.forecast = forecast;
 	}
+
+	
 	
 	
 	

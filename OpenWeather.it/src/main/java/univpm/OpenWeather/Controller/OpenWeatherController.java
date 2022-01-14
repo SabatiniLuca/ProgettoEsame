@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import univpm.OpenWeather.Exception.ExeededDayException;
 import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Service.WeatherImpl;
 import univpm.OpenWeather.Utils.FiltersImpl;
@@ -80,10 +81,22 @@ public class OpenWeatherController {
 	
 	@GetMapping("/Filters")
 	public ResponseEntity<JSONObject> filters(@RequestParam(name = "name", defaultValue = "Milano")String name,
-			@RequestParam(name = "date", defaultValue = "17-01-2022 15:00:00")String type) throws MalformedURLException, ParseException {
+			@RequestParam(name = "start", defaultValue = "now")String start,
+			@RequestParam(name = "finish", defaultValue = "five")String finish,
+			@RequestParam(name = "time", defaultValue = "00:00")String time) throws MalformedURLException, ParseException, ExeededDayException {
 		
 		FiltersImpl f=new FiltersImpl(name);
-		return new ResponseEntity<>(f.fiveDaysFromNow(), HttpStatus.OK);
+		
+		
+		if (start.equals("now") && !finish.equals("five")) {//Stampa il normale forecast per 5 giorni
+			return new ResponseEntity<>(f.selectDay(finish+" "+time), HttpStatus.OK);
+		}
+		
+		else if(!start.equals("now")&& !finish.equals("five")) {
+			return new ResponseEntity<>(f.FromStartToFinish(start+" "+time, finish+" "+time), HttpStatus.OK);
+		}
+		
+		return new ResponseEntity<>(f.selectDay(finish+" "+time), HttpStatus.OK);
 	}
 }
 
