@@ -14,13 +14,9 @@ import univpm.OpenWeather.Model.Weather;
  */
 public class GetFromCall {
 
-	public GetFromCall() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	
-	
-	@SuppressWarnings("unchecked")
+		
+	/**
+	 * @SuppressWarnings("unchecked")
 	public JSONObject getCurrent(JSONObject obj) {
 		JSONObject toPrint=new JSONObject();
 		toPrint.put("City", getCity(obj));
@@ -28,21 +24,7 @@ public class GetFromCall {
 		toPrint.put("Weather", getWeather(obj));
 		return toPrint;
 	}
-	
-	public String getString(JSONObject obj, String value) {
-		String ret=(String) obj.get(value);
-		return ret;
-	}
-	
-	public double getDouble(JSONObject obj, String value) {
-		double ret=(double) obj.get(value);
-		return ret;
-	}
-	
-	public long getLong(JSONObject obj, String value) {
-		long ret=(long) obj.get(value);
-		return ret;
-	}
+	 */
 	
 	/**
 	 * crea una posizione da un JSONobject
@@ -112,6 +94,12 @@ public class GetFromCall {
 		}
 	}
 	
+	/**
+	 * @param obj  JSONObject della chiamata api
+	 * @param current stabilisce se deve prendere i valori per una stampa parziale o intera 
+	 * in base all'utilizzo necessario (per il forecast o il current)
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getMain(JSONObject obj,boolean current) {
 		JSONObject m=(JSONObject) obj.get("main");
@@ -196,8 +184,8 @@ public class GetFromCall {
 	}
 	/**
 	 * 
-	 * @param obj
-	 * @return
+	 * @param obj  JSONobject contenente le descrizioni del meteo
+	 * @return weather  Un JSONObject con dentro i parametri con i nomi specificati
 	 * @author lucas
 	 */
 	@SuppressWarnings("unchecked")
@@ -213,17 +201,6 @@ public class GetFromCall {
 		return weather;
 		
 	}
-	
-	/**
-	 * 
-	 * @param obj
-	 * @return
-	 * @author lucas
-	 */
-	public JSONObject getDate(JSONObject obj) {
-		return (JSONObject) obj.get("dt");
-	}
-	
-	
+		
 
 }

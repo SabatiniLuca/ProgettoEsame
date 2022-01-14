@@ -52,7 +52,10 @@ public class Utils {
 	 * @throws ParseException 
 	 */
 	public Date dateConverter(String dateText) throws ParseException {
-		Date date= new SimpleDateFormat("yyyy-MM-dd HH:MM:SS").parse(dateText);
+		
+		SimpleDateFormat format=new SimpleDateFormat("dd-MM-yyyy HH:MM");
+		Date date=format.parse(dateText);
+		
 		return date;
 	}
 

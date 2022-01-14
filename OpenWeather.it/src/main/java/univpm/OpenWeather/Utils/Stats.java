@@ -204,7 +204,6 @@ public class Stats implements StatsInt{
 	}
 
 	/**
-	 * 
 	 * @param jobj
 	 * @return  la pressione minima tra le pressioni presenti nel forecast
 	 */

@@ -3,6 +3,8 @@ package univpm.OpenWeather.Controller;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.util.Date;
 
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Service.WeatherImpl;
+import univpm.OpenWeather.Utils.FiltersImpl;
 import univpm.OpenWeather.Utils.Stats;
 
 
@@ -25,7 +28,6 @@ public class OpenWeatherController {
 	@Autowired
 	WeatherImpl service; 	
 	Stats statistics = new Stats();
-	
 	@RequestMapping("/greeting")
 	public String greeting(@RequestParam(value="name",defaultValue="Mario")String name) {
 		return "Salve "+name+", questo è OpenWeather";		
@@ -38,8 +40,7 @@ public class OpenWeatherController {
 	 * @throws MalformedURLException avvisa se la chiamata non è andata a buon fine
 	 * 
 	 * @author lucas
-	 */
-	
+	 */	
 	@GetMapping("/current")
 	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
 		return new ResponseEntity<>(service.printInfo(service.getWeather(name), true), HttpStatus.OK);
@@ -50,16 +51,6 @@ public class OpenWeatherController {
 		return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
 	}
 	
-	/**
-	 * @param name
-	 * @return sia il file che si aggiorna ogni ora sia le statistiche 
-	 * (prende però solo le prime previsioni e quindi non genera statistiche vere e proprie)		
-	 * @throws NullObjectException
-	 */
-	@GetMapping("/saveEveryHourStats")
-	public ResponseEntity<JSONObject> saveEveryHour(@RequestParam(name ="name", defaultValue = "Milano") String name) throws NullObjectException{
-		return new ResponseEntity<>(service.saveHourlyWeatherAndStats(name,false), HttpStatus.OK);
-	}
 	
 	/**
 	 * @param name
@@ -85,6 +76,14 @@ public class OpenWeatherController {
 	@GetMapping("/Errors")
 	public ResponseEntity<JSONObject> errors(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException, ParseException{
 		return new ResponseEntity<>(service.getErrors(name), HttpStatus.OK);
+	}
+	
+	@GetMapping("/Filters")
+	public ResponseEntity<JSONObject> filters(@RequestParam(name = "name", defaultValue = "Milano")String name,
+			@RequestParam(name = "date", defaultValue = "17-01-2022 15:00:00")String type) throws MalformedURLException, ParseException {
+		
+		FiltersImpl f=new FiltersImpl(name);
+		return new ResponseEntity<>(f.fiveDaysFromNow(), HttpStatus.OK);
 	}
 }
 
