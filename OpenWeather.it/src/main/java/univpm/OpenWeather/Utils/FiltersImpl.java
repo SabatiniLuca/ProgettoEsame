@@ -1,11 +1,8 @@
 package univpm.OpenWeather.Utils;
 
 import java.net.MalformedURLException;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -73,11 +70,11 @@ public class FiltersImpl implements FiltersInt {
 		
 		if (number>432000 ) {
 			throw new ExeededDayException("La previsione cercata è tra più di 5 giorni da ora");
+		}else if(number==0) {
+			days=0;//setta la data al momento presente
 		}
 		else if(number<10800) {
 			throw new ExeededDayException("La previsione cercata è tra meno di 3 ore da ora");
-		}else if(number==0) {
-			days=0;//setta la data al momento presente
 		}
 		else {
 			days=86400+number;//setta la data ad un momento futuro in base a quanto è grande number
@@ -98,11 +95,12 @@ public class FiltersImpl implements FiltersInt {
 		JSONArray toPrint= new JSONArray();
 		
 		Date datainizio=u.dateConverter(start);
-		while(true) {
-			Date cerca=u.dateConverter((String) i.next().get("date")) ;
-			if(datainizio.compareTo(cerca)==0) {
+		Date cerca=null;
+		while(cerca!=null) {
+			cerca=u.dateConverter((String) i.next().get("date")) ;
+			if((datainizio.compareTo(cerca))==0) {
 				break;
-			}
+			} 
 		}
 		
 		Date datafine=u.dateConverter(finish);
@@ -118,7 +116,7 @@ public class FiltersImpl implements FiltersInt {
 		}
 		
 		JSONObject printAll=new JSONObject();
-		printAll.put("Previsioni dal"+ datainizio.toString().substring(0, 16)+" al "+datafine.toString().substring(0, 16), toPrint);
+		printAll.put("Previsioni da "+ datainizio.toString().substring(0, 16)+" a "+datafine.toString().substring(0, 16), toPrint);
 		return printAll;
 	}
 

@@ -3,9 +3,6 @@ package univpm.OpenWeather.Controller;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.util.Date;
-
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -86,17 +83,14 @@ public class OpenWeatherController {
 			@RequestParam(name = "time", defaultValue = "00:00")String time) throws MalformedURLException, ParseException, ExeededDayException {
 		
 		FiltersImpl f=new FiltersImpl(name);
-		
-		
-		if (start.equals("now") && !finish.equals("five")) {//Stampa il normale forecast per 5 giorni
-			return new ResponseEntity<>(f.selectDay(finish+" "+time), HttpStatus.OK);
+		if(start.equals("now")) {
+			start=f.setDate(0);
+		}
+		if(finish.equals("five")) {
+			finish=f.setDate(345600);
 		}
 		
-		else if(!start.equals("now")&& !finish.equals("five")) {
-			return new ResponseEntity<>(f.FromStartToFinish(start+" "+time, finish+" "+time), HttpStatus.OK);
-		}
-		
-		return new ResponseEntity<>(f.selectDay(finish+" "+time), HttpStatus.OK);
+		return new ResponseEntity<>(f.FromStartToFinish(start+" "+time, finish+" "+time), HttpStatus.OK);
 	}
 }
 
