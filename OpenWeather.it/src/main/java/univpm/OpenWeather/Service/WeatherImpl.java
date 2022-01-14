@@ -30,7 +30,6 @@ import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.GetFromCall;
-import univpm.OpenWeather.Utils.Stats;
 
 
 @Service
@@ -208,9 +207,12 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
-	 * Metodo che crea un file e immette informazioni 
-	 * riguardanti le previsioni ogni ora.
-	 */
+	 * Metodo che salva su file le informazioni 
+	 * del meteo di una città
+	 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
+	 * @author Francesco
+	 * @throws NullObjectException 
+	 */		
 	public String saveFile(String name) {
 
 		String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
@@ -260,88 +262,12 @@ public class WeatherImpl implements WeatherInt {
 					System.out.println(e); //creare eccezioni
 				}				
 			}
-		}, 0, 20, TimeUnit.SECONDS);
+		}, 0, 1, TimeUnit.HOURS);
 
 		return path;
 	}
 
-	/**
-	 * Metodo che salva su file le informazioni 
-	 * del meteo di una città
-	 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
-	 * @author Francesco
-	 * @throws NullObjectException 
-	 */		
-	@SuppressWarnings("unchecked")
-	public JSONObject saveHourlyWeatherAndStats(String name,boolean stats) throws NullObjectException {
-
-
-		String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
-		File file = new File(path);	
-		JSONObject printStats = null;
-
-		ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
-		System.out.println("Start Execution");
-
-		JSONObject toPrint=new JSONObject();
-		JSONArray array=new JSONArray();
-
-		eTP.scheduleAtFixedRate(new Runnable() {
-
-			@Override
-			public void run() {
-
-
-				JSONObject toFile = new JSONObject();
-				Weather weather = new Weather();
-				try {
-					
-					weather=getWeather(name);
-					
-				} catch (MalformedURLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				toFile = printInfo(weather, false);
-
-				array.add(toFile);
-
-				toPrint.put("Forecasts", array);
-
-				try {
-					if (!file.exists()) {
-						file.createNewFile();
-						System.out.println("File created");
-					}
-					FileWriter f = new FileWriter(file); 
-					BufferedWriter n = new BufferedWriter(f);
-					n.write(toPrint.toString());
-					n.close();
-				}
-				catch(IOException e)
-				{
-					System.out.println(e); //creare eccezioni
-				}				
-			}
-		}, 0, 20, TimeUnit.SECONDS);
-
-		Stats s = new Stats();
-		try {
-			Thread.sleep(5000);
-			printStats=s.getFiveDaysAverage(name+"HourlyWeather.txt");
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NullObjectException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return printStats;
-	}
+	
 
 	/**
 	 * Metodo che restituisce l'errore tra il forecast e l'attuale

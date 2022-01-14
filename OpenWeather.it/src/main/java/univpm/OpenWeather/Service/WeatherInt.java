@@ -17,7 +17,6 @@ public interface WeatherInt {
 	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException;
 	public String toString();
 	public JSONObject printInfo(Weather city, boolean all);
-	public JSONObject saveHourlyWeatherAndStats(String name,boolean stats) throws NullObjectException;//, Weather weather
 	public String saveFile(String name);
 
 }
