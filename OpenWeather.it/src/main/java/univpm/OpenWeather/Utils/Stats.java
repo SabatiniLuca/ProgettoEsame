@@ -2,6 +2,7 @@ package univpm.OpenWeather.Utils;
 
 import java.io.BufferedReader;
 
+
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -48,6 +49,7 @@ public class Stats implements StatsInt{
 		double p_average = getPressAverage(read);
 		double p_max = getPressMax(read);
 		double p_min = getPressMin(read);
+		double variance = getVariance(read);
 		
 		if(t_average!=0 && p_average!=0) {
 			temp.put("Average Temperature", t_average);
@@ -55,7 +57,8 @@ public class Stats implements StatsInt{
 			temp.put("Min Temperature", temp_min);	
 			temp.put("Average Pressure", p_average);
 			temp.put("Max Pressure", p_max);
-			temp.put("Min Pressure", p_min);	
+			temp.put("Min Pressure", p_min);
+			temp.put("Variance", variance);
 			statistics.put("Statistics", temp);
 		}
 		else throw new NullObjectException("Object is null");
@@ -87,7 +90,7 @@ public class Stats implements StatsInt{
 			somma +=value;
 
 		}
-		return somma/arr.size();
+		return Math.round((somma)/arr.size()*100.0)/100.0;
 
 	}
 
@@ -171,7 +174,7 @@ public class Stats implements StatsInt{
 			
 			somma +=value;
 		}
-		return somma/arr.size();
+		return Math.round((somma/arr.size())*100.0)/100.0;
 
 	}
 	/**
@@ -232,24 +235,42 @@ public class Stats implements StatsInt{
 	}
 
 
-	//Da finire
 	public double getVariance(JSONObject jobj) {
+		
 		JSONObject variance = null;
-		double media = getPressAverage(jobj);
-		double somma=0;
-		double var=0;
+		double var;
+		double somma=0, media=0;
+		
 		JSONArray arr =(JSONArray) jobj.get("Forecasts");
+		double value[] = new double[arr.size()];
 		for (int i =0; i<arr.size(); i++) {
+			
 			JSONObject FObj = (JSONObject) arr.get(i);
-			System.out.println(FObj);
+			
 			variance = (JSONObject) FObj.get("Status");
-			System.out.println(variance);
 
 			String curr = (String) variance.get("Pressure");
-			double value= Double.parseDouble(curr.substring(0, 4));
-			somma +=value;
+			
+			double valuePress= Double.parseDouble(curr.substring(0, 4));
+			
+			somma += valuePress;
+			
+			value[i]=valuePress;
 		}
-		//var = pow((somma - media), 2) 
+		
+		media = somma/arr.size();
+		
+		double s=0;
+		
+		for (int i=0; i<arr.size(); i++) {
+			value[i] = value[i]-media;
+			value[i]=Math.pow(value[i],2);
+			s +=value[i];
+		}
+		
+		var = s/(arr.size()-1);
+		
+		var = Math.round(var*100.0)/100.0;		
 		return var;
 	}
 
