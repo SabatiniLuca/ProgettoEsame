@@ -94,7 +94,11 @@ public class WeatherImpl implements WeatherInt {
 
 	}
 
-
+	/**
+	 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
+	 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
+	 * @author lucas
+	 */
 	@Override
 	public Weather getWeather(String cityName) throws MalformedURLException {//, Weather meteo
 		// TODO Auto-generated method stub
@@ -105,17 +109,13 @@ public class WeatherImpl implements WeatherInt {
 		JSONObject object = getInfo(u); //JSONObject contentente il JSON 
 		Weather meteo=p.createWeather(object,true);
 
-
-		/**
-		 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
-		 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
-		 * @author lucas
-		 */
-
 		return meteo;
 	}
 
-
+	/**
+	 * Questo metodo stampa il forecast per i cinque giorni successivi ad intervalli di tre ore
+	 * @author lucas
+	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException {
 		GetFromCall p = new GetFromCall();
@@ -145,11 +145,6 @@ public class WeatherImpl implements WeatherInt {
 		return toPrint;
 	}
 
-
-
-
-
-
 	/**
 	 * questo metodo stampa tutte le informazioni se 
 	 * @param all è true
@@ -174,7 +169,7 @@ public class WeatherImpl implements WeatherInt {
 		}		
 
 		//info stampate se all é false
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");//  
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm"); 
 		String strDate = dateFormat.format(u.toDate(meteo.getDate()));  
 		weatherInfo.put("date", strDate);
 		JSONObject weather=new JSONObject();
@@ -212,7 +207,8 @@ public class WeatherImpl implements WeatherInt {
 	 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
 	 * @author Francesco
 	 * @throws NullObjectException 
-	 */		
+	 */	
+	@Override
 	public String saveFile(String name) {
 
 		String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
@@ -262,13 +258,12 @@ public class WeatherImpl implements WeatherInt {
 					System.out.println(e); //creare eccezioni
 				}				
 			}
-		}, 0, 1, TimeUnit.HOURS);
+		}, 0, 20, TimeUnit.SECONDS);
 
 		return path;
 	}
 
 	
-
 	/**
 	 * Metodo che restituisce l'errore tra il forecast e l'attuale
 	 * @param name

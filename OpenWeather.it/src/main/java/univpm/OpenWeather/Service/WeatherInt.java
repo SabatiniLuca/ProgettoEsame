@@ -5,7 +5,6 @@ import java.text.ParseException;
 
 import org.json.simple.JSONObject;
 
-import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Model.Weather;
 
 public interface WeatherInt {
