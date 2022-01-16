@@ -26,6 +26,7 @@ import org.json.simple.parser.JSONParser;
 
 import org.springframework.stereotype.Service;
 
+import univpm.OpenWeather.Exception.CityNotFoundException;
 import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
@@ -61,14 +62,16 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
-	 * questo metodo crea una connessione usando il parametro u e restituisce un Json object
+	 * Questo metodo crea una connessione alle API e restituisce un JSONObject contenente tutte le informazioni di quell'API
+	 * @param api API  grazie alla quale si connette e prende informazioni il metodo
+	 * @author Francesco 
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getInfo(String u) throws MalformedURLException {
+	public JSONObject getInfo(String api) throws MalformedURLException {
 		
 		JSONObject obj = null;
-		URL url = new URL(u);
+		URL url = new URL(api);
 		try {
 
 			HttpsURLConnection conn=(HttpsURLConnection) url.openConnection();
@@ -110,9 +113,10 @@ public class WeatherImpl implements WeatherInt {
 	 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
 	 * @return Crea un oggetto di @Weather e valorizza
 	 * @author lucas
+	 * @throws CityNotFoundException 
 	 */
 	@Override
-	public Weather getWeather(String cityName) throws MalformedURLException {//, Weather meteo
+	public Weather getWeather(String cityName) throws MalformedURLException, CityNotFoundException {//, Weather meteo
 		// TODO Auto-generated method stub
 		GetFromCall p=new GetFromCall();
 		ResetUrl();
@@ -129,9 +133,10 @@ public class WeatherImpl implements WeatherInt {
 	 * @return Questo metodo stampa un @JSONObject contenente un @JSONArray con le previsioni per i cinque giorni successivi al momento della chiamata
 	 * 	ad intervalli di tre ore. Contiene anche un @JSONObject con le informazioni della città.
 	 * @author lucas
+	 * @throws CityNotFoundException 
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException {
+	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException, CityNotFoundException {
 		GetFromCall p = new GetFromCall();
 
 		ResetUrl();
@@ -216,9 +221,8 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
-	 * Metodo che salva su file le informazioni 
-	 * del meteo di una città
-	 * @param name(nome della città), weather(oggetto di Weather per prenderer tutte le informazioni sul meteo)
+	 * Metodo che salva su file le informazioni del meteo attuale di una città e si aggiorna ogni ora
+	 * @param name è il nome della città di cui verranno salvate le informazioni
 	 * @author Francesco
 	 * @throws NullObjectException 
 	 */	
@@ -250,6 +254,9 @@ public class WeatherImpl implements WeatherInt {
 				} catch (MalformedURLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
+				} catch (CityNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				toFile = printInfo(weather, false);
 
@@ -279,14 +286,15 @@ public class WeatherImpl implements WeatherInt {
 
 	
 	/**
-	 * Metodo che restituisce l'errore tra il forecast e l'attuale
-	 * @param name
+	 * Metodo che restituisce l'errore tra il forecast e l'attuale (nel forecast prende solo il primo JSONObject)
+	 * @param name è il nome della città di cui si vuole calcolare l'errore
 	 * @return
 	 * @throws MalformedURLException 
 	 * @throws ParseException 
+	 * @throws CityNotFoundException 
 	 */
 	@SuppressWarnings("unchecked")
-	public JSONObject getErrors(String name) throws MalformedURLException, ParseException {
+	public JSONObject getErrors(String name) throws MalformedURLException, ParseException, CityNotFoundException {
 		
 		Utils u = new Utils();
 		JSONObject current = printInfo(getWeather(name), false);

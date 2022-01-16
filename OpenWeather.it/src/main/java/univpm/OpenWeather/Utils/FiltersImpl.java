@@ -9,6 +9,7 @@ import java.util.Iterator;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import univpm.OpenWeather.Exception.CityNotFoundException;
 import univpm.OpenWeather.Exception.ExeededDayException;
 import univpm.OpenWeather.Exception.WrongDateException;
 import univpm.OpenWeather.Service.WeatherImpl;
@@ -35,8 +36,9 @@ public class FiltersImpl implements FiltersInt {
 	 * @throws MalformedURLException
 	 * @throws ParseException
 	 * @author lucas
+	 * @throws CityNotFoundException 
 	 */
-	public FiltersImpl(String name) throws MalformedURLException, ParseException {
+	public FiltersImpl(String name) throws MalformedURLException, ParseException, CityNotFoundException {
 		this.setForecast(service.getForecast(name));
 		this.days=(JSONArray) this.forecast.get("Forecasts");
 		

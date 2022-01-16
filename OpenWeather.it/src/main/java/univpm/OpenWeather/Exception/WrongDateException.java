@@ -1,5 +1,10 @@
 package univpm.OpenWeather.Exception;
 
+/**
+ * Questa classe serve a gestire eccezioni quando si immette un formato di data sbagliato
+ * @author Francesco
+ *
+ */
 @SuppressWarnings("serial")
 public class WrongDateException extends Exception {
 

@@ -13,7 +13,12 @@ import org.json.simple.parser.ParseException;
 
 import univpm.OpenWeather.Exception.NullObjectException;
 
-
+/**
+ * Questa classe contiene i metodi che servono a leggere un file salvato e calcolare le statistiche riguardanti 
+ * valori massimi, minimi, media e varianza di temperatura e pressione di una città prendendo i valori da file
+ * @author Francesco
+ *
+ */
 public class Stats implements StatsInt{
 
 	/**
@@ -42,15 +47,16 @@ public class Stats implements StatsInt{
 
 		JSONObject temp = new JSONObject();
 		JSONObject statistics = new JSONObject();
-		
+
 		double t_average = getTempAverage(read);
-		double temp_max = getTempMax(read);
-		double temp_min = getTempMin(read);
+		double temp_max = getCurrentMax(read);
+		double temp_min = getCurrentMin(read);
 		double p_average = getPressAverage(read);
 		double p_max = getPressMax(read);
 		double p_min = getPressMin(read);
-		double variance = getVariance(read);
-		
+		double varianceP = getPressVariance(read);
+		double varianceT = getTempVariance(read);
+
 		if(t_average!=0 && p_average!=0) {
 			temp.put("Average Temperature", t_average);
 			temp.put("Max Temperature", temp_max);
@@ -58,18 +64,20 @@ public class Stats implements StatsInt{
 			temp.put("Average Pressure", p_average);
 			temp.put("Max Pressure", p_max);
 			temp.put("Min Pressure", p_min);
-			temp.put("Variance", variance);
+			temp.put("Pressure Variance", varianceP);
+			temp.put("Temperature Variance", varianceT);			
 			statistics.put("Statistics", temp);
 		}
 		else throw new NullObjectException("Object is null");
-		
+
 		return statistics;
 	}
 
 	/**
-	 * 
-	 * @param jobj
+	 * Questo metodo consente di fare la media della temperatura corrente, tra le temperature registrate
+	 * @param jobj JSONObject contenente le informazioni del file
 	 * @return media delle temperature
+	 * @author Francesco
 	 */
 	public double getTempAverage(JSONObject obj) {
 
@@ -84,9 +92,9 @@ public class Stats implements StatsInt{
 			temp = (JSONObject) FObj.get("Temperatures");
 
 			String curr = (String) temp.get("Current");
-			
+
 			value= Double.parseDouble(curr.substring(0, 4));
-			
+
 			somma +=value;
 
 		}
@@ -95,11 +103,12 @@ public class Stats implements StatsInt{
 	}
 
 	/**
-	 * 
-	 * @param jobj
+	 * Questo metodo consente di prendere la temperatura massima tra le temperature correnti nell'arco di una giornata
+	 * @param jobj JSONObject contenente le informazioni del file
 	 * @return la temperatura massima tra le temperature presenti nel forecast
+	 * @author Francesco
 	 */
-	public double getTempMax(JSONObject jobj) {
+	public double getCurrentMax(JSONObject jobj) {
 
 		JSONObject temp = null;
 		double value = 0;
@@ -122,38 +131,85 @@ public class Stats implements StatsInt{
 		return temp_max;
 	}
 	/**
-	 * 
-	 * @param jobj
+	 * Questo metodo consente di prendere la temperatura minima tra le temperature correnti nell'arco di una giornata
+	 * @param jobjJSONObject contenente le informazioni del file
 	 * @return la temperatura minima tra le temperature presenti nel forecast
+	 * @author Francesco
 	 */
-	public double getTempMin(JSONObject jobj) {
+	public double getCurrentMin(JSONObject jobj) {
 
 		JSONObject temp = null;
 		double value = 0;
 		double temp_min = 40 ;
 		JSONArray arr = (JSONArray) jobj.get("Forecasts");
-		
+
 		for (int i =0; i<arr.size(); i++) {
-			
+
 			JSONObject FObj = (JSONObject) arr.get(i);
 			
 			temp = (JSONObject) FObj.get("Temperatures");
-			
+
 			String curr = (String) temp.get("Current");
-			
+
 			value= Double.parseDouble(curr.substring(0, 4));
-			
+
 			if (value < temp_min) {
 				temp_min = value;
 			}
-			
+
 		}
 		return temp_min;
 	}
+
 	/**
-	 * 
-	 * @param jobj
+	 * Questo metodo consente di elaborare la varianza della temperatura
+	 * @param jobj JSONObject contenente le informazioni del file
+	 * @return
+	 * @author Francesco
+	 */
+	public double getTempVariance(JSONObject jobj) {
+
+		JSONObject variance = null;
+		double var;
+		double somma=0, media=0;
+
+		JSONArray arr =(JSONArray) jobj.get("Forecasts");
+		double value[] = new double[arr.size()];
+		for (int i =0; i<arr.size(); i++) {
+
+			JSONObject FObj = (JSONObject) arr.get(i);
+
+			variance = (JSONObject) FObj.get("Temperatures");
+
+			String curr = (String) variance.get("Current");
+
+			double valuePress= Double.parseDouble(curr.substring(0, 4));
+
+			somma += valuePress;
+
+			value[i]=valuePress;
+		}
+
+		media = somma/arr.size();
+
+		double s=0;
+
+		for (int i=0; i<arr.size(); i++) {
+			value[i] = value[i]-media;
+			value[i]=Math.pow(value[i],2);
+			s +=value[i];
+		}
+
+		var = s/(arr.size()-1);
+
+		var = Math.round(var*100.0)/100.0;		
+		return var;
+	}
+	/**
+	 * Questo metodo consente di stampare la pressione media di una giornata
+	 * @param jobj JSONObject contenente le informazioni del file
 	 * @return la pressione media 
+	 * @author Francesco
 	 */
 	public double getPressAverage(JSONObject jobj) {
 
@@ -161,26 +217,27 @@ public class Stats implements StatsInt{
 		double value = 0;
 		double somma =0;
 		JSONArray arr = (JSONArray) jobj.get("Forecasts");
-		
+
 		for (int i =0; i<arr.size(); i++) {
-			
+
 			JSONObject FObj = (JSONObject) arr.get(i);
-			
+
 			temp = (JSONObject) FObj.get("Status");
-			
+
 			String curr = (String) temp.get("Pressure");
-			
+
 			value= Double.parseDouble(curr.substring(0, 4));
-			
+
 			somma +=value;
 		}
 		return Math.round((somma/arr.size())*100.0)/100.0;
 
 	}
 	/**
-	 * 
-	 * @param jobj
+	 * Questo metodo consente di prendere la temperatura massima tra le pressioni nell'arco di una giornata
+	 * @param jobj JSONObject contenente le informazioni del file
 	 * @return la pressione massima tra le pressioni presenti nel forecast
+	 * @author Francesco
 	 */
 	public double getPressMax(JSONObject jobj) {
 
@@ -188,17 +245,17 @@ public class Stats implements StatsInt{
 		double value = 0;
 		double temp_max =0;
 		JSONArray arr = (JSONArray) jobj.get("Forecasts");
-		
+
 		for (int i =0; i<arr.size(); i++) {
-			
+
 			JSONObject FObj = (JSONObject) arr.get(i);
-			
+
 			temp = (JSONObject) FObj.get("Status");
-			
+
 			String curr = (String) temp.get("Pressure");
-			
+
 			value= Double.parseDouble(curr.substring(0, 4));
-			
+
 			if (value > temp_max) {
 				temp_max = value;
 			}
@@ -207,8 +264,10 @@ public class Stats implements StatsInt{
 	}
 
 	/**
-	 * @param jobj
+	 * Questo metodo consente di prendere la pressione minima tra le pressioni nell'arco di una giornata
+	 * @param jobj JSONObject contenente le informazioni del file
 	 * @return  la pressione minima tra le pressioni presenti nel forecast
+	 * @author Francesco
 	 */
 	public double getPressMin(JSONObject jobj) {
 
@@ -216,17 +275,17 @@ public class Stats implements StatsInt{
 		double value = 0;
 		double temp_min = 1100 ;
 		JSONArray arr = (JSONArray) jobj.get("Forecasts");
-		
+
 		for (int i =0; i<arr.size(); i++) {
-			
+
 			JSONObject FObj = (JSONObject) arr.get(i);
-			
+
 			temp = (JSONObject) FObj.get("Status");
-			
+
 			String curr = (String) temp.get("Pressure");
-			
+
 			value= Double.parseDouble(curr.substring(0, 4));
-			
+
 			if (value < temp_min) {
 				temp_min = value;
 			}
@@ -234,44 +293,52 @@ public class Stats implements StatsInt{
 		return temp_min;
 	}
 
+	/**
+	 * Questo metodo consente di elaborare la varianza della pressione
+	 * @param jobj JSONObject contenente le informazioni del file
+	 * @return
+	 * @author Francesco
+	 */
+	public double getPressVariance(JSONObject jobj) {
 
-	public double getVariance(JSONObject jobj) {
-		
 		JSONObject variance = null;
 		double var;
 		double somma=0, media=0;
-		
+
 		JSONArray arr =(JSONArray) jobj.get("Forecasts");
 		double value[] = new double[arr.size()];
 		for (int i =0; i<arr.size(); i++) {
-			
+
 			JSONObject FObj = (JSONObject) arr.get(i);
-			
+
 			variance = (JSONObject) FObj.get("Status");
 
 			String curr = (String) variance.get("Pressure");
-			
+
 			double valuePress= Double.parseDouble(curr.substring(0, 4));
-			
+
 			somma += valuePress;
-			
+
 			value[i]=valuePress;
 		}
-		
+
 		media = somma/arr.size();
-		
+
 		double s=0;
-		
+
 		for (int i=0; i<arr.size(); i++) {
 			value[i] = value[i]-media;
 			value[i]=Math.pow(value[i],2);
 			s +=value[i];
 		}
-		
+
 		var = s/(arr.size()-1);
-		
+
 		var = Math.round(var*100.0)/100.0;		
 		return var;
 	}
+
+
+
 
 }

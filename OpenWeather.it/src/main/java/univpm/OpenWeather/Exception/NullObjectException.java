@@ -5,27 +5,16 @@ package univpm.OpenWeather.Exception;
  * @author Francesco
  *
  */
+@SuppressWarnings("serial")
 public class NullObjectException extends Exception{
+
+	public NullObjectException() {
+		System.out.println("Error: Object is null");
+	}
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String mes="Objcet is null";
-	/**
-	 * Constructor
-	 * @param mes
-	 */
+	
 	public NullObjectException(String mes) {
-		super();
-		this.mes = mes;
+		super(mes);
 	}
 	
-	/**
-	 * getter del messaggio di errore
-	 * @return messaggio di errore
-	 */
-	public String getMes() {
-		return mes;
-	}
 }

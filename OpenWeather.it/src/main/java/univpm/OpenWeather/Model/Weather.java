@@ -1,7 +1,5 @@
 package univpm.OpenWeather.Model;
 
-import univpm.OpenWeather.Utils.Stats;
-
 /**
  * Classe contenente le informazioni sul meteo 
  * e un oggetto di City per prendere le informazioni sulla città e sulla posizione
@@ -22,7 +20,6 @@ public class Weather extends City {
 	private long date;
 	private String main;
 	private City city;
-	Stats s;
 
 	
 	//Constructors

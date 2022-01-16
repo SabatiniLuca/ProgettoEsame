@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import univpm.OpenWeather.Exception.CityNotFoundException;
 import univpm.OpenWeather.Exception.ExeededDayException;
 import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Exception.WrongDateException;
@@ -54,28 +55,43 @@ public class OpenWeatherController {
 	
 	
 	/**
-	 * @param name
+	 * Questa rotta consente di salvare su file le previsioni meteo prese ogni ora. Su questi file saranno poi generate le statistiche.
+	 * 
+	 * @param name nome della città della quale si vogliono salvare le informazioni
 	 * @return la stringa che indica il percorso in cui il file è stato salvato
+	 * @author Francesco
 	 */
 	@GetMapping("/saveFile")
 	public ResponseEntity<String> saveFile(@RequestParam(name = "name", defaultValue = "Milano")String name){
 		return new ResponseEntity<>(service.saveFile(name), HttpStatus.OK);
 	}
 	
-	/**
-	 * 
-	 * @param name
-	 * @return Statistiche sulle previsioni prese da file
-	 * @throws NullObjectException
-	 * @throws IOException
-	 */
+/**
+ * Questa rotta consente di visualizzare le statistiche riguardanti i valori massimi, minimi, la media e la varianza della pressione e delle temperature
+ * @param name nome della città di cui si vogliono generare le statistiche
+ * @return
+ * @throws NullObjectException
+ * @throws IOException eccezione generata se il nome del file di cui si vogliono generare le statistiche non è presente
+ * @author Francesco
+ */
 	@GetMapping("/Stats")
 	public ResponseEntity<JSONObject> genStats(@RequestParam(name = "name", defaultValue="Milano")String name) throws NullObjectException, IOException{
 		return new ResponseEntity<JSONObject>(statistics.getFiveDaysAverage(name+"HourlyWeather.txt"), HttpStatus.OK);
 	}
 	
+	/**
+	 * Questa rotta consente di visualizzare la soglia di errore delle temperatura corrente, massima e minima tra il forecast(previsioni per 5 giorni)
+	 * e l'attuale(previsione giornaliera)
+	 * 
+	 * @param name nome della città della quale si vuole calcolare la soglia di errore tra il forecast e l'attuale
+	 * @return
+	 * @throws MalformedURLException
+	 * @throws ParseException
+	 * @throws CityNotFoundException
+	 * @author Francesco
+	 */
 	@GetMapping("/Errors")
-	public ResponseEntity<JSONObject> errors(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException, ParseException{
+	public ResponseEntity<JSONObject> errors(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException, ParseException, CityNotFoundException{
 		return new ResponseEntity<>(service.getErrors(name), HttpStatus.OK);
 	}
 	
@@ -97,13 +113,14 @@ public class OpenWeatherController {
 	 * 
 	 * @throws WrongDateException se la data d'inizio è posteriore a quella di fine
 	 * @author lucas
+	 * @throws CityNotFoundException 
 	 */
 	@GetMapping("/Filters")
 	public ResponseEntity<JSONObject> filters(@RequestParam(name = "name", defaultValue = "Milano")String name,
 			@RequestParam(name = "start", defaultValue = "now")String start,
 			@RequestParam(name = "finish", defaultValue = "five")String finish,
 			@RequestParam(name = "startTime", defaultValue = "00:00")String startTime,
-			@RequestParam(name = "finishTime", defaultValue = "00:00")String finishTime) throws MalformedURLException, ParseException, ExeededDayException, WrongDateException {
+			@RequestParam(name = "finishTime", defaultValue = "00:00")String finishTime) throws MalformedURLException, ParseException, ExeededDayException, WrongDateException, CityNotFoundException {
 		String format="dd-MM-yyyy";
 		if(!start.equals(format)) {
 			

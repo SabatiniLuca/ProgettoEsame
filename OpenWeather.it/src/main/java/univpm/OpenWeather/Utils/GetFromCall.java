@@ -3,6 +3,7 @@ package univpm.OpenWeather.Utils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import univpm.OpenWeather.Exception.CityNotFoundException;
 import univpm.OpenWeather.Model.City;
 import univpm.OpenWeather.Model.Position;
 import univpm.OpenWeather.Model.Weather;
@@ -28,7 +29,7 @@ public class GetFromCall {
 	
 	/**
 	 * crea una posizione da un JSONobject
-	 * @param obj json object da cui prendere le informazioni di latitudine e longitudine
+	 * @param obj JSONObject da cui prendere le informazioni di latitudine e longitudine
 	 * @return un oggetto della classe Position
 	 * @author lucas
 	 */
@@ -42,7 +43,7 @@ public class GetFromCall {
 	
 	/**
 	 * Questo metodo consente di creare una citta da un Json object
-	 * @param obj Json object da elaborare
+	 * @param obj JSONObject da elaborare
 	 * @return ritorna un oggetto della classe City
 	 * @author lucas
 	 */
@@ -67,10 +68,15 @@ public class GetFromCall {
 	 * @param obj Json object da elaborare
 	 * @param current seleziona il tipo di operazione da fare
 	 * @return un oggetto della classe Weather valorizzato con il json object passatogli
+	 * @throws CityNotFoundException 
 	 */
-	public Weather createWeather(JSONObject obj,boolean current) {
+	public Weather createWeather(JSONObject obj,boolean current) throws CityNotFoundException {
+		
+		if(obj==null) {
+			throw new CityNotFoundException("City not found, please enter a different city name");
+		}
+		
 			JSONObject t=(JSONObject) obj.get("main");
-			
 			JSONObject w=getWeather(obj);
 			
 			double temp= ifThenRound(t.get("temp"));			
@@ -187,6 +193,7 @@ public class GetFromCall {
 	 * @param obj  JSONobject contenente le descrizioni del meteo
 	 * @return weather  Un JSONObject con dentro i parametri con i nomi specificati
 	 * @author lucas
+	 * @throws CityNotFoundException 
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getWeather(JSONObject obj) {

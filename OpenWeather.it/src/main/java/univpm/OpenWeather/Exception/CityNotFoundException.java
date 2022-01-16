@@ -6,29 +6,15 @@ package univpm.OpenWeather.Exception;
  * @author Francesco
  */
 
+@SuppressWarnings("serial")
 public class CityNotFoundException extends Exception {
 	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L; //Se lo tolgo mi da Warning
-	public String mes = "City not found, please enter a different city";
-	
-	/**
-	 * Constructor 
-	 * @param mes rappresenta il messaggio di errore
-	 */
-	public CityNotFoundException(String mes) {
-		super();
-		this.mes = mes;
+	public CityNotFoundException() {
+		System.out.println("City not found, please enter a different city name");
 	}
 	
-	/**
-	 * getter del messaggio di errore
-	 * @return messaggio di errore
-	 */
-	public String getCityNotFoundException() {
-		return mes;
+	public CityNotFoundException(String mes) {
+		super(mes);
 	}
 
 }

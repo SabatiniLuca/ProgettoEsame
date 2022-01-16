@@ -80,6 +80,11 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * Questo metodo consente di ottenere la temperatura corrente delle previsioni del current (prende solo i valori numerici)
+	 * @param jobj JSONObject contenente le informazioni del current
+	 * @return
+	 */
 	public double getCurrentInfo(JSONObject jobj) {
 		double temp=0;
 		
@@ -91,6 +96,11 @@ public class Utils {
 		return temp;
 	}
 	
+	/**
+	 * Questo metodo consente di ottenere la temperatura corrente delle previsioni del forecast (prende solo i valori numerici)
+	 * @param jobj JSONObject contenente le informazioni del forecast
+	 * @return
+	 */
 	public double getForecastInfo(JSONObject jobj) {
 		double temp=0;
 		
@@ -103,6 +113,11 @@ public class Utils {
 		return temp;
 	}
 	
+	/**
+	 * Questo metodo consente di ottenere la temperatura massima delle previsioni del current (prende solo i valori numerici)
+	 * @param jobj
+	 * @return
+	 */
 	public double getCurrentMaxTemp(JSONObject jobj) {
 		double temp=0;
 		
@@ -114,6 +129,11 @@ public class Utils {
 		return temp;
 	}
 	
+	/**
+	 * Questo metodo consente di ottenere la temperatura massima delle previsioni del forecast (prende solo i valori numerici)
+	 * @param jobj
+	 * @return
+	 */
 	public double getForecastMaxTemp(JSONObject jobj) {
 		double temp=0;
 		
@@ -126,6 +146,11 @@ public class Utils {
 		return temp;
 	}
 	
+	/**
+	 * Questo metodo consente di ottenere la temperatura minima delle previsioni del current (prende solo i valori numerici)
+	 * @param jobj
+	 * @return
+	 */
 	public double getCurrentMinTemp(JSONObject jobj) {
 		double temp=0;
 		
@@ -137,6 +162,11 @@ public class Utils {
 		return temp;
 	}
 	
+	/**
+	 * Questo metodo consente di ottenere la temperatura minima delle previsioni del forecast (prende solo i valori numerici)
+	 * @param jobj
+	 * @return
+	 */
 	public double getForecastMinTemp(JSONObject jobj) {
 		double temp=0;
 		

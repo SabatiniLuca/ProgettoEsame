@@ -5,27 +5,15 @@ package univpm.OpenWeather.Exception;
  * @author Francesco
  *
  */
+@SuppressWarnings("serial")
 public class EmptyStringException extends Exception{
-
-	private static final long serialVersionUID = 1L;
 	
-	private String mes;
-	/**
-	 * Constructor
-	 * @param mes
-	 */
-	
-	public EmptyStringException(String mes) {
-		super();
-		this.mes = mes;
+	public EmptyStringException() {
+		System.out.println("Error: something went wrong.");
 	}
 	
-	/**
-	 * getter del messaggio di errore
-	 * @return messaggio di errore
-	 */
-	public String getMes() {
-		return mes;
+	public EmptyStringException(String mes) {
+		super(mes);
 	}
 	
 	

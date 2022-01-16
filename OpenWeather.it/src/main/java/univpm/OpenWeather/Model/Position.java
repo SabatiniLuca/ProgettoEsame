@@ -34,6 +34,7 @@ public class Position {
 		this.longitude = longitude;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Position [latitude=" + latitude + ", longitude=" + longitude + "]";

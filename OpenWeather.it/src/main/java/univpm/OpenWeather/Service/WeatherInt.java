@@ -5,17 +5,23 @@ import java.text.ParseException;
 
 import org.json.simple.JSONObject;
 
+import univpm.OpenWeather.Exception.CityNotFoundException;
+import univpm.OpenWeather.Exception.EmptyStringException;
 import univpm.OpenWeather.Model.Weather;
 
+/**
+ * Interfaccia di weatherImpl
+ * @author Francesco
+ *
+ */
 public interface WeatherInt {
 	
-	
-	public JSONObject getInfo(String url) throws MalformedURLException;
 	public String UrlBuilder(boolean current, String cityName);
-	public Weather getWeather(String name) throws MalformedURLException;//, Weather meteo
-	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException;
-	public String toString();
+	public JSONObject getInfo(String url) throws MalformedURLException;
+	public Weather getWeather(String name) throws MalformedURLException, CityNotFoundException;//, Weather meteo
+	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException, CityNotFoundException;
 	public JSONObject printInfo(Weather city, boolean all);
-	public String saveFile(String name);
+	public String saveFile(String name) throws EmptyStringException;
+	public void ResetUrl();
 
 }
