@@ -13,6 +13,7 @@ import univpm.OpenWeather.Utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * Questa classe testa alcuni metodi del service
  * @author lucas
  *
  */
@@ -39,10 +40,13 @@ class WeatherImplTest extends TestCase {
 		r.close();
 		JSONParser parser=new JSONParser();
 		this.esRisposta=(JSONObject) parser.parse(str);
-		System.out.println(this.esRisposta);
+		
 	}
 	
-	
+	/**
+	 * verifica che l'URL per la chiamata sia costruito correttamente.
+	 * @author lucas
+	 */
 	@Test
 	void testUrlBuilder() {
 		String url=service.UrlBuilder(true,"fano");
@@ -52,21 +56,13 @@ class WeatherImplTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#getInfo(java.lang.String)}.
-	 * @throws IOException 
+	 * verifica che il metodo per prendere un certo valore all'interno di un JSONArray sia corretto
+	 * @throws IOException
+	 * @throws ParseException
+	 * @author lucas
 	 */
 	@Test
-	void testGetInfo() throws IOException {
-		
-	}
-
-	/**
-	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#getWeather(java.lang.String, univpm.OpenWeather.Model.Weather)}.
-	 * @throws ParseException 
-	 * @throws IOException 
-	 */
-	@Test
-	void testGetWeather() throws IOException, ParseException {
+	void testSearchArray() throws IOException, ParseException {
 		setUp();
 		String totest=u.searchArray(this.esRisposta, "weather", "description");
 		String actual="overcast clouds";
@@ -75,15 +71,8 @@ class WeatherImplTest extends TestCase {
 	}
 
 	/**
-	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#printInfo(univpm.OpenWeather.Model.Weather, boolean)}.
-	 */
-	@Test
-	void testPrintInfo() {
-		
-	}
-
-	/**
-	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#ResetUrl()}.
+	 * verifica che l'URL sia resettato correttamente.
+	 * @author lucas
 	 */
 	@Test
 	void testResetUrl() {
@@ -92,5 +81,9 @@ class WeatherImplTest extends TestCase {
 		assertEquals(this.url,url);
 	}
 
-	public void tearDown() {}
+	public void tearDown() {
+		this.u=null;
+		this.esRisposta=null;
+		this.service=null;
+	}
 }

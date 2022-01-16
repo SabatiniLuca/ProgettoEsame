@@ -31,24 +31,25 @@ import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.GetFromCall;
 
+/**
+ * 
+ * @author lucas
 
+ */
 @Service
 public class WeatherImpl implements WeatherInt {
 
-	/**
-	 * ho modificato l'url iniziale per poter usare @method UrlBuilder correttamente 
-	 * @author lucas
-	 */
 	private String apiKey = "15b8b402dfd9f2d93b1bfa8245d0edc6";
 	private String url ="https://api.openweathermap.org/data/2.5/";
 
 	/**
-	 * Questo metodo setta la stringa url 
+	 * Questo metodo setta la stringa url per effettuare la chiamata.
+	 * @param current se è true crea una stringa per chiamata current(meteo attuale), se è false fa una chiamata forecast (previsione per 5 gg).
 	 * @author lucas
 	 */
 	@Override 
 	public String UrlBuilder(boolean current, String cityName) {
-		//creazione Url
+
 
 		if(current==true) {//current weather
 			this.url+="weather?q="+cityName+",IT"+"&appid="+this.apiKey;  
@@ -62,9 +63,10 @@ public class WeatherImpl implements WeatherInt {
 	/**
 	 * questo metodo crea una connessione usando il parametro u e restituisce un Json object
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getInfo(String u) throws MalformedURLException {
-		// TODO Auto-generated method stub
+		
 		JSONObject obj = null;
 		URL url = new URL(u);
 		try {
@@ -74,8 +76,16 @@ public class WeatherImpl implements WeatherInt {
 			conn.connect();
 
 			int responseCode = conn.getResponseCode();
+			
+			
 			if (responseCode !=200) {
-				throw new Exception("HttpResponseCode: " + responseCode);
+				if(responseCode==500) {
+					JSONObject er=new JSONObject();
+					er.put("error", conn.getContent());
+					return er;
+				}else {
+					throw new Exception("HttpResponseCode: " + responseCode);
+				}
 			}else {
 				Reader scan=new InputStreamReader(url.openStream());
 
@@ -95,8 +105,10 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
+	 * @param cityName è il nome della città per cui si vuole richiedere la previsione.
 	 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
 	 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
+	 * @return Crea un oggetto di @Weather e valorizza
 	 * @author lucas
 	 */
 	@Override
@@ -113,7 +125,9 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
-	 * Questo metodo stampa il forecast per i cinque giorni successivi ad intervalli di tre ore
+	 * @param cityName è il nome della città per cui si vuole richiedere la previsione.
+	 * @return Questo metodo stampa un @JSONObject contenente un @JSONArray con le previsioni per i cinque giorni successivi al momento della chiamata
+	 * 	ad intervalli di tre ore. Contiene anche un @JSONObject con le informazioni della città.
 	 * @author lucas
 	 */
 	@SuppressWarnings("unchecked")
@@ -146,12 +160,12 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
-	 * questo metodo stampa tutte le informazioni se 
-	 * @param all è true
-	 * in caso contrario stampa solo le informazioni del meteo
+	 * Questo metodo stampa le informazioni della città e del meteo se all è true mentre stampa solo quelle relative al meteo se all è false.
+	 * @param all 
+	 * @param meteo oggetto di Weather
 	 * @author lucas
 	 */
-	@SuppressWarnings("unchecked")// se lo tolgo si riempe di warnings perchè dice di definire il tipo di mappa
+	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject printInfo(Weather meteo, boolean all) {
 		Utils u=new Utils();
@@ -258,7 +272,7 @@ public class WeatherImpl implements WeatherInt {
 					System.out.println(e); //creare eccezioni
 				}				
 			}
-		}, 0, 20, TimeUnit.SECONDS);
+		}, 0, 1, TimeUnit.HOURS);
 
 		return path;
 	}
@@ -292,6 +306,10 @@ public class WeatherImpl implements WeatherInt {
 		return err;
 	}
 
+	/**
+	 * resetta l'Url prima di ogni chiamata
+	 * @author lucas
+	 */
 	public void ResetUrl() {
 		this.url = "https://api.openweathermap.org/data/2.5/";
 	}

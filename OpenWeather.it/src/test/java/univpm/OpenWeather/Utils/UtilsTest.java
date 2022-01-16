@@ -13,14 +13,13 @@ import java.util.Scanner;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
+ * Questa classe testa alcuni metodi della classe @Utils
  * @author lucas
  *
  */
@@ -29,20 +28,7 @@ class UtilsTest {
 	@Autowired
 	Utils u=new Utils();
 	JSONObject esRisposta=new JSONObject();
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeAll
-	static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterAll
-	static void tearDownAfterClass() throws Exception {
-	}
-
+	
 	/**
 	 * @return 
 	 * @throws java.lang.Exception
@@ -56,7 +42,7 @@ class UtilsTest {
 			json += (in.nextLine());
 
 		}
-		//System.out.println(json);
+		
 		JSONParser parser = new JSONParser();
 		JSONObject obj = new JSONObject();
 		obj = (JSONObject) parser.parse(json);
@@ -69,6 +55,8 @@ class UtilsTest {
 	 */
 	@AfterEach
 	void tearDown() throws Exception {
+		this.esRisposta=null;
+		this.u=null;
 	}
 
 	/**
@@ -124,7 +112,6 @@ class UtilsTest {
 	@Test
 	void testTempConverter() {
 		double totest=u.tempConverter(293);
-		//System.out.println(totest);
 		double temp=19.85;
 		
 		assertEquals(totest,temp);
