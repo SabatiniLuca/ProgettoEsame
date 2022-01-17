@@ -60,8 +60,6 @@ public class GetFromCall {
 	 */
 	public Weather createWeather(JSONObject obj,boolean current) throws CityNotFoundException {
 		
-		
-		
 			JSONObject t=(JSONObject) obj.get("main");
 			JSONObject w=getWeather(obj);
 			

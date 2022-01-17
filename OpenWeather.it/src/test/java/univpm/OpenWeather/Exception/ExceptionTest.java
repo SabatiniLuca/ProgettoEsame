@@ -30,19 +30,25 @@ public class ExceptionTest {
 		this.g=null;
 	}
 		
-	
 	@Test
-	void createWeather() throws CityNotFoundException{
+	void getCurrrent() throws CityNotFoundException {
 		Exception e = assertThrows(CityNotFoundException.class, ()->
-		g.createWeather(null, true));
+		i.getWeather("WrongName"));
 		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}
 	
 	@Test
-	void saveFile() throws EmptyStringException {
-		Exception e = assertThrows(EmptyStringException.class, ()->
-		i.saveFile(""));
-		assertEquals("Error: something went wrong, please enter a city name", e.getMessage());
+	void getForecast() throws CityNotFoundException {
+		Exception e = assertThrows(CityNotFoundException.class, ()->
+		i.getForecast("WrongName"));
+		assertEquals("City not found, please enter a different city name", e.getMessage());
+	}
+	
+	@Test
+	void saveFile() throws CityNotFoundException {
+		Exception e = assertThrows(CityNotFoundException.class, ()->
+		i.saveFile("WrongName"));
+		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}
 
 }
