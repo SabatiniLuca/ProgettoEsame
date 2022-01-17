@@ -33,11 +33,7 @@ import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.GetFromCall;
 
-/**
- * 
- * @author lucas
 
- */
 @Service
 public class WeatherImpl implements WeatherInt {
 
@@ -66,10 +62,10 @@ public class WeatherImpl implements WeatherInt {
 	 * Questo metodo crea una connessione alle API e restituisce un JSONObject contenente tutte le informazioni di quell'API
 	 * @param api API  grazie alla quale si connette e prende informazioni il metodo
 	 * @author Francesco 
+	 * @throws CityNotFoundException 
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getInfo(String api) throws MalformedURLException {
+	public JSONObject getInfo(String api) throws MalformedURLException, CityNotFoundException {
 		
 		JSONObject obj = null;
 		URL url = new URL(api);
@@ -83,13 +79,8 @@ public class WeatherImpl implements WeatherInt {
 			
 			
 			if (responseCode !=200) {
-				if(responseCode==500) {
-					JSONObject er=new JSONObject();
-					er.put("error", conn.getContent());
-					return er;
-				}else {
-					throw new Exception("HttpResponseCode: " + responseCode);
-				}
+				throw new Exception("HttpResponseCode: " + responseCode);
+			
 			}else {
 				Reader scan=new InputStreamReader(url.openStream());
 
@@ -100,10 +91,13 @@ public class WeatherImpl implements WeatherInt {
 				scan.close();
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 
+		if(obj==null) {
+			throw new CityNotFoundException("City not found, please enter a different city name");
+		}
 		return obj;
 
 	}
@@ -112,13 +106,14 @@ public class WeatherImpl implements WeatherInt {
 	 * @param cityName è il nome della città per cui si vuole richiedere la previsione.
 	 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
 	 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
-	 * @return Crea un oggetto di @Weather e valorizza
-	 * @author lucas
 	 * @throws CityNotFoundException 
+	 * @return Crea un oggetto di @Weather e valorizza
+	 * 
+	 * @author lucas
 	 */
 	@Override
 	public Weather getWeather(String cityName) throws MalformedURLException, CityNotFoundException {//, Weather meteo
-		// TODO Auto-generated method stub
+		
 		GetFromCall p=new GetFromCall();
 		ResetUrl();
 		String u = UrlBuilder(true, cityName); //Crea URL
@@ -133,19 +128,20 @@ public class WeatherImpl implements WeatherInt {
 	 * @param cityName è il nome della città per cui si vuole richiedere la previsione.
 	 * @return Questo metodo stampa un @JSONObject contenente un @JSONArray con le previsioni per i cinque giorni successivi al momento della chiamata
 	 * 	ad intervalli di tre ore. Contiene anche un @JSONObject con le informazioni della città.
-	 * @author lucas
 	 * @throws CityNotFoundException 
+	 * @author lucas
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException, CityNotFoundException {
 		GetFromCall p = new GetFromCall();
-
+		
 		ResetUrl();
 		String u = UrlBuilder(false, cityName);
 
 		JSONObject object = getInfo(u);// ottiene il JSONObject con tutte le previsioni
-
+		
 		JSONArray list = (JSONArray) object.get("list");// seleziono l'array contenente le informazioni del meteo
+		
 		Iterator<JSONObject> i = list.iterator();// creo un iteratore
 
 		JSONObject toPrint = new JSONObject();
@@ -222,16 +218,23 @@ public class WeatherImpl implements WeatherInt {
 	 * @param name è il nome della città di cui verranno salvate le informazioni
 	 * @author Francesco
 	 * @throws EmptyStringException 
+	 * @throws CityNotFoundException 
+	 * @throws MalformedURLException 
 	 * @throws NullObjectException 
 	 */	
 	@Override
-	public String saveFile(String name) throws EmptyStringException {
+	public String saveFile(String name) throws EmptyStringException, MalformedURLException, CityNotFoundException {
+		
+		ResetUrl();
+		String u = UrlBuilder(true, name);
 
-		String path = null;
-		path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
-		if (!path.contentEquals(name)) {
-			throw new EmptyStringException("Error: something went wrong, please enter a city name");
+		JSONObject object = getInfo(u);
+		if(object==null) {
+			throw new CityNotFoundException("City not found, please enter a different city name");
 		}
+
+		String path =System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
+		
 		File file = new File(path);	
 
 		ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
@@ -253,14 +256,12 @@ public class WeatherImpl implements WeatherInt {
 
 					weather=getWeather(name);
 					
-				} catch (MalformedURLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (CityNotFoundException e) {
-					// TODO Auto-generated catch block
+				}catch (Exception e) {
+					
 					e.printStackTrace();
 				}
 				toFile = printInfo(weather, false);
+				
 
 				array.add(toFile);
 
@@ -278,10 +279,11 @@ public class WeatherImpl implements WeatherInt {
 				}
 				catch(IOException e)
 				{
-					System.out.println(e); //creare eccezioni
+					System.out.println(e); 
 				}				
 			}
 		}, 0, 1, TimeUnit.HOURS);
+		
 
 		return path;
 	}
@@ -307,11 +309,14 @@ public class WeatherImpl implements WeatherInt {
 		
 		JSONObject err = new JSONObject();
 		double errors = (u.getCurrentInfo(current) - u.getForecastInfo(fore));
+		errors=Math.round(errors*100.0)/100.0;
 		double err_max = (u.getCurrentMaxTemp(current) - u.getForecastMaxTemp(fore));
+		err_max=Math.round(err_max*100.0)/100.0;
 		double err_min = (u.getCurrentMinTemp(current) - u.getForecastMinTemp(fore));
-		err.put("Current temp Error", errors);
-		err.put("Current temp Max Error", err_max);
-		err.put("Current temp Min Error", err_min);
+		err_min=Math.round(err_min*100.0)/100.0;
+		err.put("Current temp Error", errors+" °C");
+		err.put("Current temp Max Error", err_max+" °C");
+		err.put("Current temp Min Error", err_min+" °C");
 		
 		return err;
 	}

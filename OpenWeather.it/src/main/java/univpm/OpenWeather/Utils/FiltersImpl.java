@@ -35,8 +35,8 @@ public class FiltersImpl implements FiltersInt {
 	 * @param name nome della città
 	 * @throws MalformedURLException
 	 * @throws ParseException
-	 * @author lucas
 	 * @throws CityNotFoundException 
+	 * @author lucas
 	 */
 	public FiltersImpl(String name) throws MalformedURLException, ParseException, CityNotFoundException {
 		this.setForecast(service.getForecast(name));

@@ -15,18 +15,6 @@ import univpm.OpenWeather.Model.Weather;
  */
 public class GetFromCall {
 
-		
-	/**
-	 * @SuppressWarnings("unchecked")
-	public JSONObject getCurrent(JSONObject obj) {
-		JSONObject toPrint=new JSONObject();
-		toPrint.put("City", getCity(obj));
-		toPrint.put("Coord", getCoord(obj));
-		toPrint.put("Weather", getWeather(obj));
-		return toPrint;
-	}
-	 */
-	
 	/**
 	 * crea una posizione da un JSONobject
 	 * @param obj JSONObject da cui prendere le informazioni di latitudine e longitudine
@@ -49,12 +37,12 @@ public class GetFromCall {
 	 */
 	public City createCity(JSONObject obj) {
 		JSONObject c=getCity(obj);
-		System.out.println(c);
+		
 		long id=(long) c.get("Id");
 		String name=(String) c.get("City Name");
 		Position pos=createPosition(obj);
 		City city=new City(id,name,pos);
-		System.out.println(city);
+		
 		return city;
 	}
 	
@@ -72,9 +60,7 @@ public class GetFromCall {
 	 */
 	public Weather createWeather(JSONObject obj,boolean current) throws CityNotFoundException {
 		
-		if(obj==null) {
-			throw new CityNotFoundException("City not found, please enter a different city name");
-		}
+		
 		
 			JSONObject t=(JSONObject) obj.get("main");
 			JSONObject w=getWeather(obj);
@@ -141,7 +127,7 @@ public class GetFromCall {
 	 */
 	public double ifThenRound(Object number) {
 		double ret=0;
-		//System.out.println(number);
+		
 		if(number instanceof Double) {
 			ret=(double) number;
 		}else if(number instanceof Long) {
@@ -150,7 +136,7 @@ public class GetFromCall {
 		}else if(number instanceof Integer) {
 			ret=((Integer)number).doubleValue();
 		}
-		//System.out.println(number);
+		
 		return ret;
 			
 	}

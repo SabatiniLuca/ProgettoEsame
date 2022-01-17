@@ -37,8 +37,14 @@ public class OpenWeatherController {
 	 * @author lucas
 	 */	
 	@GetMapping("/current")
-	public ResponseEntity<JSONObject> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
-		return new ResponseEntity<>(service.printInfo(service.getWeather(name), true), HttpStatus.OK);
+	public ResponseEntity<Object> current(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
+		try{
+			return new ResponseEntity<>(service.printInfo(service.getWeather(name), true), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	/**
@@ -50,8 +56,14 @@ public class OpenWeatherController {
 	 * @author lucas
 	 */
 	@GetMapping("/forecast")
-	public ResponseEntity<JSONObject> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception{
-		return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
+	public ResponseEntity<Object> forecast(@RequestParam(name = "name", defaultValue = "Milano")String name) throws Exception,CityNotFoundException{
+	
+		try{
+			return new ResponseEntity<>(service.getForecast(name), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	
@@ -65,7 +77,13 @@ public class OpenWeatherController {
 	 */
 	@GetMapping("/saveFile")
 	public ResponseEntity<String> saveFile(@RequestParam(name = "name", defaultValue = "Milano")String name) throws EmptyStringException{
-		return new ResponseEntity<>(service.saveFile(name), HttpStatus.OK);
+		
+		try{
+			return new ResponseEntity<>(service.saveFile(name), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 /**
@@ -77,8 +95,14 @@ public class OpenWeatherController {
  * @author Francesco
  */
 	@GetMapping("/Stats")
-	public ResponseEntity<JSONObject> genStats(@RequestParam(name = "name", defaultValue="Milano")String name) throws NullObjectException, IOException{
-		return new ResponseEntity<JSONObject>(statistics.getFiveDaysAverage(name+"HourlyWeather.txt"), HttpStatus.OK);
+	public ResponseEntity<Object> genStats(@RequestParam(name = "name", defaultValue="Milano")String name) throws NullObjectException, IOException{
+		
+		try{
+			return new ResponseEntity<>(statistics.getFiveDaysAverage(name+"HourlyWeather.txt"), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	/**
@@ -93,14 +117,20 @@ public class OpenWeatherController {
 	 * @author Francesco
 	 */
 	@GetMapping("/Errors")
-	public ResponseEntity<JSONObject> errors(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException, ParseException, CityNotFoundException{
-		return new ResponseEntity<>(service.getErrors(name), HttpStatus.OK);
+	public ResponseEntity<Object> errors(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException, ParseException, CityNotFoundException{
+	
+		try{
+			return new ResponseEntity<>(service.getErrors(name), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	
 	/**
 	 * Questa rotta permette di stampare tutte le previsioni ad intervalli di tre ore dal momento Start a Finish.
-	 * La data deve essere scritta in formato dd-MM-yyyy , mentre l'orario HH-mm .
+	 * La data deve essere scritta in formato dd-MM-yyyy , mentre l'orario HH:mm .
 	 * 
 	 * @param name nome della città
 	 * @param start data d'inizio
@@ -108,17 +138,17 @@ public class OpenWeatherController {
 	 * @param startTime orario d'inizio
 	 * @param finishTime orario di fine
 	 * 
-	 * @return
 	 * @throws MalformedURLException
 	 * @throws ParseException
 	 * @throws ExeededDayException se lo start richiesto è a meno di 3 ore dal momento attuale, o se il finish richiesto è a più fi 5 giorni dal momento attuale.
-	 * 
 	 * @throws WrongDateException se la data d'inizio è posteriore a quella di fine
-	 * @author lucas
 	 * @throws CityNotFoundException 
+	 * 
+	 * @return Un @JSONObject con le previsioni nell'intervallo richiesto
+	 * @author lucas
 	 */
 	@GetMapping("/Filters")
-	public ResponseEntity<JSONObject> filters(@RequestParam(name = "name", defaultValue = "Milano")String name,
+	public ResponseEntity<Object> filters(@RequestParam(name = "name", defaultValue = "Milano")String name,
 			@RequestParam(name = "start", defaultValue = "now")String start,
 			@RequestParam(name = "finish", defaultValue = "five")String finish,
 			@RequestParam(name = "startTime", defaultValue = "00:00")String startTime,
@@ -135,7 +165,13 @@ public class OpenWeatherController {
 			finish=f.setDate(432000);
 		}
 		
-		return new ResponseEntity<>(f.FromStartToFinish(start+" "+startTime, finish+" "+finishTime), HttpStatus.OK);
+		
+		try{
+			return new ResponseEntity<>(f.FromStartToFinish(start+" "+startTime, finish+" "+finishTime), HttpStatus.OK);
+		}
+		catch(Exception e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 }
 
