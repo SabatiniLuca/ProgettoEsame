@@ -33,69 +33,70 @@ import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.GetFromCall;
 
-
 @Service
 public class WeatherImpl implements WeatherInt {
 
 	private String apiKey = "15b8b402dfd9f2d93b1bfa8245d0edc6";
-	private String url ="https://api.openweathermap.org/data/2.5/";
+	private String url = "https://api.openweathermap.org/data/2.5/";
 
 	/**
 	 * Questo metodo setta la stringa url per effettuare la chiamata.
-	 * @param current se è true crea una stringa per chiamata current(meteo attuale), se è false fa una chiamata forecast (previsione per 5 gg).
+	 * 
+	 * @param current se è true crea una stringa per chiamata current(meteo
+	 *                attuale), se è false fa una chiamata forecast (previsione per
+	 *                5 gg).
 	 * @author lucas
 	 */
-	@Override 
+	@Override
 	public String UrlBuilder(boolean current, String cityName) {
 
-
-		if(current==true) {//current weather
-			this.url+="weather?q="+cityName+",IT"+"&appid="+this.apiKey;  
-		}
-		else if(current==false) {//5day forecast
-			this.url+="forecast?q="+cityName+",IT"+"&appid="+this.apiKey;
+		if (current == true) {// current weather
+			this.url += "weather?q=" + cityName + ",IT" + "&appid=" + this.apiKey;
+		} else if (current == false) {// 5day forecast
+			this.url += "forecast?q=" + cityName + ",IT" + "&appid=" + this.apiKey;
 		}
 		return this.url;
 	}
 
 	/**
-	 * Questo metodo crea una connessione alle API e restituisce un JSONObject contenente tutte le informazioni di quell'API
-	 * @param api API  grazie alla quale si connette e prende informazioni il metodo
-	 * @author Francesco 
-	 * @throws CityNotFoundException 
+	 * Questo metodo crea una connessione alle API e restituisce un JSONObject
+	 * contenente tutte le informazioni di quell'API
+	 * 
+	 * @param api API grazie alla quale si connette e prende informazioni il metodo
+	 * @author Francesco
+	 * @throws CityNotFoundException
 	 */
 	@Override
 	public JSONObject getInfo(String api) throws MalformedURLException, CityNotFoundException {
-		
+
 		JSONObject obj = null;
 		URL url = new URL(api);
 		try {
 
-			HttpsURLConnection conn=(HttpsURLConnection) url.openConnection();
+			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			conn.connect();
 
 			int responseCode = conn.getResponseCode();
-			
-			
-			if (responseCode !=200) {
-				throw new Exception("HttpResponseCode: " + responseCode);
-			
-			}else {
-				Reader scan=new InputStreamReader(url.openStream());
 
-				JSONParser parser = new JSONParser() ;
+			if (responseCode != 200) {
+				throw new Exception("HttpResponseCode: " + responseCode);
+
+			} else {
+				Reader scan = new InputStreamReader(url.openStream());
+
+				JSONParser parser = new JSONParser();
 
 				obj = (JSONObject) parser.parse(scan);
 
 				scan.close();
 			}
 		} catch (Exception e) {
-			
+
 			e.printStackTrace();
 		}
 
-		if(obj==null) {
+		if (obj == null) {
 			throw new CityNotFoundException("City not found, please enter a different city name");
 		}
 		return obj;
@@ -103,45 +104,50 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
-	 * @param cityName è il nome della città per cui si vuole richiedere la previsione.
+	 * @param cityName è il nome della città per cui si vuole richiedere la
+	 *                 previsione.
 	 * @method getInfoCity prende le informazioni riguardanti: coordinate,nome, id
-	 * @method getDailyWeather prende le indformazioni riguardanti: temperature, pressioni,descrizione meteo
-	 * @throws CityNotFoundException 
+	 * @method getDailyWeather prende le indformazioni riguardanti: temperature,
+	 *         pressioni,descrizione meteo
+	 * @throws CityNotFoundException
 	 * @return Crea un oggetto di @Weather e valorizza
 	 * 
 	 * @author lucas
 	 */
 	@Override
-	public Weather getWeather(String cityName) throws MalformedURLException, CityNotFoundException {//, Weather meteo
-		
-		GetFromCall p=new GetFromCall();
-		ResetUrl();
-		String u = UrlBuilder(true, cityName); //Crea URL
+	public Weather getWeather(String cityName) throws MalformedURLException, CityNotFoundException {// , Weather meteo
 
-		JSONObject object = getInfo(u); //JSONObject contentente il JSON 
-		Weather meteo=p.createWeather(object,true);
+		GetFromCall p = new GetFromCall();
+		ResetUrl();
+		String u = UrlBuilder(true, cityName); // Crea URL
+
+		JSONObject object = getInfo(u); // JSONObject contentente il JSON
+		Weather meteo = p.createWeather(object, true);
 
 		return meteo;
 	}
 
 	/**
-	 * @param cityName è il nome della città per cui si vuole richiedere la previsione.
-	 * @return Questo metodo stampa un @JSONObject contenente un @JSONArray con le previsioni per i cinque giorni successivi al momento della chiamata
-	 * 	ad intervalli di tre ore. Contiene anche un @JSONObject con le informazioni della città.
-	 * @throws CityNotFoundException 
+	 * @param cityName è il nome della città per cui si vuole richiedere la
+	 *                 previsione.
+	 * @return Questo metodo stampa un @JSONObject contenente un @JSONArray con le
+	 *         previsioni per i cinque giorni successivi al momento della chiamata
+	 *         ad intervalli di tre ore. Contiene anche un @JSONObject con le
+	 *         informazioni della città.
+	 * @throws CityNotFoundException
 	 * @author lucas
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getForecast(String cityName) throws MalformedURLException, ParseException, CityNotFoundException {
 		GetFromCall p = new GetFromCall();
-		
+
 		ResetUrl();
 		String u = UrlBuilder(false, cityName);
 
 		JSONObject object = getInfo(u);// ottiene il JSONObject con tutte le previsioni
-		
+
 		JSONArray list = (JSONArray) object.get("list");// seleziono l'array contenente le informazioni del meteo
-		
+
 		Iterator<JSONObject> i = list.iterator();// creo un iteratore
 
 		JSONObject toPrint = new JSONObject();
@@ -162,86 +168,88 @@ public class WeatherImpl implements WeatherInt {
 	}
 
 	/**
-	 * Questo metodo stampa le informazioni della città e del meteo se all è true mentre stampa solo quelle relative al meteo se all è false.
-	 * @param all 
+	 * Questo metodo stampa le informazioni della città e del meteo se all è true
+	 * mentre stampa solo quelle relative al meteo se all è false.
+	 * 
+	 * @param all
 	 * @param meteo oggetto di Weather
 	 * @author lucas
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject printInfo(Weather meteo, boolean all) {
-		Utils u=new Utils();
-		JSONObject allInfo=new JSONObject();
+		Utils u = new Utils();
+		JSONObject allInfo = new JSONObject();
 
-		JSONObject cityInfo=new JSONObject();
-		JSONObject weatherInfo=new JSONObject();
+		JSONObject cityInfo = new JSONObject();
+		JSONObject weatherInfo = new JSONObject();
 
-		if(all) {
-			//info stampate se all é true
+		if (all) {
+			// info stampate se all é true
 
 			cityInfo.put("Coordinates", meteo.getCity().getCoordinates());
 			cityInfo.put("Name", meteo.getCity().getCityName());
 			cityInfo.put("Id", meteo.getCity().getId());
-		}		
+		}
 
-		//info stampate se all é false
-		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm"); 
-		String strDate = dateFormat.format(u.toDate(meteo.getDate()));  
+		// info stampate se all é false
+		DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+		String strDate = dateFormat.format(u.toDate(meteo.getDate()));
 		weatherInfo.put("date", strDate);
-		JSONObject weather=new JSONObject();
+		JSONObject weather = new JSONObject();
 		weather.put("Weather", meteo.getMain());
 		weather.put("Specific", meteo.getDescription());
-		weather.put("Pressure", meteo.getPressure() +" Pa");
+		weather.put("Pressure", meteo.getPressure() + " Pa");
 		weatherInfo.put("Status", weather);
 
-		JSONObject temp=new JSONObject();
-		temp.put("Minimum", (u.tempConverter(meteo.getTemp_min())+" °C"));
-		temp.put("Current", (u.tempConverter(meteo.getTemp())+" °C"));
-		temp.put("Maximum", (u.tempConverter(meteo.getTemp_max())+" °C"));
+		JSONObject temp = new JSONObject();
+		temp.put("Minimum", (u.tempConverter(meteo.getTemp_min()) + " °C"));
+		temp.put("Current", (u.tempConverter(meteo.getTemp()) + " °C"));
+		temp.put("Maximum", (u.tempConverter(meteo.getTemp_max()) + " °C"));
 		weatherInfo.put("Temperatures", temp);
 
 		allInfo.put("City", cityInfo);
 		allInfo.put("Forecasts", weatherInfo);
 
-		if(all) {
+		if (all) {
 			return allInfo;
-		}else {
+		} else {
 			return weatherInfo;
 		}
-
-
 
 	}
 
 	/**
-	 * Metodo che salva su file le informazioni del meteo attuale di una città e si aggiorna ogni ora
+	 * Metodo che salva su file le informazioni del meteo attuale di una città e si
+	 * aggiorna ogni ora
+	 * 
 	 * @param name è il nome della città di cui verranno salvate le informazioni
 	 * @author Francesco
-	 * @throws EmptyStringException 
-	 * @throws CityNotFoundException 
-	 * @throws MalformedURLException 
-	 * @throws NullObjectException 
-	 */	
+	 * @throws EmptyStringException
+	 * @throws CityNotFoundException
+	 * @throws MalformedURLException
+	 * @throws NullObjectException
+	 */
 	@Override
 	public String saveFile(String name) throws EmptyStringException, MalformedURLException, CityNotFoundException {
-		
+
 		ResetUrl();
 		String u = UrlBuilder(true, name);
 
 		JSONObject object = getInfo(u);
-		if(object==null) {
+		if (object == null) {
 			throw new CityNotFoundException("City not found, please enter a different city name");
 		}
 
-		String path =System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
-		
-		File file = new File(path);	
+		String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
+
+		File file = new File(path);
 
 		ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();
 		System.out.println("Start Execution");
 
-		JSONObject toPrint=new JSONObject();
-		JSONArray array=new JSONArray();
+		JSONObject toPrint = new JSONObject();
+		JSONArray array = new JSONArray();
 
 		eTP.scheduleAtFixedRate(new Runnable() {
 
@@ -249,86 +257,81 @@ public class WeatherImpl implements WeatherInt {
 			@Override
 			public void run() {
 
-
 				JSONObject toFile = new JSONObject();
 				Weather weather = new Weather();
 				try {
 
-					weather=getWeather(name);
-					
-				}catch (Exception e) {
-					
+					weather = getWeather(name);
+
+				} catch (Exception e) {
+
 					e.printStackTrace();
 				}
 				toFile = printInfo(weather, false);
-				
 
 				array.add(toFile);
 
 				toPrint.put("Forecasts", array);
-				
+
 				try {
 					if (!file.exists()) {
 						file.createNewFile();
 						System.out.println("File created");
 					}
-					FileWriter f = new FileWriter(file); 
+					FileWriter f = new FileWriter(file);
 					BufferedWriter n = new BufferedWriter(f);
 					n.write(toPrint.toString());
 					n.close();
+				} catch (IOException e) {
+					System.out.println(e);
 				}
-				catch(IOException e)
-				{
-					System.out.println(e); 
-				}				
 			}
 		}, 0, 1, TimeUnit.HOURS);
-		
 
 		return path;
 	}
 
-	
 	/**
-	 * Metodo che restituisce l'errore tra il forecast e l'attuale (nel forecast prende solo il primo JSONObject)
+	 * Metodo che restituisce l'errore tra il forecast e l'attuale (nel forecast
+	 * prende solo il primo JSONObject)
+	 * 
 	 * @param name è il nome della città di cui si vuole calcolare l'errore
 	 * @return
-	 * @throws MalformedURLException 
-	 * @throws ParseException 
-	 * @throws CityNotFoundException 
+	 * @throws MalformedURLException
+	 * @throws ParseException
+	 * @throws CityNotFoundException
 	 */
 	@SuppressWarnings("unchecked")
 	public JSONObject getErrors(String name) throws MalformedURLException, ParseException, CityNotFoundException {
-		
+
 		Utils u = new Utils();
 		JSONObject current = printInfo(getWeather(name), false);
-		
+
 		JSONObject forecast = getForecast(name);
 		JSONArray forecastArr = (JSONArray) forecast.get("Forecasts");
 		JSONObject fore = (JSONObject) forecastArr.get(0);
-		
+
 		JSONObject err = new JSONObject();
 		double errors = (u.getCurrentInfo(current) - u.getForecastInfo(fore));
-		errors=Math.round(errors*100.0)/100.0;
+		errors = Math.round(errors * 100.0) / 100.0;
 		double err_max = (u.getCurrentMaxTemp(current) - u.getForecastMaxTemp(fore));
-		err_max=Math.round(err_max*100.0)/100.0;
+		err_max = Math.round(err_max * 100.0) / 100.0;
 		double err_min = (u.getCurrentMinTemp(current) - u.getForecastMinTemp(fore));
-		err_min=Math.round(err_min*100.0)/100.0;
-		err.put("Current temp Error", errors+" °C");
-		err.put("Current temp Max Error", err_max+" °C");
-		err.put("Current temp Min Error", err_min+" °C");
-		
+		err_min = Math.round(err_min * 100.0) / 100.0;
+		err.put("Current temp Error", errors + " °C");
+		err.put("Current temp Max Error", err_max + " °C");
+		err.put("Current temp Min Error", err_min + " °C");
+
 		return err;
 	}
 
 	/**
 	 * resetta l'Url prima di ogni chiamata
+	 * 
 	 * @author lucas
 	 */
 	public void ResetUrl() {
 		this.url = "https://api.openweathermap.org/data/2.5/";
 	}
-
-
 
 }

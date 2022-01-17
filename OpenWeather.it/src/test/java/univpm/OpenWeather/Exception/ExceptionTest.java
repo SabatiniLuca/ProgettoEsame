@@ -12,42 +12,40 @@ import univpm.OpenWeather.Utils.GetFromCall;
 
 /**
  * Classe che testa l'eccezione CityNotFound e EmptyStringException
+ * 
  * @author Francesco
  *
  */
 public class ExceptionTest {
-	
+
 	GetFromCall g;
 	WeatherImpl i = new WeatherImpl();
-	
+
 	@BeforeEach
 	void setUp() throws Exception {
-		g=new GetFromCall();
+		g = new GetFromCall();
 	}
 
 	@AfterEach
 	void tearDown() throws Exception {
-		this.g=null;
+		this.g = null;
 	}
-		
+
 	@Test
 	void getCurrrent() throws CityNotFoundException {
-		Exception e = assertThrows(CityNotFoundException.class, ()->
-		i.getWeather("WrongName"));
+		Exception e = assertThrows(CityNotFoundException.class, () -> i.getWeather("WrongName"));
 		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}
-	
+
 	@Test
 	void getForecast() throws CityNotFoundException {
-		Exception e = assertThrows(CityNotFoundException.class, ()->
-		i.getForecast("WrongName"));
+		Exception e = assertThrows(CityNotFoundException.class, () -> i.getForecast("WrongName"));
 		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}
-	
+
 	@Test
 	void saveFile() throws CityNotFoundException {
-		Exception e = assertThrows(CityNotFoundException.class, ()->
-		i.saveFile("WrongName"));
+		Exception e = assertThrows(CityNotFoundException.class, () -> i.saveFile("WrongName"));
 		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}
 

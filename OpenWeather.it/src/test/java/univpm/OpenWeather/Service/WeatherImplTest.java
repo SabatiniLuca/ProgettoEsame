@@ -17,24 +17,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Questa classe testa alcuni metodi del service
+ * 
  * @author lucas
  *
  */
-class WeatherImplTest extends TestCase { 
-	
+class WeatherImplTest extends TestCase {
+
 	@Autowired
-	private WeatherImpl service=new WeatherImpl();
-	private Utils u=new Utils();
-	private String url ="https://api.openweathermap.org/data/2.5/";
-	JSONObject esRisposta=new JSONObject();
+	private WeatherImpl service = new WeatherImpl();
+	private Utils u = new Utils();
+	private String url = "https://api.openweathermap.org/data/2.5/";
+	JSONObject esRisposta = new JSONObject();
+
 	/**
-	 * Test method for {@link univpm.OpenWeather.Service.WeatherImpl#UrlBuilder(boolean, java.lang.String)}.
-	 * @throws IOException 
-	 * @throws ParseException 
+	 * Test method for
+	 * {@link univpm.OpenWeather.Service.WeatherImpl#UrlBuilder(boolean, java.lang.String)}.
+	 * 
+	 * @throws IOException
+	 * @throws ParseException
 	 */
 	@BeforeEach
-	protected
-	void setUp() throws Exception {
+	protected void setUp() throws Exception {
 		System.out.println("Setting it up!");
 		String json = "";
 		Scanner in = new Scanner(new FileReader("risposta.txt"));
@@ -42,56 +45,60 @@ class WeatherImplTest extends TestCase {
 			json += (in.nextLine());
 
 		}
-		
+
 		JSONParser parser = new JSONParser();
 		JSONObject obj = new JSONObject();
 		obj = (JSONObject) parser.parse(json);
-		this.esRisposta=obj;
+		this.esRisposta = obj;
 		in.close();
 	}
-	
+
 	/**
 	 * verifica che l'URL per la chiamata sia costruito correttamente.
+	 * 
 	 * @author lucas
 	 */
 	@Test
 	void testUrlBuilder() {
-		String url=service.UrlBuilder(true,"fano");
-		String urlCorretto="https://api.openweathermap.org/data/2.5/weather?q=fano,IT&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
+		String url = service.UrlBuilder(true, "fano");
+		String urlCorretto = "https://api.openweathermap.org/data/2.5/weather?q=fano,IT&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
 		assertEquals(url, urlCorretto);
-		
+
 	}
 
 	/**
-	 * verifica che il metodo per prendere un certo valore all'interno di un JSONArray sia corretto
+	 * verifica che il metodo per prendere un certo valore all'interno di un
+	 * JSONArray sia corretto
+	 * 
 	 * @throws IOException
 	 * @throws ParseException
 	 * @author lucas
 	 */
 	@Test
 	void testSearchArray() throws IOException, ParseException {
-		
-		String totest=u.searchArray(this.esRisposta, "weather", "description");
-		String actual="overcast clouds";
-		
-		assertEquals(totest,actual);
+
+		String totest = u.searchArray(this.esRisposta, "weather", "description");
+		String actual = "overcast clouds";
+
+		assertEquals(totest, actual);
 	}
 
 	/**
 	 * verifica che l'URL sia resettato correttamente.
+	 * 
 	 * @author lucas
 	 */
 	@Test
 	void testResetUrl() {
 		service.ResetUrl();
-		String url="https://api.openweathermap.org/data/2.5/";
-		assertEquals(this.url,url);
+		String url = "https://api.openweathermap.org/data/2.5/";
+		assertEquals(this.url, url);
 	}
 
 	@AfterEach
 	public void tearDown() {
-		this.u=null;
-		this.esRisposta=null;
-		this.service=null;
+		this.u = null;
+		this.esRisposta = null;
+		this.service = null;
 	}
 }
