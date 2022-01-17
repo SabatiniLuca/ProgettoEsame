@@ -1,7 +1,9 @@
 package univpm.OpenWeather.Exception;
 
 /**
- * Questa classe serve a gestire eccezioni quando si immette un formato di data sbagliato
+ * Questa classe serve a gestire eccezioni quando si immette un formato di data
+ * sbagliato
+ * 
  * @author Francesco
  *
  */
@@ -16,7 +18,5 @@ public class WrongDateException extends Exception {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
-
-	
 
 }

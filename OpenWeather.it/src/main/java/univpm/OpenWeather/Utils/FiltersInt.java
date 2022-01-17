@@ -9,12 +9,9 @@ import univpm.OpenWeather.Exception.WrongDateException;
 
 public interface FiltersInt {
 
-	public JSONObject FromStartToFinish(String start, String finish) throws ParseException, ExeededDayException, WrongDateException;
-	/**
-	 * Questo metodo crea una data sotto forma di testo che limita la stampa di previsioni e poi le stampa.
-	 * per esempio se la data creata è fra due giorni
-	 * @throws ExeededDayException 
-	 */
+	public JSONObject FromStartToFinish(String start, String finish)
+			throws ParseException, ExeededDayException, WrongDateException;
+
 	String setDate(long number) throws ParseException, ExeededDayException;
-	
+
 }
