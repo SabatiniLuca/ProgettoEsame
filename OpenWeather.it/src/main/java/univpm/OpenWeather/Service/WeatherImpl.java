@@ -27,6 +27,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 
 import univpm.OpenWeather.Exception.CityNotFoundException;
+import univpm.OpenWeather.Exception.EmptyStringException;
 import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
@@ -220,12 +221,17 @@ public class WeatherImpl implements WeatherInt {
 	 * Metodo che salva su file le informazioni del meteo attuale di una città e si aggiorna ogni ora
 	 * @param name è il nome della città di cui verranno salvate le informazioni
 	 * @author Francesco
+	 * @throws EmptyStringException 
 	 * @throws NullObjectException 
 	 */	
 	@Override
-	public String saveFile(String name) {
+	public String saveFile(String name) throws EmptyStringException {
 
-		String path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
+		String path = null;
+		path = System.getProperty("user.dir") + "/" + name + "HourlyWeather.txt";
+		if (!path.contentEquals(name)) {
+			throw new EmptyStringException("Error: something went wrong, please enter a city name");
+		}
 		File file = new File(path);	
 
 		ScheduledExecutorService eTP = Executors.newSingleThreadScheduledExecutor();

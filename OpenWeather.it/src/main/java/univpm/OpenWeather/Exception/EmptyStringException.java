@@ -9,7 +9,7 @@ package univpm.OpenWeather.Exception;
 public class EmptyStringException extends Exception{
 	
 	public EmptyStringException() {
-		System.out.println("Error: something went wrong.");
+		System.out.println("Error: something went wrong, please enter a city name");
 	}
 	
 	public EmptyStringException(String mes) {

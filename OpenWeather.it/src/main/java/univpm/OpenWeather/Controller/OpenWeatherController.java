@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import univpm.OpenWeather.Exception.CityNotFoundException;
+import univpm.OpenWeather.Exception.EmptyStringException;
 import univpm.OpenWeather.Exception.ExeededDayException;
 import univpm.OpenWeather.Exception.NullObjectException;
 import univpm.OpenWeather.Exception.WrongDateException;
@@ -60,9 +61,10 @@ public class OpenWeatherController {
 	 * @param name nome della città della quale si vogliono salvare le informazioni
 	 * @return la stringa che indica il percorso in cui il file è stato salvato
 	 * @author Francesco
+	 * @throws EmptyStringException 
 	 */
 	@GetMapping("/saveFile")
-	public ResponseEntity<String> saveFile(@RequestParam(name = "name", defaultValue = "Milano")String name){
+	public ResponseEntity<String> saveFile(@RequestParam(name = "name", defaultValue = "Milano")String name) throws EmptyStringException{
 		return new ResponseEntity<>(service.saveFile(name), HttpStatus.OK);
 	}
 	
