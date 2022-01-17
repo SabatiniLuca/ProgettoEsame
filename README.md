@@ -18,12 +18,12 @@ Inoltre si può richiedere la stampa di alcune statistiche riguardanti la temper
 # Esempi di risultati da Postman
 Di seguito gli esempi delle rotte sopra elencate:
 
-`/current?name=ancona`
+`/current?name=ancona` 
 
-Questa rotta richiede un parametro *name* dove va inserito il nome della città. Il valore di default è Milano.
 ![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseCurrent.jpg)
 
 `/forecast?name=fano`   
+Questa rotta consente di visualizzare le previsioni meteo per 5 giorni.
 *parte uno*
 ![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseForecast1.jpg)
 
