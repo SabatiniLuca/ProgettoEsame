@@ -203,10 +203,6 @@ public class WeatherImpl implements WeatherInt {
 		temp.put("Maximum", (u.tempConverter(meteo.getTemp_max())+" °C"));
 		weatherInfo.put("Temperatures", temp);
 
-
-
-
-
 		allInfo.put("City", cityInfo);
 		allInfo.put("Forecasts", weatherInfo);
 

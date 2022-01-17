@@ -83,9 +83,9 @@ class UtilsTest {
 	 */
 	@Test
 	void testDateConverter() throws ParseException {
-		String dt_txt="2022-01-13 09:00:00";
+		String dt_txt="13-01-2022 09:00";
 		Date totest=u.dateConverter(dt_txt);
-		Date actual=new SimpleDateFormat("yyyy-MM-dd HH:MM:SS").parse(dt_txt);
+		Date actual=new SimpleDateFormat("dd-MM-yyyy HH:mm").parse(dt_txt);
 		
 		assertEquals(totest,actual);
 		

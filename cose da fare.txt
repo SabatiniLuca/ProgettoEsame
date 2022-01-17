@@ -1,9 +1,1 @@
-Stats:
-	fare una rotta che visualizzi valori massimi, minimi,la media e la pressione
-	per giorno, fascia oraria e settimanale;
-
-Calcolo della soglia:
-	
-	stampare la differenza tra il forecast e il current
-
-Migliorare l'estetica del programma
+readme

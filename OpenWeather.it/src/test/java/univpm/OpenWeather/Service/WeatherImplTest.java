@@ -3,9 +3,13 @@ package univpm.OpenWeather.Service;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
+
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import junit.framework.*;
 import univpm.OpenWeather.Utils.Utils;
@@ -29,18 +33,22 @@ class WeatherImplTest extends TestCase {
 	 * @throws IOException 
 	 * @throws ParseException 
 	 */
-	public void setUp() throws IOException, ParseException {
-		String str="";
-		BufferedReader r=new BufferedReader(new FileReader("risposta.txt"));
-		
-		while(r.readLine()!=null) {
-			str+=r.readLine();
-			System.out.println(str);
+	@BeforeEach
+	protected
+	void setUp() throws Exception {
+		System.out.println("Setting it up!");
+		String json = "";
+		Scanner in = new Scanner(new FileReader("risposta.txt"));
+		while (in.hasNext()) {
+			json += (in.nextLine());
+
 		}
-		r.close();
-		JSONParser parser=new JSONParser();
-		this.esRisposta=(JSONObject) parser.parse(str);
 		
+		JSONParser parser = new JSONParser();
+		JSONObject obj = new JSONObject();
+		obj = (JSONObject) parser.parse(json);
+		this.esRisposta=obj;
+		in.close();
 	}
 	
 	/**
@@ -50,7 +58,7 @@ class WeatherImplTest extends TestCase {
 	@Test
 	void testUrlBuilder() {
 		String url=service.UrlBuilder(true,"fano");
-		String urlCorretto="https://api.openweathermap.org/data/2.5/weather?q=fano&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
+		String urlCorretto="https://api.openweathermap.org/data/2.5/weather?q=fano,IT&appid=15b8b402dfd9f2d93b1bfa8245d0edc6";
 		assertEquals(url, urlCorretto);
 		
 	}
@@ -63,7 +71,7 @@ class WeatherImplTest extends TestCase {
 	 */
 	@Test
 	void testSearchArray() throws IOException, ParseException {
-		setUp();
+		
 		String totest=u.searchArray(this.esRisposta, "weather", "description");
 		String actual="overcast clouds";
 		
@@ -81,6 +89,7 @@ class WeatherImplTest extends TestCase {
 		assertEquals(this.url,url);
 	}
 
+	@AfterEach
 	public void tearDown() {
 		this.u=null;
 		this.esRisposta=null;

@@ -49,9 +49,8 @@ public class FiltersImpl implements FiltersInt {
 	 * Questo metodo crea una data sotto forma di testo in base al numero passatogli come parametro.
 	 * Questo numero viene aggiunto al tempo corrente per ottenere una data futura di inizio o fine per le previsioni.
 	 * 
-	 * 
-	 * 
 	 * @throws ExeededDayException se la data selezionata è tra più di 5 giorni o tra meno di tre ore
+	 * @author lucas
 	 */
 	@Override
 	public String setDate(long number) throws ParseException, ExeededDayException {
