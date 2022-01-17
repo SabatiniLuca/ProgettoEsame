@@ -62,20 +62,6 @@ class WeatherImplTest extends TestCase {
 		
 	}
 
-	/**
-	 * verifica che il metodo per prendere un certo valore all'interno di un JSONArray sia corretto
-	 * @throws IOException
-	 * @throws ParseException
-	 * @author lucas
-	 */
-	@Test
-	void testSearchArray() throws IOException, ParseException {
-		
-		String totest=u.searchArray(this.esRisposta, "weather", "description");
-		String actual="overcast clouds";
-		
-		assertEquals(totest,actual);
-	}
 
 	/**
 	 * verifica che l'URL sia resettato correttamente.
