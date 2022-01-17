@@ -1,0 +1,6 @@
+univpm.OpenWeather
+univpm.OpenWeather.Controller
+univpm.OpenWeather.Exception
+univpm.OpenWeather.Model
+univpm.OpenWeather.Service
+univpm.OpenWeather.Utils
