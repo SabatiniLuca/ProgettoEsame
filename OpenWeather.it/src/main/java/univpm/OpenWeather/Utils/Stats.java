@@ -34,7 +34,6 @@ public class Stats implements StatsInt{
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new FileReader(nameFile));
 		String lettura = br.readLine();
-		System.out.println(lettura);
 		br.close();
 		JSONParser parser = new JSONParser();
 		JSONObject read = null;

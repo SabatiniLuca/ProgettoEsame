@@ -3,7 +3,6 @@
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.ParseException;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,7 +93,7 @@ public class OpenWeatherController {
  * @throws IOException eccezione generata se il nome del file di cui si vogliono generare le statistiche non è presente
  * @author Francesco
  */
-	@GetMapping("/Stats")
+	@GetMapping("/stats")
 	public ResponseEntity<Object> genStats(@RequestParam(name = "name", defaultValue="Milano")String name) throws NullObjectException, IOException{
 		
 		try{
@@ -116,7 +115,7 @@ public class OpenWeatherController {
 	 * @throws CityNotFoundException
 	 * @author Francesco
 	 */
-	@GetMapping("/Errors")
+	@GetMapping("/errors")
 	public ResponseEntity<Object> errors(@RequestParam(name = "name", defaultValue = "Milano")String name) throws MalformedURLException, ParseException, CityNotFoundException{
 	
 		try{
@@ -147,7 +146,7 @@ public class OpenWeatherController {
 	 * @return Un @JSONObject con le previsioni nell'intervallo richiesto
 	 * @author lucas
 	 */
-	@GetMapping("/Filters")
+	@GetMapping("/filters")
 	public ResponseEntity<Object> filters(@RequestParam(name = "name", defaultValue = "Milano")String name,
 			@RequestParam(name = "start", defaultValue = "now")String start,
 			@RequestParam(name = "finish", defaultValue = "five")String finish,

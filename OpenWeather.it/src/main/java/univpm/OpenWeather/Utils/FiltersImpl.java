@@ -121,8 +121,7 @@ public class FiltersImpl implements FiltersInt {
 		printAll.put("Previsioni da " + datainizio.toString().substring(0, 16) + " a "
 				+ datafine.toString().substring(0, 16), toPrint);
 		if(toPrint.isEmpty()) {
-			toPrint.add("Non ci sono previsioni disponibili da ora all'orario richiesto");
-			//throw new ExeededDayException("La previsione cercata è tra meno di 3 ore da ora");
+			throw new ExeededDayException("La previsione cercata è tra meno di 3 ore da ora");
 		}
 		return printAll;
 	}
