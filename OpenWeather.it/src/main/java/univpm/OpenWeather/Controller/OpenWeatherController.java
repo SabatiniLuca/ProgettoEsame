@@ -1,6 +1,7 @@
 package univpm.OpenWeather.Controller;
 
 import java.io.IOException;
+
 import java.net.MalformedURLException;
 import java.text.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import univpm.OpenWeather.Exception.CityNotFoundException;
-import univpm.OpenWeather.Exception.EmptyStringException;
 import univpm.OpenWeather.Exception.ExeededDayException;
-import univpm.OpenWeather.Exception.NullObjectException;
+import univpm.OpenWeather.Exception.WrongValueException;
 import univpm.OpenWeather.Exception.WrongDateException;
 import univpm.OpenWeather.Service.WeatherImpl;
 import univpm.OpenWeather.Utils.FiltersImpl;
@@ -79,7 +79,7 @@ public class OpenWeatherController {
 	 */
 	@GetMapping("/saveFile")
 	public ResponseEntity<String> saveFile(@RequestParam(name = "name", defaultValue = "Milano") String name)
-			throws EmptyStringException {
+			throws CityNotFoundException {
 
 		try {
 			return new ResponseEntity<>(service.saveFile(name), HttpStatus.OK);
@@ -94,14 +94,14 @@ public class OpenWeatherController {
 	 * 
 	 * @param name nome della città di cui si vogliono generare le statistiche
 	 * @return
-	 * @throws NullObjectException
+	 * @throws WrongValueException
 	 * @throws IOException         eccezione generata se il nome del file di cui si
 	 *                             vogliono generare le statistiche non è presente
 	 * @author Francesco
 	 */
 	@GetMapping("/stats")
 	public ResponseEntity<Object> genStats(@RequestParam(name = "name", defaultValue = "Milano") String name)
-			throws NullObjectException, IOException {
+			throws WrongValueException, IOException {
 
 		try {
 			return new ResponseEntity<>(statistics.getFiveDaysAverage(name + "HourlyWeather.txt"), HttpStatus.OK);

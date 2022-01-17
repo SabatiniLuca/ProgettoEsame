@@ -8,13 +8,13 @@ package univpm.OpenWeather.Exception;
  *
  */
 @SuppressWarnings("serial")
-public class NullObjectException extends Exception {
+public class WrongValueException extends Exception {
 
-	public NullObjectException() {
-		System.out.println("Error: Object is null");
+	public WrongValueException() {
+		System.out.println("Error: Wrong value detected");
 	}
 
-	public NullObjectException(String mes) {
+	public WrongValueException(String mes) {
 		super(mes);
 	}
 

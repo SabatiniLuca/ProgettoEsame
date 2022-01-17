@@ -1,12 +1,12 @@
 package univpm.OpenWeather.Service;
 
 import java.net.MalformedURLException;
+
 import java.text.ParseException;
 
 import org.json.simple.JSONObject;
 
 import univpm.OpenWeather.Exception.CityNotFoundException;
-import univpm.OpenWeather.Exception.EmptyStringException;
 import univpm.OpenWeather.Model.Weather;
 
 /**
@@ -27,7 +27,7 @@ public interface WeatherInt {
 
 	public JSONObject printInfo(Weather city, boolean all);
 
-	public String saveFile(String name) throws EmptyStringException, MalformedURLException, CityNotFoundException;
+	public String saveFile(String name) throws MalformedURLException, CityNotFoundException;
 
 	public void ResetUrl();
 

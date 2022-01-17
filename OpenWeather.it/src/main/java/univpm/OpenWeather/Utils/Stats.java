@@ -10,7 +10,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
-import univpm.OpenWeather.Exception.NullObjectException;
+import univpm.OpenWeather.Exception.WrongValueException;
 
 /**
  * Questa classe contiene i metodi che servono a leggere un file salvato e
@@ -31,7 +31,7 @@ public class Stats implements StatsInt {
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getFiveDaysAverage(String nameFile) throws NullObjectException, IOException {
+	public JSONObject getFiveDaysAverage(String nameFile) throws WrongValueException, IOException {
 
 		// TODO Auto-generated method stub
 		BufferedReader br = new BufferedReader(new FileReader(nameFile));
@@ -58,7 +58,7 @@ public class Stats implements StatsInt {
 		double varianceP = getPressVariance(read);
 		double varianceT = getTempVariance(read);
 
-		if (t_average != 0 && p_average != 0) {
+		if (t_average != -273.15 && p_average != 0) {
 			temp.put("Average Temperature", t_average);
 			temp.put("Max Temperature", temp_max);
 			temp.put("Min Temperature", temp_min);
@@ -69,7 +69,7 @@ public class Stats implements StatsInt {
 			temp.put("Temperature Variance", varianceT);
 			statistics.put("Statistics", temp);
 		} else
-			throw new NullObjectException("Object is null");
+			throw new WrongValueException("Error: Wrong value detected");
 
 		return statistics;
 	}

@@ -1,6 +1,7 @@
 package univpm.OpenWeather.Service;
 
 import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -27,8 +28,7 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.stereotype.Service;
 
 import univpm.OpenWeather.Exception.CityNotFoundException;
-import univpm.OpenWeather.Exception.EmptyStringException;
-import univpm.OpenWeather.Exception.NullObjectException;
+import univpm.OpenWeather.Exception.WrongValueException;
 import univpm.OpenWeather.Model.Weather;
 import univpm.OpenWeather.Utils.Utils;
 import univpm.OpenWeather.Utils.GetFromCall;
@@ -228,10 +228,10 @@ public class WeatherImpl implements WeatherInt {
 	 * @throws EmptyStringException
 	 * @throws CityNotFoundException
 	 * @throws MalformedURLException
-	 * @throws NullObjectException
+	 * @throws WrongValueException
 	 */
 	@Override
-	public String saveFile(String name) throws EmptyStringException, MalformedURLException, CityNotFoundException {
+	public String saveFile(String name) throws MalformedURLException, CityNotFoundException {
 
 		ResetUrl();
 		String u = UrlBuilder(true, name);
