@@ -32,19 +32,19 @@ public class ExceptionTest {
 	}
 
 	@Test
-	void getCurrrent() throws CityNotFoundException {
+	void testGetCurrrent() throws CityNotFoundException {
 		Exception e = assertThrows(CityNotFoundException.class, () -> i.getWeather("WrongName"));
 		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}
 
 	@Test
-	void getForecast() throws CityNotFoundException {
+	void testGetForecast() throws CityNotFoundException {
 		Exception e = assertThrows(CityNotFoundException.class, () -> i.getForecast("WrongName"));
 		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}
 
 	@Test
-	void saveFile() throws CityNotFoundException {
+	void testSaveFile() throws CityNotFoundException {
 		Exception e = assertThrows(CityNotFoundException.class, () -> i.saveFile("WrongName"));
 		assertEquals("City not found, please enter a different city name", e.getMessage());
 	}

@@ -114,6 +114,9 @@ public class FiltersImpl implements FiltersInt {
 		if (datafine.compareTo(u.dateConverter(setDate(432000))) > 0) {
 			throw new WrongDateException("La data di fine è tra più di 5 giorni");
 		}
+		if (datainizio.compareTo(u.dateConverter(setDate(0))) < 0) {
+			throw new WrongDateException("La data di inizio è nel passato");
+		}
 
 		while (i.hasNext()) {
 			JSONObject temp = i.next();

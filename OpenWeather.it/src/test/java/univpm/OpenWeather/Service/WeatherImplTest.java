@@ -11,8 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import junit.framework.*;
-import univpm.OpenWeather.Utils.Utils;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -25,7 +23,6 @@ class WeatherImplTest extends TestCase {
 
 	@Autowired
 	private WeatherImpl service = new WeatherImpl();
-	private Utils u = new Utils();
 	private String url = "https://api.openweathermap.org/data/2.5/";
 	JSONObject esRisposta = new JSONObject();
 
@@ -82,7 +79,6 @@ class WeatherImplTest extends TestCase {
 
 	@AfterEach
 	public void tearDown() {
-		this.u = null;
 		this.esRisposta = null;
 		this.service = null;
 	}
