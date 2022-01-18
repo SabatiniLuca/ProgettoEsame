@@ -18,7 +18,9 @@ Inoltre si può richiedere la stampa di alcune statistiche riguardanti la temper
 - [Autori](https://github.com/SabatiniLuca/ProgettoEsame#componenti-del-gruppo)
 
 ### ![alt text](https://img.shields.io/badge/OpenWeather-Rotte-blue) 
-*Tutte le rotte sono di tipo GET*
+> L'utente può effettuare chiamate postman tramite l'indirizzo: *localhost:8080* .
+> 
+> *Tutte le rotte sono di tipo GET*
 
 | N° | Rotta   | Descrizione   | Parametri |
 |-----|:-------:|:-------------:|:---------:|
@@ -31,15 +33,19 @@ Inoltre si può richiedere la stampa di alcune statistiche riguardanti la temper
 ----------------------
 
 ### `/current?name=ancona` 
-Questa rotta fa stampare un JSONObject contenente due oggetti. Uno con le informazioni sul meteo e uno contenente informazioni della città richiesta. Se l'Url non è creato correttamente verrà stampata una eccezione.
+*Questa rotta fa stampare un JSONObject contenente due oggetti. Uno con le informazioni sul meteo e uno contenente informazioni della città richiesta.*
+
+*Questa rotta genera l'eccezione ***CityNotFoundException*** se il nome della città inserita è inesistente.*
 
 *Funzionamento:* 
 >Il JSONObject ottenuto dalla chiamata API viene elaborato, dalle informazioni che esso contiene viene creato un oggetto della classe [Weather](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/src/main/java/univpm/OpenWeather/Model/Weather.java). Questo oggetto è poi passato al metodo *printInfo* per creare un JSONObject da stampare.
 ![alt text](https://github.com/SabatiniLuca/ProgettoEsame/blob/main/OpenWeather.it/IMMgithub/responseCurrent.jpg)
 
 ### `/forecast?name=fano`   
-Questa rotta stampa un oggetto contenente le previsioni per i 5 giorni successivi al momento della richiesta.
-Le previsioni sono fatte ad intervalli di tre ore l'una dall'altra. Se l'Url non è creato correttamente verrà stampata una eccezione.
+*Questa rotta stampa un oggetto contenente le previsioni per i 5 giorni successivi al momento della richiesta.
+Le previsioni sono fatte ad intervalli di tre ore l'una dall'altra.*
+
+*Questa rotta genera l'eccezione ***CityNotFoundException*** se il nome della città inserita è inesistente.*
 
 *Funzionamento:* 
 >Dal JSONObject ottenuto con la chiamata API viene selezionato un oggetto alla volta, all'interno del JSONArray contenente tutte le previsioni, e per ognuno di essi viene fatto un simile procedimento a quello usato con la rotta `/current`. 
